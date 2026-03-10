@@ -1,0 +1,73 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [rollon-app, target_repo]
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: '${{ matrix.project }}/package-lock.json'
+        
+    - name: Install Dependencies
+      working-directory: ./${{ matrix.project }}
+      run: npm ci
+      
+    - name: Lint
+      working-directory: ./${{ matrix.project }}
+      run: npm run lint
+
+    - name: Run Tests
+      working-directory: ./${{ matrix.project }}
+      run: npm run test -- --run --coverage
+      
+    - name: Build
+      working-directory: ./${{ matrix.project }}
+      run: npm run build
+
+  security-audit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [rollon-app, target_repo]
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: '${{ matrix.project }}/package-lock.json'
+        
+    - name: Install Dependencies
+      working-directory: ./${{ matrix.project }}
+      run: npm ci
+      
+    - name: Audit Dependencies
+      working-directory: ./${{ matrix.project }}
+      run: npm audit --audit-level=high
+      continue-on-error: true
+      
+    - name: Check for vulnerabilities
+      working-directory: ./${{ matrix.project }}
+      run: |
+        npm audit --json > audit-results.json || true
+        if grep -q '"vulnerabilities"' audit-results.json; then
+          echo "Security vulnerabilities found!"
+          cat audit-results.json
+          exit 1
+        fi
