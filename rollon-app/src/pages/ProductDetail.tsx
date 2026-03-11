@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, Star, Truck, Shield,
@@ -13,6 +13,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { buildProductJsonLd, useDocumentSEO } from '@/lib/seo';
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -21,6 +22,30 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+
+  const location = useLocation();
+
+  const seoDescription = useMemo(() => {
+    if (!product) {
+      return 'Premium smoking accessories from RollON Bangladesh.';
+    }
+
+    return `${product.name} - ${product.description.slice(0, 140)}${product.description.length > 140 ? '…' : ''}`;
+  }, [product]);
+
+  const productJsonLd = useMemo(
+    () => (product ? buildProductJsonLd(product, location.pathname) : undefined),
+    [location.pathname, product],
+  );
+
+  useDocumentSEO({
+    title: product ? product.name : 'Product',
+    description: seoDescription,
+    canonicalPath: location.pathname,
+    image: product?.image,
+    type: 'product',
+    jsonLd: productJsonLd,
+  });
 
 
   if (isLoading) {
@@ -123,6 +148,7 @@ export function ProductDetail() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:border-primary/50 hover:text-primary transition-all shadow-xl"
+                    aria-label="Add to wishlist"
                   >
                     <Heart className="w-5 h-5" />
                   </motion.button>
@@ -130,6 +156,7 @@ export function ProductDetail() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:border-primary/50 hover:text-primary transition-all shadow-xl"
+                    aria-label="Share product"
                   >
                     <Share2 className="w-5 h-5" />
                   </motion.button>
