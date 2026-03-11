@@ -34,6 +34,7 @@ const AdminProducts = React.lazy(() => import('@/pages/admin/AdminProducts').the
 const AdminOrders = React.lazy(() => import('@/pages/admin/AdminOrders').then(m => ({ default: m.AdminOrders })));
 const AdminCustomers = React.lazy(() => import('@/pages/admin/AdminCustomers').then(m => ({ default: m.AdminCustomers })));
 const AdminAnalytics = React.lazy(() => import('@/pages/admin/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
+const AdminSettings = React.lazy(() => import('@/pages/admin/AdminSettings').then(m => ({ default: m.AdminSettings })));
 
 function App() {
   const location = useLocation();
@@ -69,6 +70,7 @@ function App() {
               <Route path="/admin/orders" element={<ProtectedRoute role="admin">{withTransition(AdminOrders)}</ProtectedRoute>} />
               <Route path="/admin/customers" element={<ProtectedRoute role="admin">{withTransition(AdminCustomers)}</ProtectedRoute>} />
               <Route path="/admin/analytics" element={<ProtectedRoute role="admin">{withTransition(AdminAnalytics)}</ProtectedRoute>} />
+              <Route path="/admin/settings" element={<ProtectedRoute role="admin">{withTransition(AdminSettings)}</ProtectedRoute>} />
             </Routes>
           </AnimatePresence>
         </Suspense>
