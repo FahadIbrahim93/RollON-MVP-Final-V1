@@ -102,7 +102,27 @@ export function Component({ title }: Props) {
 - [ ] Touch targets are minimum 24px
 - [ ] Heading levels don't skip
 
-## Superpowers
+## Branch Protection (Important!)
+
+### Setting Up Branch Protection
+
+1. Go to: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/settings/branches
+2. Click "Add branch protection rule"
+3. Set "Branch name pattern" to: `main`
+4. Configure these settings:
+   - ✅ "Require pull request reviews before merging" (1 approval)
+   - ✅ "Require status checks to pass before merging"
+   - ✅ "Require branches to be up to date before merging"
+   - ✅ "Include administrators"
+   - ❌ Uncheck "Allow force pushes"
+   - ❌ Uncheck "Allow deletions"
+
+### Why This Matters
+- Prevents direct pushes to main
+- Ensures all changes go through PR reviews
+- Keeps history clean
+
+## Using Skills
 
 This project uses [Superpowers](https://github.com/obra/superpowers) for AI-assisted development.
 
