@@ -1,11 +1,12 @@
 import type { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { CheckoutForm } from '@/lib/checkoutSchema';
 
 interface AddressFieldsProps {
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
-  watch?: UseFormWatch<any>;
+  register: UseFormRegister<CheckoutForm>;
+  errors: FieldErrors<CheckoutForm>;
+  watch?: UseFormWatch<CheckoutForm>;
 }
 
 export function AddressFields({ register, errors, watch }: AddressFieldsProps) {

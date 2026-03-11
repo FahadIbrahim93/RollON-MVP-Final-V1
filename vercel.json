@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd rollon-app && npm ci",
+  "buildCommand": "cd rollon-app && npm run build",
+  "outputDirectory": "rollon-app/dist",
+  "framework": "vite"
+}

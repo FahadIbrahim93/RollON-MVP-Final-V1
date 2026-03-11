@@ -2,11 +2,12 @@ import type { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Wallet, Smartphone } from 'lucide-react';
+import type { CheckoutForm } from '@/lib/checkoutSchema';
 
 interface PaymentMethodSelectorProps {
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
-  watch?: UseFormWatch<any>;
+  register: UseFormRegister<CheckoutForm>;
+  errors: FieldErrors<CheckoutForm>;
+  watch?: UseFormWatch<CheckoutForm>;
 }
 
 const paymentMethods = [
@@ -41,8 +42,10 @@ export function PaymentMethodSelector({ register, errors, watch }: PaymentMethod
         defaultValue="cod"
         className="space-y-3"
         onValueChange={(value) => {
-          const event = { target: { name: 'paymentMethod', value } };
-          register('paymentMethod').onChange(event as any);
+          register('paymentMethod').onChange({
+            target: { name: 'paymentMethod', value },
+            type: 'change',
+          });
         }}
       >
         {paymentMethods.map((method) => (

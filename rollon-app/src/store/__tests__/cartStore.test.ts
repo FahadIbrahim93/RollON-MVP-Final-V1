@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useCartStore } from '../cartStore';
+import type { Product } from '@/types';
 
-const mockProduct = {
+const mockProduct: Product = {
   id: '1',
   name: 'Test Product',
   price: 100,
@@ -13,6 +14,7 @@ const mockProduct = {
   rating: 4,
   reviewCount: 10,
   stock: 5,
+  inStock: true,
 };
 
 describe('cartStore', () => {
@@ -24,7 +26,7 @@ describe('cartStore', () => {
     it('should add a new item to the cart', () => {
       const { addItem } = useCartStore.getState();
 
-      addItem(mockProduct as any);
+      addItem(mockProduct);
 
       const items = useCartStore.getState().items;
       expect(items).toHaveLength(1);
@@ -35,8 +37,8 @@ describe('cartStore', () => {
     it('should increment quantity for existing item', () => {
       const { addItem } = useCartStore.getState();
 
-      addItem(mockProduct as any);
-      addItem(mockProduct as any);
+      addItem(mockProduct);
+      addItem(mockProduct);
 
       const items = useCartStore.getState().items;
       expect(items).toHaveLength(1);
@@ -46,8 +48,8 @@ describe('cartStore', () => {
     it('should update totalItems and totalPrice', () => {
       const { addItem } = useCartStore.getState();
 
-      addItem(mockProduct as any);
-      addItem({ ...mockProduct, id: '2', price: 200 } as any);
+      addItem(mockProduct);
+      addItem({ ...mockProduct, id: '2', price: 200 });
 
       const { totalItems, totalPrice } = useCartStore.getState();
       expect(totalItems).toBe(2);
@@ -59,7 +61,7 @@ describe('cartStore', () => {
     it('should remove item from cart', () => {
       const { addItem, removeItem } = useCartStore.getState();
 
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       removeItem('1');
 
       const items = useCartStore.getState().items;
@@ -71,7 +73,7 @@ describe('cartStore', () => {
     it('should update item quantity', () => {
       const { addItem, updateQuantity } = useCartStore.getState();
 
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       updateQuantity('1', 5);
 
       const items = useCartStore.getState().items;
@@ -81,7 +83,7 @@ describe('cartStore', () => {
     it('should remove item when quantity is 0', () => {
       const { addItem, updateQuantity } = useCartStore.getState();
 
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       updateQuantity('1', 0);
 
       const items = useCartStore.getState().items;
@@ -93,8 +95,8 @@ describe('cartStore', () => {
     it('should clear all items', () => {
       const { addItem, clearCart } = useCartStore.getState();
 
-      addItem(mockProduct as any);
-      addItem({ ...mockProduct, id: '2' } as any);
+      addItem(mockProduct);
+      addItem({ ...mockProduct, id: '2' });
       clearCart();
 
       const items = useCartStore.getState().items;

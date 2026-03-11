@@ -1,10 +1,11 @@
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { CheckoutForm } from '@/lib/checkoutSchema';
 
 interface ContactFieldsProps {
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
+  register: UseFormRegister<CheckoutForm>;
+  errors: FieldErrors<CheckoutForm>;
 }
 
 export function ContactFields({ register, errors }: ContactFieldsProps) {

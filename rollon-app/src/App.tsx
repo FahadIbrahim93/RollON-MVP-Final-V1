@@ -11,7 +11,7 @@ import { Toaster } from 'sonner';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { AnimatePresence } from 'framer-motion';
 
-const withTransition = (Component: React.LazyExoticComponent<any>) => (
+const withTransition = (Component: React.LazyExoticComponent<React.ComponentType>) => (
   <PageTransition>
     <Component />
   </PageTransition>

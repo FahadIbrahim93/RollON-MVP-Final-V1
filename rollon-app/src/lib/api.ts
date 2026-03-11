@@ -1,4 +1,5 @@
 import { products as mockProducts, categories as mockCategories, testimonials as mockTestimonials, orders as mockOrders, customers as mockCustomers, paymentMethods } from '../data/products';
+import type { Order } from '@/types';
 
 const API_DELAY = 300;
 
@@ -77,7 +78,7 @@ export const api = {
       return simulateApiCall(order);
     },
 
-    create: async (order: any) => {
+    create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) => {
       const newOrder = {
         ...order,
         id: Math.random().toString(36).substr(2, 9),
