@@ -4,7 +4,7 @@ A production-ready, enterprise-grade e-commerce storefront with admin dashboard 
 
 ## 🚀 Live Deployment
 
-**Production URL:** https://rollon.vercel.app
+**Production URL:** https://rollon-premium-smoking.vercel.app
 
 ## 📦 Tech Stack
 
