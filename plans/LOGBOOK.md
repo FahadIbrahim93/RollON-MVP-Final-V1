@@ -11,3 +11,5 @@
 | 2026-03-10T00:00:00Z | P1-TEST-02 | Codex | Added registration failure-path test to prevent silent auth success on API failure. | None | Vitest test added |
 | 2026-03-10T00:00:00Z | P1-TEST-03 | Codex | Added pure shop utility module + tests to cover category resolution, filtering, sorting, and load-more pagination behavior. | None | Unit tests added in `src/lib/__tests__/shop.test.ts` |
 | 2026-03-10T00:00:00Z | P2-DOC-02 | Codex | Added agent guideline document for standards, testing gates, and communication protocol. | None | `plans/AGENT_GUIDELINES.md` |
+| 2026-03-10T00:00:00Z | P0-SCOPE-01 | Codex | Removed unrelated repository content (`target_repo`, generated static root assets, and scratch target files) to enforce RollON-only scope. | None | Repository structure review |
+| 2026-03-10T00:00:00Z | P1-DEPLOY-01 | Codex | Added root-level Vercel deployment config and canonical root README for RollON app deployment path. | None | `vercel.json` + `README.md` |

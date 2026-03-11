@@ -10,6 +10,8 @@
 | P2-DOC-01 | Create handoff protocol docs (taskboard/logbook) | None | Architect Agent | Completed | Planning artifacts present and updated |
 | P2-DOC-02 | Add explicit agent execution guideline doc | P2-DOC-01 | Architect Agent | Completed | `plans/AGENT_GUIDELINES.md` present |
 | P2-PIPE-01 | Validate build and tests | P0-QA-01 | Execution Agent | In Progress | Final rerun blocked by dependency install in this environment |
+| P0-SCOPE-01 | Remove non-RollON code/assets from repo root | None | Architect Agent | Completed | `target_repo`, `target_*`, static build artifacts removed |
+| P1-DEPLOY-01 | Configure root Vercel deployment for `rollon-app` | P0-SCOPE-01 | DevOps Agent | Completed | `vercel.json` added with rollon-app build/output commands |
 | EXT-GH-01 | Close all GitHub issues | External access/auth | Repo Admin | Blocked | Requires authenticated GitHub context in this environment |
 
 ## Current Sprint Notes

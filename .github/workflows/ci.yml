@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [rollon-app, target_repo]
+        project: [rollon-app]
     steps:
     - uses: actions/checkout@v4
     
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [rollon-app, target_repo]
+        project: [rollon-app]
     steps:
     - uses: actions/checkout@v4
     
