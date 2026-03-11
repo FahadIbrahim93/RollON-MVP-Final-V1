@@ -199,22 +199,24 @@ export function ProductDetail() {
                     <span className="text-xs uppercase tracking-widest text-white/40 font-bold">Quantity</span>
                     <div className="flex items-center gap-2 p-1.5 bg-white/[0.03] border border-white/10 rounded-2xl">
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="h-10 w-10 text-white hover:bg-white/5 rounded-xl transition-all"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <span className="text-white w-10 text-center font-bold text-lg tabular-nums">{quantity}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setQuantity(quantity + 1)}
-                        className="h-10 w-10 text-white hover:bg-white/5 rounded-xl transition-all"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                  variant="outline"
+                  size="icon"
+                  className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+                <div className="w-12 text-center font-bold font-mono text-xl">{quantity}</div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-primary hover:text-primary hover:border-primary/50"
+                  onClick={() => setQuantity(quantity + 1)}
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
                     </div>
                   </div>
 

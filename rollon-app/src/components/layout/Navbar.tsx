@@ -76,6 +76,7 @@ export function Navbar() {
                 >
                   <Link
                     to={link.href}
+                    aria-current={location.pathname === link.href ? "page" : undefined}
                     className={cn(
                       'relative group text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-500',
                       location.pathname === link.href ? 'text-primary' : 'text-white/60 hover:text-white'
@@ -185,6 +186,7 @@ export function Navbar() {
                 >
                   <Link
                     to={link.href}
+                    aria-current={location.pathname === link.href ? "page" : undefined}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="group flex items-end gap-4"
                   >
@@ -263,13 +265,14 @@ export function Navbar() {
                 <div className="flex flex-wrap items-center gap-4 mt-12">
                   <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
                   {['Ceramic v2', 'Titanium Trucks', 'Limited Drops', 'Manifesto'].map((tag) => (
-                    <Button
-                      key={tag}
-                      variant="outline"
-                      className="rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/40 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase"
+                      <Link
+                        key={tag}
+                        to={`/products?q=${encodeURIComponent(tag)}`} // Assuming a search query for trending products
+                        aria-current={location.pathname === `/products?q=${encodeURIComponent(tag)}` ? "page" : undefined}
+                        className={cn("rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/40 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase")}
                     >
                       {tag}
-                    </Button>
+                    </Link>
                   ))}
                 </div>
               </motion.div>
