@@ -189,6 +189,9 @@ export function Hero() {
               <Badge variant="outline" className="border-primary/30 text-primary py-1.5 px-4 bg-primary/5 uppercase tracking-[0.2em] text-[10px] font-bold">
                 Level Up Your Lifestyle
               </Badge>
+              <Badge className="bg-primary text-black font-black px-4 py-1.5 rounded-full animate-bounce shadow-[0_0_20px_rgba(74,222,128,0.5)]">
+                EID SPECIAL: 20% OFF
+              </Badge>
               <div className="h-[1px] w-12 bg-primary/30" />
             </motion.div>
 
