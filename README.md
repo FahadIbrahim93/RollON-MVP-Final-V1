@@ -93,6 +93,8 @@ rollon-app/
 - Upstash Redis-backed serverless API implemented under `/api/*`
 - Key schema documented in `docs/database-architecture.md`
 - Catalog research notes (Facebook metadata + data sourcing): `docs/catalog-research.md`
+- Execution taskboard and agent protocol: `docs/agents-taskboard.md`
+- Production hardening checklist: `docs/production-hardening.md`
 - React frontend can use remote API or local fallback mode
 
 ## 🔐 Security

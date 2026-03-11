@@ -34,6 +34,13 @@ const fetchJson = async <T>(path: string, init?: RequestInit): Promise<T> => {
   return response.json();
 };
 
+
+type ListResponse<T> = T[] | { items: T[]; total?: number; page?: number; limit?: number };
+
+const unwrapList = <T>(payload: ListResponse<T>): T[] => {
+  return Array.isArray(payload) ? payload : payload.items;
+};
+
 const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise<T>) => {
   if (!USE_REMOTE) {
     return mockFn();
@@ -49,7 +56,7 @@ const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise
 
 export const api = {
   products: {
-    getAll: async () => withFallback<Product[]>(() => fetchJson('/products'), () => simulateApiCall(mockProducts)),
+    getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), () => simulateApiCall(mockProducts)),
 
     getById: async (id: string) =>
       withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => mockProducts.find((p) => p.id === id)),
@@ -62,16 +69,16 @@ export const api = {
 
     getByCategory: async (categoryId: string) =>
       withFallback<Product[]>(
-        () => fetchJson(`/products?categoryId=${encodeURIComponent(categoryId)}`),
+        async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?categoryId=${encodeURIComponent(categoryId)}`)),
         async () => mockProducts.filter((p) => p.categoryId === categoryId),
       ),
 
     getFeatured: async () =>
-      withFallback<Product[]>(() => fetchJson('/products?featured=true'), async () => mockProducts.filter((p) => p.featured)),
+      withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => mockProducts.filter((p) => p.featured)),
 
     search: async (query: string) =>
       withFallback<Product[]>(
-        () => fetchJson(`/products?search=${encodeURIComponent(query)}`),
+        async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?search=${encodeURIComponent(query)}`)),
         async () => {
           const lowerQuery = query.toLowerCase();
           return mockProducts.filter(

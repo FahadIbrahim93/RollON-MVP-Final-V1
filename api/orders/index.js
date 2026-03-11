@@ -1,5 +1,6 @@
 const { withErrorHandling, sendJson } = require('../_lib/http');
 const { KEYS, orderKey, getAllFromSet, getJson, createOrder } = require('../_lib/repositories');
+const { validateOrderPayload } = require('../_lib/validation');
 
 module.exports = withErrorHandling(async (req, res) => {
   if (req.method === 'GET') {
@@ -14,8 +15,9 @@ module.exports = withErrorHandling(async (req, res) => {
 
   if (req.method === 'POST') {
     const payload = req.body;
-    if (!payload || !payload.customerId || !payload.customerName || !Array.isArray(payload.items)) {
-      return sendJson(res, 400, { error: 'Invalid order payload' });
+    const validation = validateOrderPayload(payload);
+    if (!validation.valid) {
+      return sendJson(res, 400, { error: validation.error });
     }
 
     const order = await createOrder(payload);

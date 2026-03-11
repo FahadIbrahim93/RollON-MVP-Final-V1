@@ -6,6 +6,7 @@ import { useCartStore } from '@/store/cartStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PromoBanner } from './PromoBanner';
 
 const navLinks = [
   { label: 'Collections', href: '/shop' },
@@ -33,6 +34,7 @@ export function Navbar() {
 
   return (
     <>
+      <PromoBanner />
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -41,7 +43,7 @@ export function Navbar() {
           'fixed top-0 left-0 right-0 z-50 transition-all duration-700',
           isScrolled
             ? 'bg-black/40 backdrop-blur-2xl border-b border-white/5 py-3'
-            : 'bg-transparent py-8'
+            : 'bg-transparent py-4 top-10'
         )}
       >
         <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">

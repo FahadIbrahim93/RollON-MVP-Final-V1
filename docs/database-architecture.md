@@ -27,9 +27,9 @@ Seed source of truth:
 ## API Endpoints
 
 - `GET /api/health` → health + Redis ping
-- `GET /api/products` with filters (`id`, `slug`, `categoryId`, `featured`, `search`)
+- `GET /api/products` with filters (`id`, `slug`, `categoryId`, `featured`, `search`) and pagination (`page`, `limit`)
 - `GET /api/categories`
-- `GET /api/orders`, `GET /api/orders?id=...`, `POST /api/orders`
+- `GET /api/orders`, `GET /api/orders?id=...`, `POST /api/orders` (validated payload with strict item rules)
 - `GET /api/customers`
 - `POST /api/admin/seed` (requires `x-admin-token` header and `ROLLON_ADMIN_SEED_TOKEN`)
 

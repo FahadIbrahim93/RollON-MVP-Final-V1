@@ -1,12 +1,13 @@
 const { withErrorHandling, sendJson } = require('../_lib/http');
 const { KEYS, productKey, getAllFromSet, getJson } = require('../_lib/repositories');
+const { toPositiveInt } = require('../_lib/validation');
 
 module.exports = withErrorHandling(async (req, res) => {
   if (req.method !== 'GET') {
     return sendJson(res, 405, { error: 'Method not allowed' });
   }
 
-  const { id, slug, categoryId, featured, search } = req.query;
+  const { id, slug, categoryId, featured, search, page, limit } = req.query;
 
   if (id) {
     const product = await getJson(productKey(String(id)));
@@ -38,5 +39,15 @@ module.exports = withErrorHandling(async (req, res) => {
     });
   }
 
-  return sendJson(res, 200, products);
+  const pageNumber = toPositiveInt(page, 1);
+  const pageLimit = Math.min(toPositiveInt(limit, 50), 100);
+  const start = (pageNumber - 1) * pageLimit;
+  const paginatedItems = products.slice(start, start + pageLimit);
+
+  return sendJson(res, 200, {
+    items: paginatedItems,
+    total: products.length,
+    page: pageNumber,
+    limit: pageLimit,
+  });
 });
