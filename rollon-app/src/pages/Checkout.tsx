@@ -40,8 +40,13 @@ export function Checkout() {
     name: 'paymentMethod',
   });
 
+  const city = useWatch({
+    control,
+    name: 'city',
+  });
+
   const processOrder = async (data: CheckoutForm) => {
-    console.log('Processing order:', data);
+    void data;
     setIsProcessing(true);
     try {
       // TODO: Replace with real API call
@@ -304,7 +309,7 @@ export function Checkout() {
                               <span className="text-[10px] uppercase font-black tracking-widest">Delivery Route</span>
                             </div>
                             <p className="text-white/60 text-sm font-medium leading-relaxed">
-                              Verified Address in {watch('city')}
+                              Verified Address in {city || 'N/A'}
                             </p>
                           </div>
                           <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3">
