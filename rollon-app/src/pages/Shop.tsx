@@ -8,6 +8,7 @@ import { ShoppingCart, Star, Search, SlidersHorizontal, ChevronDown } from 'luci
 import { useProducts, useCategories } from '@/hooks/useApi';
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice, cn } from '@/lib/utils';
+import { filterProducts, getNextVisibleCount, getVisibleProducts, INITIAL_VISIBLE_PRODUCTS, resolveCategoryIdFromSlug, sortProducts } from '@/lib/shop';
 import { Footer } from '@/components/layout/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,7 @@ export function Shop() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_PRODUCTS);
 
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -30,40 +31,17 @@ export function Shop() {
   const { data: products = [], isLoading: isProductsLoading } = useProducts();
   const { data: categories = [] } = useCategories();
 
-  const selectedCategoryId = useMemo(() => {
-    if (selectedCategory === 'all') {
-      return null;
-    }
-
-    return categories.find((category) => category.slug === selectedCategory)?.id ?? null;
-  }, [categories, selectedCategory]);
+  const selectedCategoryId = useMemo(() => resolveCategoryIdFromSlug(categories, selectedCategory), [categories, selectedCategory]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesCategory = selectedCategoryId === null || product.categoryId === selectedCategoryId;
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
+    return filterProducts(products, selectedCategoryId, searchQuery);
   }, [products, selectedCategoryId, searchQuery]);
 
   const sortedProducts = useMemo(() => {
-    return [...filteredProducts].sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
-        case 'rating':
-          return b.rating - a.rating;
-        case 'newest':
-          return String(b.id || '').localeCompare(String(a.id || ''));
-
-        default:
-          return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
-      }
-    });
+    return sortProducts(filteredProducts, sortBy);
   }, [filteredProducts, sortBy]);
+
+  const visibleProducts = useMemo(() => getVisibleProducts(sortedProducts, visibleCount), [sortedProducts, visibleCount]);
 
   const sortOptions = [
     { label: 'Featured', value: 'featured' },
@@ -115,7 +93,7 @@ export function Shop() {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setVisibleCount(12);
+                    setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                   }}
                   className="pl-11 pr-4 py-6 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 focus-visible:border-primary/50 transition-all text-white placeholder:text-white/20"
                 />
@@ -136,7 +114,7 @@ export function Shop() {
                 variant="ghost"
                 onClick={() => {
                   setSearchParams({});
-                  setVisibleCount(12);
+                  setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                 }}
                 className={cn(
                   "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
@@ -153,7 +131,7 @@ export function Shop() {
                   variant="ghost"
                   onClick={() => {
                     setSearchParams({ category: cat.slug });
-                    setVisibleCount(12);
+                    setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                   }}
                   className={cn(
                     "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
@@ -178,7 +156,7 @@ export function Shop() {
                     value={sortBy}
                     onChange={(e) => {
                       setSortBy(e.target.value);
-                      setVisibleCount(12);
+                      setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                     }}
                     className="w-full h-12 bg-white/[0.03] border border-white/10 rounded-2xl px-6 text-sm font-bold text-white/60 hover:text-white hover:border-primary/30 appearance-none focus:outline-none transition-all cursor-pointer"
                   >
@@ -209,7 +187,7 @@ export function Shop() {
                     variant="outline"
                     onClick={() => {
                       setSearchParams({});
-                      setVisibleCount(12);
+                      setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                       setIsFilterVisible(false);
                     }}
                     className={cn(
@@ -225,7 +203,7 @@ export function Shop() {
                       variant="outline"
                       onClick={() => {
                         setSearchParams({ category: cat.slug });
-                        setVisibleCount(12);
+                        setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                         setIsFilterVisible(false);
                       }}
                       className={cn(
@@ -254,7 +232,7 @@ export function Shop() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
                 <AnimatePresence mode="popLayout">
-                  {sortedProducts.slice(0, visibleCount).map((product, index) => (
+                  {visibleProducts.map((product, index) => (
                     <motion.div
                       key={product.id}
                       layout
@@ -279,7 +257,7 @@ export function Shop() {
                           {/* Interaction Overlay */}
                           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20">
                             <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-primary px-8 font-black tracking-tight">
-                              <Link to={`/product/${product.slug}`}>VEIW SPECIFICATIONS</Link>
+                              <Link to={`/product/${product.slug}`}>VIEW SPECIFICATIONS</Link>
                             </Button>
                             <Button
                               variant="ghost"
@@ -353,7 +331,7 @@ export function Shop() {
                     <p className="text-white/40 text-lg max-w-sm mx-auto">None of our current artifacts match your specific criteria. Try reframing your search.</p>
                   </div>
                   <Button
-                    onClick={() => { setSearchQuery(''); setSearchParams({}); }}
+                    onClick={() => { setSearchQuery(''); setSearchParams({}); setVisibleCount(INITIAL_VISIBLE_PRODUCTS); }}
                     className="rounded-full bg-white text-black hover:bg-primary px-12 h-14 font-black shadow-2xl"
                   >
                     Reset Exploration
@@ -366,7 +344,7 @@ export function Shop() {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => setVisibleCount((prev) => prev + 12)}
+                    onClick={() => setVisibleCount((prev) => getNextVisibleCount(prev))}
                     className="rounded-full border-white/10 hover:bg-white/5 hover:text-white px-12 h-14 text-sm font-black tracking-widest text-white/60 shadow-2xl"
                   >
                     LOAD MORE ITEMS
