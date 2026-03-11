@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const productsHandler = require('../products');
 const ordersHandler = require('../orders');
+const customersHandler = require('../customers');
 
 function createRes() {
   return {
@@ -17,6 +18,12 @@ function createRes() {
       return this;
     },
   };
+}
+
+
+function createToken(payload) {
+  const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  return `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode(payload)}.signature`;
 }
 
 function installFetchMock() {
@@ -60,6 +67,14 @@ function installFetchMock() {
     }
 
     if (cmd[0] === 'JSON.GET' && cmd[1].startsWith('rollon:customer:')) {
+      return { ok: true, json: async () => ({ result: null }) };
+    }
+
+    if (cmd[0] === 'SMEMBERS' && (cmd[1] === 'rollon:idx:orders' || cmd[1] === 'rollon:idx:customers')) {
+      return { ok: true, json: async () => ({ result: [] }) };
+    }
+
+    if (cmd[0] === 'JSON.GET' && (cmd[1].startsWith('rollon:order:') || cmd[1].startsWith('rollon:customer:'))) {
       return { ok: true, json: async () => ({ result: null }) };
     }
 
@@ -201,4 +216,69 @@ test('POST /orders rejects missing payload', async () => {
 
   assert.equal(res.statusCode, 400);
   assert.match(res.payload.error, /Payload is required/);
+});
+
+
+test('GET /orders requires authentication token', async () => {
+  const res = createRes();
+  await ordersHandler({ method: 'GET', query: {}, headers: {} }, res);
+
+  assert.equal(res.statusCode, 401);
+  assert.equal(res.payload.error, 'Authentication token required');
+});
+
+test('GET /orders requires admin role token', async () => {
+  const res = createRes();
+  const token = createToken({ sub: '2', role: 'user' });
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${token}` } }, res);
+
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.payload.error, 'Admin access required');
+});
+
+test('GET /orders allows admin role token', async () => {
+  const res = createRes();
+  const token = createToken({ sub: '1', role: 'admin' });
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${token}` } }, res);
+
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.payload, []);
+});
+
+test('GET /customers requires admin role token', async () => {
+  const res = createRes();
+  const token = createToken({ sub: '2', role: 'user' });
+  await customersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${token}` } }, res);
+
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.payload.error, 'Admin access required');
+});
+
+
+test('GET /orders rejects malformed bearer token', async () => {
+  const res = createRes();
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: 'Bearer not-a-jwt' } }, res);
+
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.payload.error, 'Admin access required');
+  assert.ok(res.payload.requestId);
+});
+
+test('GET /orders rejects expired admin token', async () => {
+  const res = createRes();
+  const expiredToken = createToken({ sub: '1', role: 'admin', exp: Math.floor(Date.now() / 1000) - 60 });
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${expiredToken}` } }, res);
+
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.payload.error, 'Admin access required');
+  assert.ok(res.payload.requestId);
+});
+
+test('auth errors include propagated request id', async () => {
+  const res = createRes();
+  await customersHandler({ method: 'GET', query: {}, headers: { 'x-request-id': 'req-123' } }, res);
+
+  assert.equal(res.statusCode, 401);
+  assert.equal(res.payload.error, 'Authentication token required');
+  assert.equal(res.payload.requestId, 'req-123');
 });

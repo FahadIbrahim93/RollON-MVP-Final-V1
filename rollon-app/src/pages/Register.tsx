@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
+import { useAuthStore } from '@/store';
+import { toast } from 'sonner';
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -21,15 +23,24 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const registerUser = useAuthStore((state) => state.register);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
     mode: 'onTouched'
   });
 
   const processRegister = async (data: RegisterForm) => {
-    console.log("Secure Register Data: ", data);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    // Implementation placeholder for real auth API
+    const isRegistered = await registerUser(data.name, data.email, data.password);
+
+    if (!isRegistered) {
+      toast.error('Registration failed. Please try again with a different email.');
+      return;
+    }
+
+    toast.success('Account created successfully.');
+    navigate('/');
   };
 
   return (
@@ -159,7 +170,7 @@ export function Register() {
             {/* Divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/40 text-sm">or</span>
+              <span className="text-white/60 text-sm">or</span>
               <div className="flex-1 h-px bg-white/10" />
             </div>
 

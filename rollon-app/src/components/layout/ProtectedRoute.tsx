@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import type { FC, ReactNode } from 'react';
+import { useAuthStore } from '@/store';
 
 /**
  * Route guard component. Redirects unauthenticated users to /login.
@@ -8,8 +9,7 @@ import type { FC, ReactNode } from 'react';
  * Usage:
  *   <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
  *
- * TODO: Replace `isAuthenticated` + `userRole` with real authStore selectors
- *       once Supabase/JWT auth is implemented (Phase 2).
+ * Uses auth state selectors from Zustand store.
  */
 
 interface ProtectedRouteProps {
@@ -17,13 +17,10 @@ interface ProtectedRouteProps {
     role?: 'admin' | 'customer';
 }
 
-// Temporary: hard-coded to false until real auth is wired up.
-// This blocks ALL access so the vulnerability is closed immediately.
-const isAuthenticated = false;
-const userRole: string | null = null;
-
 export const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, role }) => {
     const location = useLocation();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const userRole = useAuthStore((state) => state.user?.role);
 
     if (!isAuthenticated) {
         return (
