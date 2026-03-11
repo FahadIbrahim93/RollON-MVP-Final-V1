@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Search, User, Menu, X, Globe, Sparkles } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
+import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +24,7 @@ export function Navbar() {
   const totalItems = useCartStore((state) => state.totalItems);
   const setIsCartOpen = useCartStore((state) => state.setCartOpen);
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuthStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -128,16 +131,32 @@ export function Navbar() {
                   </AnimatePresence>
                 </Button>
 
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="icon"
-                  className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
-                >
-                  <Link to="/login">
-                    <User className="w-5 h-5" />
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <div className="flex items-center gap-4">
+                    <span className="text-white/40 text-sm font-medium hidden md:inline-block">
+                      {user?.name}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={logout}
+                      className="w-12 h-12 rounded-2xl text-white/40 hover:text-red-400 hover:bg-red-400/5 border border-transparent hover:border-red-400/20 transition-all"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  >
+                    <Link to="/login">
+                      <User className="w-5 h-5" />
+                    </Link>
+                  </Button>
+                )}
 
                 <Button
                   variant="ghost"

@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
+import { useAuthStore } from "@/store/authStore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,6 +23,8 @@ const registerSchema = z.object({
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export function Register() {
+  const navigate = useNavigate();
+  const registerUser = useAuthStore((state) => state.register);
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -27,9 +32,13 @@ export function Register() {
   });
 
   const processRegister = async (data: RegisterForm) => {
-    console.log("Secure Register Data: ", data);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    // Implementation placeholder for real auth API
+    const success = await registerUser(data.name, data.email, data.password);
+    if (success) {
+      toast.success("Account created successfully!");
+      navigate("/");
+    } else {
+      toast.error("Registration failed. Please try again.");
+    }
   };
 
   return (

@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Link, useSearchParams } from 'react-router-dom';
-import { ShoppingCart, Star, Search, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Star, Search, SlidersHorizontal, ChevronDown, Loader2 } from 'lucide-react';
 
 
 import { useProducts, useCategories } from '@/hooks/useApi';
@@ -23,6 +23,7 @@ export function Shop() {
   const [sortBy, setSortBy] = useState('featured');
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_PRODUCTS);
+  const [isExpanding, setIsExpanding] = useState(false);
 
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -344,10 +345,20 @@ export function Shop() {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => setVisibleCount((prev) => getNextVisibleCount(prev))}
-                    className="rounded-full border-white/10 hover:bg-white/5 hover:text-white px-12 h-14 text-sm font-black tracking-widest text-white/60 shadow-2xl"
+                    disabled={isExpanding}
+                    onClick={async () => {
+                      setIsExpanding(true);
+                      await new Promise(resolve => setTimeout(resolve, 800));
+                      setVisibleCount((prev) => getNextVisibleCount(prev));
+                      setIsExpanding(false);
+                    }}
+                    className="rounded-full border-white/10 hover:bg-white/5 hover:text-white px-12 h-14 text-sm font-black tracking-widest text-white/60 shadow-2xl min-w-[240px]"
                   >
-                    LOAD MORE ITEMS
+                    {isExpanding ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      "LOAD MORE ITEMS"
+                    )}
                   </Button>
                 </div>
               )}
