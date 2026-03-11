@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "rollon",
   "installCommand": "cd rollon-app && npm ci",
   "buildCommand": "cd rollon-app && npm run build",
   "outputDirectory": "rollon-app/dist",
