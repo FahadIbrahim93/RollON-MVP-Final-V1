@@ -1,7 +1,16 @@
-import { products as mockProducts, categories as mockCategories, testimonials as mockTestimonials, orders as mockOrders, customers as mockCustomers, paymentMethods } from '../data/products';
-import type { Order } from '@/types';
+import {
+  products as mockProducts,
+  categories as mockCategories,
+  testimonials as mockTestimonials,
+  orders as mockOrders,
+  customers as mockCustomers,
+  paymentMethods,
+} from '../data/products';
+import type { Category, Customer, Order, Product, Testimonial } from '@/types';
 
 const API_DELAY = 300;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const USE_REMOTE = import.meta.env.VITE_USE_REMOTE_API === 'true';
 
 const simulateApiCall = <T>(data: T): Promise<T> => {
   return new Promise((resolve) => {
@@ -9,101 +18,126 @@ const simulateApiCall = <T>(data: T): Promise<T> => {
   });
 };
 
+const fetchJson = async <T>(path: string, init?: RequestInit): Promise<T> => {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers || {}),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed (${response.status})`);
+  }
+
+  return response.json();
+};
+
+const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise<T>) => {
+  if (!USE_REMOTE) {
+    return mockFn();
+  }
+
+  try {
+    return await remoteFn();
+  } catch (error) {
+    console.warn('Remote API unavailable, falling back to local dataset.', error);
+    return mockFn();
+  }
+};
+
 export const api = {
   products: {
-    getAll: async () => {
-      return simulateApiCall(mockProducts);
-    },
+    getAll: async () => withFallback<Product[]>(() => fetchJson('/products'), () => simulateApiCall(mockProducts)),
 
-    getById: async (id: string) => {
-      const product = mockProducts.find(p => p.id === id);
-      return simulateApiCall(product);
-    },
+    getById: async (id: string) =>
+      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => mockProducts.find((p) => p.id === id)),
 
-    getBySlug: async (slug: string) => {
-      const product = mockProducts.find(p => p.slug === slug);
-      return simulateApiCall(product);
-    },
+    getBySlug: async (slug: string) =>
+      withFallback<Product | undefined>(
+        () => fetchJson(`/products?slug=${encodeURIComponent(slug)}`),
+        async () => mockProducts.find((p) => p.slug === slug),
+      ),
 
-    getByCategory: async (categoryId: string) => {
-      const filtered = mockProducts.filter(p => p.categoryId === categoryId);
-      return simulateApiCall(filtered);
-    },
+    getByCategory: async (categoryId: string) =>
+      withFallback<Product[]>(
+        () => fetchJson(`/products?categoryId=${encodeURIComponent(categoryId)}`),
+        async () => mockProducts.filter((p) => p.categoryId === categoryId),
+      ),
 
-    getFeatured: async () => {
-      const featured = mockProducts.filter(p => p.featured);
-      return simulateApiCall(featured);
-    },
+    getFeatured: async () =>
+      withFallback<Product[]>(() => fetchJson('/products?featured=true'), async () => mockProducts.filter((p) => p.featured)),
 
-    search: async (query: string) => {
-      const lowerQuery = query.toLowerCase();
-      const results = mockProducts.filter(p => 
-        p.name.toLowerCase().includes(lowerQuery) ||
-        p.description.toLowerCase().includes(lowerQuery) ||
-        p.tags?.some(t => t.toLowerCase().includes(lowerQuery))
-      );
-      return simulateApiCall(results);
-    },
+    search: async (query: string) =>
+      withFallback<Product[]>(
+        () => fetchJson(`/products?search=${encodeURIComponent(query)}`),
+        async () => {
+          const lowerQuery = query.toLowerCase();
+          return mockProducts.filter(
+            (p) =>
+              p.name.toLowerCase().includes(lowerQuery) ||
+              p.description.toLowerCase().includes(lowerQuery) ||
+              p.tags?.some((t) => t.toLowerCase().includes(lowerQuery)),
+          );
+        },
+      ),
   },
 
   categories: {
-    getAll: async () => {
-      return simulateApiCall(mockCategories);
-    },
+    getAll: async () => withFallback<Category[]>(() => fetchJson('/categories'), () => simulateApiCall(mockCategories)),
 
-    getById: async (id: string) => {
-      const category = mockCategories.find(c => c.id === id);
-      return simulateApiCall(category);
-    },
+    getById: async (id: string) =>
+      withFallback<Category | undefined>(async () => {
+        const categories = await fetchJson<Category[]>('/categories');
+        return categories.find((c) => c.id === id);
+      }, async () => mockCategories.find((c) => c.id === id)),
 
-    getBySlug: async (slug: string) => {
-      const category = mockCategories.find(c => c.slug === slug);
-      return simulateApiCall(category);
-    },
+    getBySlug: async (slug: string) =>
+      withFallback<Category | undefined>(async () => {
+        const categories = await fetchJson<Category[]>('/categories');
+        return categories.find((c) => c.slug === slug);
+      }, async () => mockCategories.find((c) => c.slug === slug)),
   },
 
   testimonials: {
-    getAll: async () => {
-      return simulateApiCall(mockTestimonials);
-    },
+    getAll: async () => simulateApiCall<Testimonial[]>(mockTestimonials),
   },
 
   orders: {
-    getAll: async () => {
-      return simulateApiCall(mockOrders);
-    },
+    getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), () => simulateApiCall(mockOrders)),
 
-    getById: async (id: string) => {
-      const order = mockOrders.find(o => o.id === id);
-      return simulateApiCall(order);
-    },
+    getById: async (id: string) =>
+      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => mockOrders.find((o) => o.id === id)),
 
-    create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) => {
-      const newOrder = {
-        ...order,
-        id: Math.random().toString(36).substr(2, 9),
-        orderNumber: `ORD-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      return simulateApiCall(newOrder);
-    },
+    create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) =>
+      withFallback<Order>(
+        () =>
+          fetchJson('/orders', {
+            method: 'POST',
+            body: JSON.stringify(order),
+          }),
+        async () => ({
+          ...order,
+          id: Math.random().toString(36).slice(2, 11),
+          orderNumber: `ORD-${Date.now()}`,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }),
+      ),
   },
 
   customers: {
-    getAll: async () => {
-      return simulateApiCall(mockCustomers);
-    },
+    getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), () => simulateApiCall(mockCustomers)),
 
-    getById: async (id: string) => {
-      const customer = mockCustomers.find(c => c.id === id);
-      return simulateApiCall(customer);
-    },
+    getById: async (id: string) =>
+      withFallback<Customer | undefined>(async () => {
+        const customers = await fetchJson<Customer[]>('/customers');
+        return customers.find((c) => c.id === id);
+      }, async () => mockCustomers.find((c) => c.id === id)),
   },
 
   payment: {
-    getMethods: async () => {
-      return simulateApiCall(paymentMethods);
-    },
+    getMethods: async () => simulateApiCall(paymentMethods),
   },
 };

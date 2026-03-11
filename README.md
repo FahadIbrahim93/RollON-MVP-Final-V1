@@ -60,7 +60,11 @@ See `rollon-app/.env.example`:
 
 | Variable | Description |
 |----------|-------------|
-| `VITE_API_URL` | Backend API URL |
+| `VITE_API_BASE_URL` | Frontend API base path (default `/api`) |
+| `VITE_USE_REMOTE_API` | Set `true` to use Vercel serverless + Upstash |
+| `RollON_Database_KV_REST_API_URL` | Upstash REST endpoint for serverless API |
+| `RollON_Database_KV_REST_API_TOKEN` | Upstash REST write token (server-side only) |
+| `ROLLON_ADMIN_SEED_TOKEN` | Protects `/api/admin/seed` endpoint |
 | `VITE_SSLCOMMERZ_*` | Payment gateway (Bangladesh) |
 | `VITE_BKASH_*` | bKash payment |
 | `VITE_ENABLE_DEMO_AUTH` | Set `false` in production |
@@ -83,6 +87,13 @@ rollon-app/
 ├── public/            # Static assets
 └── dist/              # Production build
 ```
+
+## 🗄️ Database
+
+- Upstash Redis-backed serverless API implemented under `/api/*`
+- Key schema documented in `docs/database-architecture.md`
+- Catalog research notes (Facebook metadata + data sourcing): `docs/catalog-research.md`
+- React frontend can use remote API or local fallback mode
 
 ## 🔐 Security
 
