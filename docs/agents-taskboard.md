@@ -17,6 +17,8 @@ Deliver a reliable, production-safe commerce backend on Vercel + Upstash with de
 | T3 | Harden order write validation and customer aggregation | T1 | Agent | Completed |
 | T4 | Add endpoint smoke verification script with HTTP-like traces | T2,T3 | Agent | Completed |
 | T5 | Update documentation and research notes | T1-T4 | Agent | Completed |
+| T6 | Expand serverless tests to 12+ edge/failure paths | T3,T4 | Agent | Completed |
+| T7 | Add production hardening checklist with evidence | T1-T6 | Agent | Completed |
 
 ## Logbook Protocol
 - Entry format: `Task ID | UTC time | Summary | Evidence command | Acceptance result`
@@ -28,3 +30,6 @@ Deliver a reliable, production-safe commerce backend on Vercel + Upstash with de
 - `T3 | 2026-03-11T03:53Z | Added order payload validation + cumulative customer upsert behavior | node scripts/smoke-serverless.mjs | ✅`
 - `T4 | 2026-03-11T03:53Z | Added script to execute serverless handlers with request/response traces | node scripts/smoke-serverless.mjs | ✅`
 - `T5 | 2026-03-11T03:54Z | Updated architecture, research, and handoff docs | rg -n "seed|taskboard|catalog" docs README.md | ✅`
+
+- `T6 | 2026-03-11T16:40Z | Expanded handler test coverage beyond 12 cases | node --test api/__tests__/handlers.test.js | ✅`
+- `T7 | 2026-03-11T16:41Z | Added production hardening checklist with deployment guidance | rg -n "hardening|rollback|observability" docs/production-hardening.md | ✅`

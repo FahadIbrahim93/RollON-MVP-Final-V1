@@ -167,3 +167,38 @@ test('orders route rejects unsupported methods', async () => {
 
   assert.equal(res.statusCode, 405);
 });
+
+
+test('GET /products by slug returns a single product', async () => {
+  const res = createRes();
+  await productsHandler({ method: 'GET', query: { slug: 'alpha' } }, res);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.payload.slug, 'alpha');
+});
+
+test('GET /products uses safe defaults for invalid page and limit', async () => {
+  const res = createRes();
+  await productsHandler({ method: 'GET', query: { page: '0', limit: 'abc' } }, res);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.payload.page, 1);
+  assert.equal(res.payload.limit, 50);
+});
+
+test('GET /products search can return zero results with stable schema', async () => {
+  const res = createRes();
+  await productsHandler({ method: 'GET', query: { search: 'nonexistent-keyword' } }, res);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.payload.total, 0);
+  assert.equal(res.payload.items.length, 0);
+});
+
+test('POST /orders rejects missing payload', async () => {
+  const res = createRes();
+  await ordersHandler({ method: 'POST', query: {}, body: null }, res);
+
+  assert.equal(res.statusCode, 400);
+  assert.match(res.payload.error, /Payload is required/);
+});
