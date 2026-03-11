@@ -26,6 +26,7 @@ const About = React.lazy(() => import('@/pages/About').then(m => ({ default: m.A
 const Contact = React.lazy(() => import('@/pages/Contact').then(m => ({ default: m.Contact })));
 const Login = React.lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })));
 const Register = React.lazy(() => import('@/pages/Register').then(m => ({ default: m.Register })));
+const Manifesto = React.lazy(() => import('@/pages/Manifesto').then(m => ({ default: m.Manifesto })));
 const Success = React.lazy(() => import('@/pages/Success'));
 
 // Admin Pages
@@ -60,6 +61,7 @@ function App() {
               <Route path="/checkout" element={withTransition(Checkout)} />
               <Route path="/about" element={withTransition(About)} />
               <Route path="/contact" element={withTransition(Contact)} />
+              <Route path="/manifesto" element={withTransition(Manifesto)} />
               <Route path="/login" element={withTransition(Login)} />
               <Route path="/register" element={withTransition(Register)} />
               <Route path="/success" element={withTransition(Success)} />
