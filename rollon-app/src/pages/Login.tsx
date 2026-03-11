@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
+import { useAuthStore } from '@/store/authStore';
+import { toast } from 'sonner';
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -15,6 +17,9 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const login = useAuthStore((state) => state.login);
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -22,8 +27,18 @@ export function Login() {
   });
 
   const processLogin = async (data: LoginForm) => {
-    console.log('Processing login for:', data.email); // Replace with real auth API call (Supabase/JWT)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const success = await login(data.email, data.password);
+      if (success) {
+        toast.success('Welcome back!');
+        const from = (location.state as any)?.returnTo || '/';
+        navigate(from, { replace: true });
+      } else {
+        toast.error('Invalid credentials');
+      }
+    } catch (error) {
+      toast.error('An error occurred during login');
+    }
   };
 
   return (

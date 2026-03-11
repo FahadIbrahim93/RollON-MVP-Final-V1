@@ -33,38 +33,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useOrders } from '@/hooks';
 import type { Order } from '@/types';
 import { toast } from 'sonner';
-
-const AdminSidebar = () => (
-    <aside className="w-64 bg-card border-r border-border h-screen fixed left-0 top-0 hidden lg:block">
-        <div className="p-6 border-b border-border">
-            <Link to="/admin" className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">R</span>
-                </div>
-                <span className="font-bold text-lg">RollON Admin</span>
-            </Link>
-        </div>
-        <nav className="p-4 space-y-1">
-            {[
-                { name: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
-                { name: 'Products', href: '/admin/products', icon: 'Package' },
-                { name: 'Orders', href: '/admin/orders', icon: 'ShoppingCart', active: true },
-                { name: 'Customers', href: '/admin/customers', icon: 'Users' },
-            ].map((link) => (
-                <Link
-                    key={link.name}
-                    to={link.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${link.active
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                        }`}
-                >
-                    <span>{link.name}</span>
-                </Link>
-            ))}
-        </nav>
-    </aside>
-);
+import { AdminSidebar } from '@/components/layout/AdminSidebar';
 
 const statusColors: Record<string, string> = {
     pending: 'bg-yellow-500/20 text-yellow-500',
@@ -126,12 +95,12 @@ export function AdminOrders() {
     };
 
     return (
-        <div className="min-h-screen bg-background flex">
+        <div className="min-h-screen bg-background flex flex-col lg:flex-row">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-64">
+            <main className="flex-1 lg:ml-64 pt-16 lg:pt-0">
                 {/* Header */}
-                <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-6 py-4">
+                <header className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <Link to="/admin">

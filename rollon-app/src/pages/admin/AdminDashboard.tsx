@@ -1,13 +1,10 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
-    LayoutDashboard,
     Package,
     ShoppingCart,
     Users,
     BarChart3,
-    Settings,
-    LogOut,
     TrendingUp,
     TrendingDown,
     DollarSign,
@@ -15,15 +12,22 @@ import {
     UserPlus,
     Search,
     Bell,
-    Menu,
     ChevronRight,
     MoreHorizontal,
 } from 'lucide-react';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+} from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
     Table,
     TableBody,
@@ -35,17 +39,9 @@ import {
 import { useProducts, useOrders, useCustomers } from '@/hooks';
 import type { Order } from '@/types';
 import { FadeIn } from '@/components/animations/FadeIn';
-
-const sidebarLinks = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/admin', active: true },
-    { name: 'Products', icon: Package, href: '/admin/products' },
-    { name: 'Orders', icon: ShoppingCart, href: '/admin/orders' },
-    { name: 'Customers', icon: Users, href: '/admin/customers' },
-    { name: 'Analytics', icon: BarChart3, href: '/admin/analytics' },
-    { name: 'Settings', icon: Settings, href: '/admin/settings' },
-];
-
-
+import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { aggregateAnalytics } from '@/lib/analytics';
+import { formatPrice } from '@/lib/utils';
 
 const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -59,12 +55,11 @@ const getStatusColor = (status: string) => {
 };
 
 export function AdminDashboard() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const navigate = useNavigate();
-
     const { data: products = [] } = useProducts();
     const { data: orders = [] } = useOrders();
     const { data: customers = [] } = useCustomers();
+
+    const analytics = useMemo(() => aggregateAnalytics(orders), [orders]);
 
     const stats = [
         {
@@ -101,109 +96,17 @@ export function AdminDashboard() {
         },
     ];
 
-    const handleLogout = () => {
-        // Clear any auth tokens if needed
-        navigate('/');
-    };
-
     return (
-        <div className="min-h-screen bg-background flex">
-            {/* Sidebar - Desktop */}
-            <aside className="hidden lg:flex w-64 flex-col bg-card border-r border-border fixed h-full">
-                {/* Logo */}
-                <div className="p-6 border-b border-border">
-                    <Link to="/" className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">R</span>
-                        </div>
-                        <span className="font-bold text-lg">RollON Admin</span>
-                    </Link>
-                </div>
-
-                {/* Navigation */}
-                <nav className="flex-1 p-4 space-y-1">
-                    {sidebarLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            to={link.href}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${link.active
-                                ? 'bg-primary text-primary-foreground'
-                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                                }`}
-                        >
-                            <link.icon className="h-5 w-5" />
-                            <span>{link.name}</span>
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className="p-4 border-t border-border">
-                    <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={handleLogout}
-                    >
-                        <LogOut className="h-5 w-5" />
-                        Logout
-                    </Button>
-                </div>
-            </aside>
-
-            {/* Mobile Sidebar */}
-            <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-                <SheetContent side="left" className="w-64 p-0">
-                    <div className="p-6 border-b border-border">
-                        <Link to="/" className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">R</span>
-                            </div>
-                            <span className="font-bold text-lg">RollON Admin</span>
-                        </Link>
-                    </div>
-                    <nav className="p-4 space-y-1">
-                        {sidebarLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                to={link.href}
-                                onClick={() => setIsSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${link.active
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                                    }`}
-                            >
-                                <link.icon className="h-5 w-5" />
-                                <span>{link.name}</span>
-                            </Link>
-                        ))}
-                    </nav>
-
-                    <div className="mt-auto p-4 border-t border-border">
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start gap-3 text-red-500"
-                            onClick={handleLogout}
-                        >
-                            <LogOut className="h-5 w-5" />
-                            Logout
-                        </Button>
-                    </div>
-                </SheetContent>
-            </Sheet>
+        <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+            <AdminSidebar />
 
             {/* Main Content */}
-            <main className="flex-1 lg:ml-64">
+            <main className="flex-1 lg:ml-64 pt-16 lg:pt-0">
                 {/* Header */}
-                <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-4 sm:px-6 py-4">
+                <header className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border px-4 sm:px-6 py-4">
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <Sheet>
-                                <SheetTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="lg:hidden">
-                                        <Menu className="h-5 w-5" />
-                                    </Button>
-                                </SheetTrigger>
-                            </Sheet>
-                            <h1 className="text-xl font-semibold hidden sm:block">Dashboard</h1>
+                            <h1 className="text-xl font-semibold">Dashboard</h1>
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -275,8 +178,89 @@ export function AdminDashboard() {
                         ))}
                     </div>
 
+                    {/* Main Grid: Revenue Trend & Best Sellers */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Revenue Trend Area Chart */}
+                        <FadeIn delay={0.4} className="lg:col-span-2">
+                            <Card className="bg-card/50 backdrop-blur-xl border-white/5">
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <CardTitle className="text-lg font-medium">Revenue Trend</CardTitle>
+                                    <Button variant="ghost" size="sm" asChild>
+                                        <Link to="/admin/analytics">Detailed View</Link>
+                                    </Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="h-[300px] w-full">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <AreaChart data={analytics.revenueChartData}>
+                                                <defs>
+                                                    <linearGradient id="colorRevenueDashboard" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                                                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                                                    </linearGradient>
+                                                </defs>
+                                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+                                                <XAxis
+                                                    dataKey="date"
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                                                />
+                                                <YAxis
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                                                    tickFormatter={(value) => `৳${value}`}
+                                                />
+                                                <Tooltip
+                                                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }}
+                                                    itemStyle={{ color: '#22c55e' }}
+                                                />
+                                                <Area
+                                                    type="monotone"
+                                                    dataKey="revenue"
+                                                    stroke="#22c55e"
+                                                    strokeWidth={3}
+                                                    fillOpacity={1}
+                                                    fill="url(#colorRevenueDashboard)"
+                                                />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </FadeIn>
+
+                        {/* Best Sellers Mini List */}
+                        <FadeIn delay={0.5}>
+                            <Card className="bg-card/50 backdrop-blur-xl border-white/5 h-full">
+                                <CardHeader>
+                                    <CardTitle className="text-lg font-medium">Best Sellers</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        {analytics.bestSellers.slice(0, 5).map((product) => (
+                                            <div key={product.id} className="flex items-center gap-3">
+                                                <img
+                                                    src={product.image}
+                                                    alt={product.name}
+                                                    className="w-10 h-10 rounded-lg object-cover"
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-medium text-sm truncate">{product.name}</p>
+                                                    <p className="text-xs text-muted-foreground">{product.sales} sales</p>
+                                                </div>
+                                                <p className="text-sm font-bold">{formatPrice(product.revenue)}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </FadeIn>
+                    </div>
+
                     {/* Recent Orders */}
-                    <FadeIn delay={0.4}>
+                    <FadeIn delay={0.6}>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <CardTitle>Recent Orders</CardTitle>

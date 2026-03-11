@@ -23,7 +23,7 @@ interface AuthState {
 }
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-const DEMO_AUTH_ENABLED = import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true';
+const DEMO_AUTH_ENABLED = import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true';
 
 // --- JWT Simulation Utilities ---
 const encodeMockJWT = (user: User) => {

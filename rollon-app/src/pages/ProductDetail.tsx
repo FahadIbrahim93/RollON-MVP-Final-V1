@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, Star, Truck, Shield,
@@ -22,6 +23,30 @@ export function ProductDetail() {
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
+  const productJsonLd = product ? {
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
+    name: product.name,
+    image: [product.image],
+    description: product.description,
+    sku: product.id,
+    brand: {
+      '@type': 'Brand',
+      name: 'RollON',
+    },
+    offers: {
+      '@type': 'Offer',
+      url: window.location.href,
+      priceCurrency: 'BDT',
+      price: product.price,
+      availability: product.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating,
+      reviewCount: product.reviewCount,
+    },
+  } : null;
 
   if (isLoading) {
     return (
@@ -63,6 +88,22 @@ export function ProductDetail() {
 
   return (
     <main className="min-h-screen bg-[#050505] pt-24">
+      <Helmet>
+        <title>{`${product.name} | RollON Premium`}</title>
+        <meta name="description" content={product.description} />
+        <meta property="og:title" content={`${product.name} | RollON Premium`} />
+        <meta property="og:description" content={product.description} />
+        <meta property="og:image" content={product.image} />
+        <meta property="og:type" content="product" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+
+      {productJsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(productJsonLd)}
+        </script>
+      )}
+
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] opacity-20" />
