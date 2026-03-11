@@ -74,7 +74,7 @@ export function Shop() {
               <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-black text-white tracking-tighter leading-[0.9] mb-8">
                 Elevate Your <span className="text-primary italic">Sessions.</span>
               </h1>
-              <p className="text-white/40 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed">
+              <p className="text-white/60 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed">
                 Explore our ultra-premium selection of accessories, where industrial engineering meets artisan craft.
               </p>
             </motion.div>
@@ -120,7 +120,7 @@ export function Shop() {
                   "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
                   selectedCategory === 'all'
                     ? "bg-primary text-black hover:bg-primary shadow-lg"
-                    : "text-white/40 hover:text-white hover:bg-white/5"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
                 )}
               >
                 Discover All
@@ -137,7 +137,7 @@ export function Shop() {
                     "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
                     selectedCategory === cat.slug
                       ? "bg-primary text-black hover:bg-primary shadow-lg"
-                      : "text-white/40 hover:text-white hover:bg-white/5"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
                   )}
                 >
                   {cat.name}
@@ -146,7 +146,7 @@ export function Shop() {
             </div>
 
             <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end">
-              <span className="text-white/20 text-sm font-medium tracking-wide tabular-nums">
+              <span className="text-white/50 text-sm font-medium tracking-wide tabular-nums">
                 {sortedProducts.length} <span className="text-[10px] uppercase font-black ml-1">Items Found</span>
               </span>
 
@@ -289,7 +289,7 @@ export function Shop() {
                               <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-black">{product.category}</span>
                               <div className="flex items-center gap-1">
                                 <Star className="w-3 h-3 text-primary fill-primary" />
-                                <span className="text-[10px] text-white/40 font-bold tabular-nums">{product.rating}</span>
+                                <span className="text-[10px] text-white/50 font-bold tabular-nums">{product.rating}</span>
                               </div>
                             </div>
                             <Link to={`/product/${product.slug}`}>
@@ -304,7 +304,7 @@ export function Shop() {
                               {formatPrice(product.price)}
                             </span>
                             {product.originalPrice && (
-                              <span className="text-sm text-white/20 line-through font-light tabular-nums">
+                              <span className="text-sm text-white/50 line-through font-light tabular-nums">
                                 {formatPrice(product.originalPrice)}
                               </span>
                             )}
@@ -328,7 +328,7 @@ export function Shop() {
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-3xl font-display font-black text-white tracking-tighter">Negative Match Found</h3>
-                    <p className="text-white/40 text-lg max-w-sm mx-auto">None of our current artifacts match your specific criteria. Try reframing your search.</p>
+                    <p className="text-white/60 text-lg max-w-sm mx-auto">None of our current artifacts match your specific criteria. Try reframing your search.</p>
                   </div>
                   <Button
                     onClick={() => { setSearchQuery(''); setSearchParams({}); setVisibleCount(INITIAL_VISIBLE_PRODUCTS); }}

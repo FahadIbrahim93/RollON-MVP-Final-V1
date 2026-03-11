@@ -76,7 +76,7 @@ export function Navbar() {
                     to={link.href}
                     className={cn(
                       'relative group text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-500',
-                      location.pathname === link.href ? 'text-primary' : 'text-white/40 hover:text-white'
+                      location.pathname === link.href ? 'text-primary' : 'text-white/60 hover:text-white'
                     )}
                   >
                     {link.label}
@@ -101,7 +101,8 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsSearchOpen(true)}
-                  className="w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  aria-label="Open search"
+                  className="w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   <Search className="w-5 h-5" />
                 </Button>
@@ -110,6 +111,7 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsCartOpen(true)}
+                  aria-label="Open shopping cart"
                   className="relative w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   <ShoppingBag className="w-5 h-5" />
@@ -132,6 +134,7 @@ export function Navbar() {
                   asChild
                   variant="ghost"
                   size="icon"
+                  aria-label="Go to login page"
                   className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   <Link to="/login">
@@ -142,6 +145,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="lg:hidden w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
@@ -164,7 +168,7 @@ export function Navbar() {
           >
             <div className="flex justify-between items-center p-8">
               <span className="text-xl font-display font-black text-white tracking-widest">MENU</span>
-              <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} className="w-12 h-12 rounded-2xl text-white/40">
+              <Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)} className="w-12 h-12 rounded-2xl text-white/40">
                 <X className="w-6 h-6" />
               </Button>
             </div>
@@ -217,6 +221,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Close search"
                 onClick={() => setIsSearchOpen(false)}
                 className="w-16 h-16 rounded-3xl text-white/30 hover:text-white hover:bg-white/5 transition-all"
               >
@@ -237,7 +242,7 @@ export function Navbar() {
                     <span className="text-xs font-black uppercase tracking-[0.4em]">Search Engine v4.0</span>
                   </div>
                   <h2 className="text-6xl sm:text-8xl font-display font-black text-white tracking-tighter leading-none italic uppercase">
-                    Locate <span className="text-white/20">Artifacts.</span>
+                    Locate <span className="text-white/40">Artifacts.</span>
                   </h2>
                 </div>
 
@@ -254,7 +259,7 @@ export function Navbar() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 mt-12">
-                  <span className="text-white/20 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
+                  <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
                   {['Ceramic v2', 'Titanium Trucks', 'Limited Drops', 'Manifesto'].map((tag) => (
                     <Button
                       key={tag}

@@ -139,7 +139,7 @@ export function Checkout() {
                     "flex items-center gap-3 px-6 py-3 rounded-2xl border transition-all duration-500",
                     step > index + 1 ? "bg-primary border-primary text-black" :
                       step === index + 1 ? "bg-white/5 border-white/20 text-white" :
-                        "bg-transparent border-white/5 text-white/20"
+                        "bg-transparent border-white/5 text-white/50"
                   )}>
                     <item.icon className="w-4 h-4" />
                     <span className="text-xs font-black uppercase tracking-widest">{item.label}</span>
@@ -244,7 +244,7 @@ export function Checkout() {
                               <RadioGroupItem value={pm.id} id={pm.id} className="sr-only" />
                               <div className={cn(
                                 "w-14 h-14 rounded-2xl flex items-center justify-center transition-colors duration-500",
-                                paymentMethod === pm.id ? "bg-primary text-black" : "bg-white/5 text-white/20 group-hover:bg-white/10 group-hover:text-white"
+                                paymentMethod === pm.id ? "bg-primary text-black" : "bg-white/5 text-white/50 group-hover:bg-white/10 group-hover:text-white"
                               )}>
                                 <pm.icon className="w-6 h-6" />
                               </div>
@@ -340,7 +340,7 @@ export function Checkout() {
 
                       <div className="flex justify-between items-end pt-4">
                         <div className="space-y-1">
-                          <span className="text-xs uppercase font-black tracking-[0.3em] text-white/20">Final Valuation</span>
+                          <span className="text-xs uppercase font-black tracking-[0.3em] text-white/50">Final Valuation</span>
                           <h4 className="text-white font-display text-base font-bold">Total Investment</h4>
                         </div>
                         <span className="text-5xl font-black text-white tracking-tighter tabular-nums drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
@@ -369,7 +369,7 @@ export function Checkout() {
                         </Button>
                       )}
 
-                      <div className="flex items-center justify-center gap-2 text-white/20">
+                      <div className="flex items-center justify-center gap-2 text-white/50">
                         <Lock className="w-3 h-3" />
                         <span className="text-[10px] uppercase font-bold tracking-widest">End-to-End Encryption Active</span>
                       </div>

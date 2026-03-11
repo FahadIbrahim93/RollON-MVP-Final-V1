@@ -41,7 +41,7 @@ export function FeaturedProducts() {
             <h2 className="text-5xl sm:text-7xl lg:text-8xl font-display font-black text-white tracking-tighter leading-[0.9] mb-8">
               The <span className="text-primary italic">Vanguard.</span>
             </h2>
-            <p className="text-white/40 max-w-xl text-xl font-light leading-relaxed">
+            <p className="text-white/60 max-w-xl text-xl font-light leading-relaxed">
               Curated artifacts of innovation. Engineering precision meets aesthetic transcendence in our most exclusive instruments.
             </p>
           </motion.div>
@@ -51,7 +51,7 @@ export function FeaturedProducts() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Button asChild variant="ghost" className="text-white/40 hover:text-white group pr-0 h-16 text-lg font-bold">
+            <Button asChild variant="ghost" className="text-white/60 hover:text-white group pr-0 h-16 text-lg font-bold">
               <Link to="/shop" className="flex items-center gap-3">
                 View All Products <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </Link>
@@ -140,7 +140,7 @@ export function FeaturedProducts() {
                     <div className="p-8 lg:p-10 space-y-6 flex-1 flex flex-col justify-between">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] uppercase tracking-[0.4em] text-white/20 font-black">{product.category}</span>
+                          <span className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-black">{product.category}</span>
                           <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
                             <TrendingUp className="w-3 h-3 text-primary" />
                             <span className="text-[10px] text-primary font-black tabular-nums tracking-widest uppercase">Popular</span>
@@ -155,7 +155,7 @@ export function FeaturedProducts() {
                           </h3>
                         </Link>
                         {isLarge && (
-                          <p className="text-white/40 text-lg font-light leading-relaxed line-clamp-2">
+                          <p className="text-white/60 text-lg font-light leading-relaxed line-clamp-2">
                             {product.description}
                           </p>
                         )}
@@ -170,13 +170,13 @@ export function FeaturedProducts() {
                             {formatPrice(product.price)}
                           </span>
                           {product.originalPrice && (
-                            <span className="text-base text-white/20 line-through font-light tabular-nums">
+                            <span className="text-base text-white/50 line-through font-light tabular-nums">
                               {formatPrice(product.originalPrice)}
                             </span>
                           )}
                         </div>
                         <Link to={`/product/${product.slug}`}>
-                          <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/40 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-500">
+                          <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/60 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-500">
                             <ArrowRight className="w-5 h-5" />
                           </div>
                         </Link>

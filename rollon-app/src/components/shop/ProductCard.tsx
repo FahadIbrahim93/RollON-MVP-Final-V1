@@ -77,6 +77,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Wishlist Button */}
             <button
               onClick={handleWishlist}
+              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
               className="absolute top-3 right-3 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background"
             >
               <motion.div
@@ -108,7 +109,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 Add to Cart
               </Button>
               <Button size="icon" variant="secondary" asChild>
-                <Link to={`/product/${product.slug}`}>
+                <Link to={`/product/${product.slug}`} aria-label={`View ${product.name} details`}>
                   <Eye className="h-4 w-4" />
                 </Link>
               </Button>

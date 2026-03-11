@@ -53,7 +53,7 @@ export function Footer() {
               </span>
             </Link>
 
-            <p className="text-white/40 text-lg leading-relaxed max-w-sm font-light">
+            <p className="text-white/60 text-lg leading-relaxed max-w-sm font-light">
               Engineering the future of smoking accessories. We blend technical precision with aesthetic excellence to redefine the industry standard.
             </p>
 
@@ -63,7 +63,7 @@ export function Footer() {
                   key={social.label}
                   href={social.href}
                   whileHover={{ y: -5, color: '#4ade80' }}
-                  className="h-12 w-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/40 transition-all duration-300 hover:border-primary/30"
+                  className="h-12 w-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/60 transition-all duration-300 hover:border-primary/30"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -76,13 +76,13 @@ export function Footer() {
           <div className="lg:col-span-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
               <div>
-                <h4 className="text-xs font-black text-white/20 uppercase tracking-[0.3em] mb-8">Navigation</h4>
+                <h3 className="text-xs font-black text-white/50 uppercase tracking-[0.3em] mb-8">Navigation</h3>
                 <ul className="space-y-4">
                   {footerLinks.shop.map((link) => (
                     <li key={link.label}>
                       <Link
                         to={link.href}
-                        className="text-white/40 hover:text-primary transition-colors text-sm flex items-center group"
+                        className="text-white/60 hover:text-primary transition-colors text-sm flex items-center group"
                       >
                         {link.label}
                         <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-2 transition-all" />
@@ -93,13 +93,13 @@ export function Footer() {
               </div>
 
               <div>
-                <h4 className="text-xs font-black text-white/20 uppercase tracking-[0.3em] mb-8">Performance</h4>
+                <h3 className="text-xs font-black text-white/50 uppercase tracking-[0.3em] mb-8">Performance</h3>
                 <ul className="space-y-4">
                   {footerLinks.support.map((link) => (
                     <li key={link.label}>
                       <Link
                         to={link.href}
-                        className="text-white/40 hover:text-primary transition-colors text-sm flex items-center group"
+                        className="text-white/60 hover:text-primary transition-colors text-sm flex items-center group"
                       >
                         {link.label}
                         <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-2 transition-all" />
@@ -110,13 +110,13 @@ export function Footer() {
               </div>
 
               <div className="col-span-2 sm:col-span-1">
-                <h4 className="text-xs font-black text-white/20 uppercase tracking-[0.3em] mb-8">Corporate</h4>
+                <h3 className="text-xs font-black text-white/50 uppercase tracking-[0.3em] mb-8">Corporate</h3>
                 <ul className="space-y-4">
                   {footerLinks.company.map((link) => (
                     <li key={link.label}>
                       <Link
                         to={link.href}
-                        className="text-white/40 hover:text-primary transition-colors text-sm flex items-center group"
+                        className="text-white/60 hover:text-primary transition-colors text-sm flex items-center group"
                       >
                         {link.label}
                         <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-2 transition-all" />
@@ -133,19 +133,19 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-white/20 text-[10px] font-black uppercase tracking-widest">
+            <p className="text-white/50 text-[10px] font-black uppercase tracking-widest">
               © 2024 RollON Global Dynamics.
             </p>
-            <div className="flex items-center gap-2 text-white/20 text-[10px] font-bold">
+            <div className="flex items-center gap-2 text-white/50 text-[10px] font-bold">
               <ShieldCheck className="h-3 w-3 text-primary/40" />
               SECURED BY ENTERPRISE ENCRYPTION
             </div>
           </div>
 
           <div className="flex items-center gap-8">
-            <Link to="/privacy" className="text-white/20 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
-            <Link to="/terms" className="text-white/20 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
-            <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest">
+            <Link to="/privacy" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
+            <Link to="/terms" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
+            <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[10px] font-black uppercase tracking-widest">
               STATUS: <span className="text-primary">OPERATIONAL</span>
             </div>
           </div>

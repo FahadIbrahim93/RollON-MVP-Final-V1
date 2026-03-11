@@ -109,13 +109,14 @@ export function CartDrawer() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={`Remove ${item.name} from cart`}
                             onClick={() => removeItem(item.productId)}
-                            className="w-8 h-8 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                            className="w-8 h-8 text-white/50 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mt-1">Foundry ID: #{item.productId.slice(0, 8)}</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50 mt-1">Foundry ID: #{item.productId.slice(0, 8)}</p>
                       </div>
 
                       <div className="flex items-center justify-between mt-4">
@@ -123,8 +124,9 @@ export function CartDrawer() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label="Decrease quantity"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            className="h-8 w-8 rounded-lg text-white/40 hover:text-white"
+                            className="h-8 w-8 rounded-lg text-white/60 hover:text-white"
                           >
                             <Minus className="w-3 h-3" />
                           </Button>
@@ -134,8 +136,9 @@ export function CartDrawer() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label="Increase quantity"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                            className="h-8 w-8 rounded-lg text-white/40 hover:text-white"
+                            className="h-8 w-8 rounded-lg text-white/60 hover:text-white"
                           >
                             <Plus className="w-3 h-3" />
                           </Button>
@@ -159,16 +162,16 @@ export function CartDrawer() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-4 bg-white/[0.02] rounded-2xl border border-white/5">
                   <ShieldCheck className="w-5 h-5 text-primary" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40 italic">Secure Protocol</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/60 italic">Secure Protocol</span>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white/[0.02] rounded-2xl border border-white/5">
                   <Truck className="w-5 h-5 text-primary" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40 italic">Elite Dispatch</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/60 italic">Elite Dispatch</span>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between text-white/40 text-sm font-medium">
+                <div className="flex items-center justify-between text-white/60 text-sm font-medium">
                   <span>Gross Allocation</span>
                   <span className="tabular-nums">{formatPrice(totalPrice)}</span>
                 </div>
@@ -184,7 +187,7 @@ export function CartDrawer() {
                 <Separator className="bg-white/5" />
 
                 <div className="flex items-center justify-between pt-2">
-                  <span className="text-white/40 font-black uppercase tracking-widest text-xs italic">Awaiting Settlement</span>
+                  <span className="text-white/60 font-black uppercase tracking-widest text-xs italic">Awaiting Settlement</span>
                   <span className="text-4xl font-display font-black text-white tracking-tighter tabular-nums italic">
                     {formatPrice(totalPrice)}
                   </span>
@@ -201,7 +204,7 @@ export function CartDrawer() {
                 <Button
                   variant="ghost"
                   onClick={clearCart}
-                  className="w-full text-white/20 hover:text-red-500 hover:bg-red-500/5 font-black tracking-widest text-[10px] uppercase"
+                  className="w-full text-white/50 hover:text-red-500 hover:bg-red-500/5 font-black tracking-widest text-[10px] uppercase"
                 >
                   PURGE CASE
                 </Button>

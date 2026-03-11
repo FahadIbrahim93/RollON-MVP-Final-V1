@@ -66,7 +66,7 @@ export function Newsletter() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-white/40 text-lg max-w-xl mx-auto font-light"
+                  className="text-white/60 text-lg max-w-xl mx-auto font-light"
                 >
                   Subscribe to receive drop alerts, engineering deep-dives, and exclusive member-only pricing.
                 </motion.p>
@@ -115,7 +115,7 @@ export function Newsletter() {
                   </Button>
                 </div>
 
-                <p className="mt-6 text-[10px] text-white/20 uppercase tracking-[0.2em] font-bold">
+                <p className="mt-6 text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold">
                   ENCRYPTED TRANSMISSION • ZERO SPAM POLICY
                 </p>
               </motion.form>

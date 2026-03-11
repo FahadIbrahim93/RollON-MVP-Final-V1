@@ -47,7 +47,7 @@ export function Testimonials() {
             <h2 className="text-5xl sm:text-7xl lg:text-8xl font-display font-black text-white tracking-tighter leading-[0.9] mb-8">
               Verified <span className="text-primary italic">Perspectives.</span>
             </h2>
-            <p className="text-white/40 text-xl font-light leading-relaxed max-w-2xl">
+            <p className="text-white/60 text-xl font-light leading-relaxed max-w-2xl">
               Authentic feedback from our elite circle of enthusiasts. Precision, aesthetics, and performance validated by the community.
             </p>
           </motion.div>
@@ -103,9 +103,9 @@ export function Testimonials() {
                           </div>
                         </div>
                         <div>
-                          <h4 className="text-2xl font-display font-black text-white tracking-tight">
+                          <h3 className="text-2xl font-display font-black text-white tracking-tight">
                             {testimonials[currentIndex].name}
-                          </h4>
+                          </h3>
                           <span className="text-sm text-primary font-bold uppercase tracking-widest">Verified Collector</span>
                         </div>
                       </div>
@@ -127,10 +127,10 @@ export function Testimonials() {
                 ].map((stat) => (
                   <div key={stat.label} className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center justify-between group/stat">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 group-hover/stat:bg-primary group-hover/stat:text-black transition-all duration-500">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/60 group-hover/stat:bg-primary group-hover/stat:text-black transition-all duration-500">
                         <stat.icon className="w-5 h-5" />
                       </div>
-                      <span className="text-sm font-medium text-white/40">{stat.label}</span>
+                      <span className="text-sm font-medium text-white/60">{stat.label}</span>
                     </div>
                     <span className="text-xl font-black text-white tracking-tighter tabular-nums">{stat.value}</span>
                   </div>
@@ -143,7 +143,7 @@ export function Testimonials() {
                 variant="outline"
                 size="icon"
                 onClick={prevSlide}
-                className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/40 hover:text-white transition-all shadow-xl"
+                className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/60 hover:text-white transition-all shadow-xl"
               >
                 <ChevronLeft className="w-6 h-6" />
               </Button>
@@ -151,23 +151,29 @@ export function Testimonials() {
                 variant="outline"
                 size="icon"
                 onClick={nextSlide}
-                className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/40 hover:text-white transition-all shadow-xl"
+                className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/60 hover:text-white transition-all shadow-xl"
               >
                 <ChevronRight className="w-6 h-6" />
               </Button>
 
               <div className="flex-1" />
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {testimonials.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentIndex(index)}
+                    aria-label={`Go to testimonial ${index + 1}`}
                     className={cn(
-                      "h-1.5 transition-all duration-700 rounded-full",
-                      index === currentIndex ? "w-10 bg-primary" : "w-1.5 bg-white/10 hover:bg-white/20"
+                      "h-6 w-6 flex items-center justify-center transition-all duration-700 rounded-full",
+                      index === currentIndex ? "bg-primary" : "bg-white/10 hover:bg-white/20"
                     )}
-                  />
+                  >
+                    <span className={cn(
+                      "block rounded-full transition-all",
+                      index === currentIndex ? "w-3 h-3 bg-black" : "w-1.5 h-1.5 bg-white/40"
+                    )} />
+                  </button>
                 ))}
               </div>
             </div>

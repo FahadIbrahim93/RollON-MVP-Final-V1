@@ -85,7 +85,7 @@ export default function Success() {
                         <h1 className="text-6xl sm:text-8xl font-display font-black text-white tracking-tighter italic leading-none">
                             ACQUISITION <span className="text-primary underline decoration-primary/20 underline-offset-8">SECURED.</span>
                         </h1>
-                        <p className="text-white/40 text-xl font-light max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-white/60 text-xl font-light max-w-2xl mx-auto leading-relaxed">
                             Your artifacts have been authenticated and added to the dispatch queue. A confirmation certificate has been sent to your terminal.
                         </p>
                     </div>
@@ -102,20 +102,20 @@ export default function Success() {
                         <div className="grid md:grid-cols-2 gap-12 relative z-10 text-left">
                             <div className="space-y-8">
                                 <div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/30 mb-2 italic">Foundry Manifest ID</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 mb-2 italic">Foundry Manifest ID</h3>
                                     <p className="text-3xl font-display font-black text-white tracking-tight tabular-nums">{orderId}</p>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-8">
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-1">Status</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50 mb-1">Status</h3>
                                         <div className="flex items-center gap-2">
                                             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                                             <span className="text-sm font-bold text-primary uppercase tracking-widest">In Foundry</span>
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-1">Dispatch</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50 mb-1">Dispatch</h3>
                                         <div className="flex items-center gap-2 text-white/60">
                                             <Globe className="w-3.5 h-3.5" />
                                             <span className="text-sm font-bold uppercase tracking-widest">Global Priority</span>
@@ -127,12 +127,12 @@ export default function Success() {
                             <div className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 flex flex-col justify-between group-hover:bg-white/[0.05] transition-all duration-500">
                                 <div className="flex items-start justify-between">
                                     <div className="p-3 bg-white/5 rounded-2xl">
-                                        <Package className="w-6 h-6 text-white/40" />
+                                        <Package className="w-6 h-6 text-white/60" />
                                     </div>
                                     <Sparkles className="w-5 h-5 text-primary animate-pulse" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/20 mb-1 italic">ETA Terminal</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/50 mb-1 italic">ETA Terminal</h3>
                                     <p className="text-2xl font-display font-black text-white tracking-tight uppercase">24 - 48 Hours</p>
                                 </div>
                             </div>
@@ -140,15 +140,15 @@ export default function Success() {
 
                         <div className="mt-12 pt-12 border-t border-white/5 flex flex-wrap items-center justify-between gap-6">
                             <div className="flex items-center gap-6">
-                                <Button variant="ghost" className="text-white/40 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
+                                <Button variant="ghost" className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
                                     <Printer className="w-4 h-4" /> Print Receipt
                                 </Button>
-                                <Button variant="ghost" className="text-white/40 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
+                                <Button variant="ghost" className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
                                     <Share2 className="w-4 h-4" /> Share Access
                                 </Button>
                             </div>
                             <div className="text-right">
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-1 block italic underline decoration-primary/20">Authorized Security</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 mb-1 block italic underline decoration-primary/20">Authorized Security</span>
                                 <p className="text-[9px] font-mono text-white/10 tracking-widest truncate max-w-[200px]">AUTH_SIG: B82X-091L-Z991-P011</p>
                             </div>
                         </div>
@@ -166,7 +166,7 @@ export default function Success() {
                                 Return to Shop <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                             </Link>
                         </Button>
-                        <Button asChild variant="ghost" size="lg" className="rounded-full text-white/40 hover:text-white font-bold h-16 px-10">
+                        <Button asChild variant="ghost" size="lg" className="rounded-full text-white/60 hover:text-white font-bold h-16 px-10">
                             <Link to="/">Homepage Vision</Link>
                         </Button>
                     </motion.div>

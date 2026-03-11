@@ -77,7 +77,7 @@ export function Features() {
                 </div>
                 <div>
                   <div className="text-2xl font-black text-white">10K+</div>
-                  <div className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">Trusted Reviews</div>
+                  <div className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold">Trusted Reviews</div>
                 </div>
               </motion.div>
             </div>
@@ -102,7 +102,7 @@ export function Features() {
                 className="text-4xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight tracking-tighter"
               >
                 CRAFTED FOR THE <br />
-                <span className="text-white/20">ELITE ENTHUSIAST.</span>
+                <span className="text-white/50">ELITE ENTHUSIAST.</span>
               </motion.h2>
             </div>
 
@@ -119,7 +119,7 @@ export function Features() {
                       <div className="flex items-start gap-6">
                         <div className="relative">
                           <div className="h-14 w-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/20 transition-all duration-500">
-                            <feature.icon className="h-6 w-6 text-white/40 group-hover:text-primary transition-colors" />
+                            <feature.icon className="h-6 w-6 text-white/60 group-hover:text-primary transition-colors" />
                           </div>
                           {/* Step number decorator */}
                           <span className="absolute -top-2 -right-2 text-[10px] font-black text-white/10 group-hover:text-primary/30 transition-colors">
@@ -130,7 +130,7 @@ export function Features() {
                           <h3 className="text-lg font-bold text-white tracking-tight group-hover:translate-x-1 transition-transform">
                             {feature.title}
                           </h3>
-                          <p className="text-sm text-white/40 leading-relaxed max-w-sm">
+                          <p className="text-sm text-white/60 leading-relaxed max-w-sm">
                             {feature.description}
                           </p>
                         </div>
