@@ -12,6 +12,25 @@ const API_DELAY = 300;
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const USE_REMOTE = import.meta.env.VITE_USE_REMOTE_API === 'true';
 
+
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const persisted = window.localStorage.getItem('rollon-auth');
+    if (!persisted) {
+      return null;
+    }
+
+    const parsed = JSON.parse(persisted) as { state?: { token?: string | null } };
+    return parsed?.state?.token ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const simulateApiCall = <T>(data: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => resolve(data), API_DELAY);
@@ -19,10 +38,13 @@ const simulateApiCall = <T>(data: T): Promise<T> => {
 };
 
 const fetchJson = async <T>(path: string, init?: RequestInit): Promise<T> => {
+  const token = getAuthToken();
+
   const response = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(init?.headers || {}),
     },
   });

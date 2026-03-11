@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
+import { useAuthStore } from '@/store';
+import { toast } from 'sonner';
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -16,14 +18,26 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const login = useAuthStore((state) => state.login);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     mode: 'onTouched'
   });
 
   const processLogin = async (data: LoginForm) => {
-    console.log('Processing login for:', data.email); // Replace with real auth API call (Supabase/JWT)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const isLoggedIn = await login(data.email, data.password);
+
+    if (!isLoggedIn) {
+      toast.error('Unable to sign in. Please verify your credentials and try again.');
+      return;
+    }
+
+    const returnTo = (location.state as { returnTo?: string } | null)?.returnTo;
+    navigate(returnTo && returnTo.startsWith('/') ? returnTo : '/');
+    toast.success('Signed in successfully.');
   };
 
   return (
@@ -123,7 +137,7 @@ export function Login() {
             {/* Divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/40 text-sm">or</span>
+              <span className="text-white/60 text-sm">or</span>
               <div className="flex-1 h-px bg-white/10" />
             </div>
 
