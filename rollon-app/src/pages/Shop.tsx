@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Link, useSearchParams } from 'react-router-dom';
@@ -23,10 +23,6 @@ export function Shop() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
 
-  useEffect(() => {
-    setVisibleCount(12);
-  }, [selectedCategory, searchQuery, sortBy]);
-
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const addItem = useCartStore((state) => state.addItem);
@@ -34,14 +30,22 @@ export function Shop() {
   const { data: products = [], isLoading: isProductsLoading } = useProducts();
   const { data: categories = [] } = useCategories();
 
+  const selectedCategoryId = useMemo(() => {
+    if (selectedCategory === 'all') {
+      return null;
+    }
+
+    return categories.find((category) => category.slug === selectedCategory)?.id ?? null;
+  }, [categories, selectedCategory]);
+
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+      const matchesCategory = selectedCategoryId === null || product.categoryId === selectedCategoryId;
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [products, selectedCategoryId, searchQuery]);
 
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
@@ -109,7 +113,10 @@ export function Shop() {
                   type="text"
                   placeholder="Find your aesthetic..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setVisibleCount(12);
+                  }}
                   className="pl-11 pr-4 py-6 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 focus-visible:border-primary/50 transition-all text-white placeholder:text-white/20"
                 />
               </div>
@@ -127,7 +134,10 @@ export function Shop() {
             <div className="hidden lg:flex items-center gap-2 p-1.5 bg-white/[0.03] border border-white/10 rounded-[1.25rem]">
               <Button
                 variant="ghost"
-                onClick={() => setSearchParams({})}
+                onClick={() => {
+                  setSearchParams({});
+                  setVisibleCount(12);
+                }}
                 className={cn(
                   "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
                   selectedCategory === 'all'
@@ -141,7 +151,10 @@ export function Shop() {
                 <Button
                   key={cat.id}
                   variant="ghost"
-                  onClick={() => setSearchParams({ category: cat.slug })}
+                  onClick={() => {
+                    setSearchParams({ category: cat.slug });
+                    setVisibleCount(12);
+                  }}
                   className={cn(
                     "rounded-xl px-6 h-10 text-sm font-bold tracking-tight transition-all",
                     selectedCategory === cat.slug
@@ -163,7 +176,10 @@ export function Shop() {
                 <div className="relative group min-w-[200px]">
                   <select
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={(e) => {
+                      setSortBy(e.target.value);
+                      setVisibleCount(12);
+                    }}
                     className="w-full h-12 bg-white/[0.03] border border-white/10 rounded-2xl px-6 text-sm font-bold text-white/60 hover:text-white hover:border-primary/30 appearance-none focus:outline-none transition-all cursor-pointer"
                   >
                     {sortOptions.map((option) => (
@@ -191,7 +207,11 @@ export function Shop() {
                 <div className="py-8 grid grid-cols-2 gap-3">
                   <Button
                     variant="outline"
-                    onClick={() => { setSearchParams({}); setIsFilterVisible(false); }}
+                    onClick={() => {
+                      setSearchParams({});
+                      setVisibleCount(12);
+                      setIsFilterVisible(false);
+                    }}
                     className={cn(
                       "rounded-2xl h-14 font-bold border-white/10",
                       selectedCategory === 'all' && "bg-primary text-black border-primary"
@@ -203,7 +223,11 @@ export function Shop() {
                     <Button
                       key={cat.id}
                       variant="outline"
-                      onClick={() => { setSearchParams({ category: cat.slug }); setIsFilterVisible(false); }}
+                      onClick={() => {
+                        setSearchParams({ category: cat.slug });
+                        setVisibleCount(12);
+                        setIsFilterVisible(false);
+                      }}
                       className={cn(
                         "rounded-2xl h-14 font-bold border-white/10",
                         selectedCategory === cat.slug && "bg-primary text-black border-primary"

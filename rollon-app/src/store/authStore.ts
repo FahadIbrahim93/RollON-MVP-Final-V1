@@ -23,12 +23,13 @@ interface AuthState {
 }
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const DEMO_AUTH_ENABLED = import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true';
 
 // --- JWT Simulation Utilities ---
 const encodeMockJWT = (user: User) => {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const payload = btoa(JSON.stringify({ ...user, exp: Date.now() + 86400000 })); // 1 day
-  const signature = 'mock_signature_' + Math.random().toString(36).substr(2, 9);
+  const signature = 'mock_signature_' + Math.random().toString(36).slice(2, 11);
   return `${header}.${payload}.${signature}`;
 };
 
@@ -45,7 +46,7 @@ const decodeMockJWT = (token: string): User | null => {
       role: payload.role as 'user' | 'admin',
       avatar: payload.avatar ? String(payload.avatar) : undefined,
     };
-  } catch (e) {
+  } catch {
     return null;
   }
 };
@@ -79,13 +80,17 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false
           });
           return true;
-        } catch (error) {
+        } catch {
           set({ isLoading: false });
 
-          const demoAdminEmail = import.meta.env.VITE_DEMO_ADMIN_EMAIL || 'admin@rollon.com';
-          const demoAdminPassword = import.meta.env.VITE_DEMO_ADMIN_PASSWORD || 'admin123';
-          const demoUserEmail = import.meta.env.VITE_DEMO_USER_EMAIL || 'customer@example.com';
-          const demoUserPassword = import.meta.env.VITE_DEMO_USER_PASSWORD || 'password123';
+          const demoAdminEmail = import.meta.env.VITE_DEMO_ADMIN_EMAIL;
+          const demoAdminPassword = import.meta.env.VITE_DEMO_ADMIN_PASSWORD;
+          const demoUserEmail = import.meta.env.VITE_DEMO_USER_EMAIL;
+          const demoUserPassword = import.meta.env.VITE_DEMO_USER_PASSWORD;
+
+          if (!DEMO_AUTH_ENABLED || !demoAdminEmail || !demoAdminPassword || !demoUserEmail || !demoUserPassword) {
+            return false;
+          }
 
           if (email === demoAdminEmail && password === demoAdminPassword) {
             const user: User = { id: '1', name: 'Admin User', email: demoAdminEmail, role: 'admin' };
@@ -126,18 +131,9 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false
           });
           return true;
-        } catch (error) {
+        } catch {
           set({ isLoading: false });
-
-          const newUser: User = {
-            id: Math.random().toString(36).substr(2, 9),
-            name,
-            email,
-            role: 'user'
-          };
-          const token = encodeMockJWT(newUser);
-          set({ user: newUser, token, isAuthenticated: true, isLoading: false });
-          return true;
+          return false;
         }
       },
 
@@ -167,7 +163,7 @@ export const useAuthStore = create<AuthState>()(
             get().logout();
           }
         } catch {
-          if (token.includes('.')) {
+          if (DEMO_AUTH_ENABLED && token.includes('.')) {
             const user = decodeMockJWT(token);
             if (user) {
               set({ user, isAuthenticated: true });

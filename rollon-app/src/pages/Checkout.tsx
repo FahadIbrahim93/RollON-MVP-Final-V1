@@ -9,9 +9,9 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice, cn } from '@/lib/utils';
+import { checkoutSchema, type CheckoutForm } from '@/lib/checkoutSchema';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,19 +20,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-
-const checkoutSchema = z.object({
-  firstName: z.string().min(2, "First name is too short"),
-  lastName: z.string().min(2, "Last name is too short"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Phone number is invalid"),
-  address: z.string().min(5, "Address must be fully specified"),
-  city: z.string().min(2, "City is required"),
-  postalCode: z.string().min(4, "Postal code is required"),
-  paymentMethod: z.enum(['cod', 'bkash', 'nagad'])
-});
-
-type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 export function Checkout() {
   const items = useCartStore((state) => state.items);

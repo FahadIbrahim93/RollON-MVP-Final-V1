@@ -1,8 +1,19 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAuthStore } from '../authStore';
+
+type MockLoginPayload = {
+  user: { id: string; name: string; email: string; role: 'admin' | 'user' };
+  token: string;
+};
+
+const createFetchResponse = (ok: boolean, payload: unknown = {}) => ({
+  ok,
+  json: async () => payload,
+}) as Response;
 
 describe('authStore', () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     useAuthStore.getState().logout();
   });
 
@@ -24,7 +35,13 @@ describe('authStore', () => {
   });
 
   describe('login', () => {
-    it('should login with valid admin credentials', async () => {
+    it('should login with valid admin credentials from API', async () => {
+      const payload: MockLoginPayload = {
+        user: { id: '1', name: 'Admin User', email: 'admin@rollon.com', role: 'admin' },
+        token: 'token-admin',
+      };
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(createFetchResponse(true, payload));
+
       const { login } = useAuthStore.getState();
       const result = await login('admin@rollon.com', 'admin123');
 
@@ -33,7 +50,13 @@ describe('authStore', () => {
       expect(useAuthStore.getState().user?.role).toBe('admin');
     });
 
-    it('should login with valid user credentials', async () => {
+    it('should login with valid user credentials from API', async () => {
+      const payload: MockLoginPayload = {
+        user: { id: '2', name: 'Test Customer', email: 'customer@example.com', role: 'user' },
+        token: 'token-user',
+      };
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(createFetchResponse(true, payload));
+
       const { login } = useAuthStore.getState();
       const result = await login('customer@example.com', 'password123');
 
@@ -43,6 +66,8 @@ describe('authStore', () => {
     });
 
     it('should fail login with invalid credentials', async () => {
+      vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network failure'));
+
       const { login } = useAuthStore.getState();
       const result = await login('invalid@example.com', 'wrongpassword');
 
@@ -53,6 +78,12 @@ describe('authStore', () => {
 
   describe('register', () => {
     it('should register a new user', async () => {
+      const payload: MockLoginPayload = {
+        user: { id: '3', name: 'New User', email: 'new@example.com', role: 'user' },
+        token: 'token-register',
+      };
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(createFetchResponse(true, payload));
+
       const { register } = useAuthStore.getState();
       const result = await register('New User', 'new@example.com', 'password123');
 
@@ -61,10 +92,27 @@ describe('authStore', () => {
       expect(useAuthStore.getState().user?.name).toBe('New User');
       expect(useAuthStore.getState().user?.role).toBe('user');
     });
+
+    it('should fail registration when API fails', async () => {
+      vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network failure'));
+
+      const { register } = useAuthStore.getState();
+      const result = await register('New User', 'new@example.com', 'password123');
+
+      expect(result).toBe(false);
+      expect(useAuthStore.getState().isAuthenticated).toBe(false);
+      expect(useAuthStore.getState().user).toBeNull();
+    });
   });
 
   describe('logout', () => {
     it('should logout and clear user data', async () => {
+      const payload: MockLoginPayload = {
+        user: { id: '1', name: 'Admin User', email: 'admin@rollon.com', role: 'admin' },
+        token: 'token-admin',
+      };
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(createFetchResponse(true, payload));
+
       const { login, logout } = useAuthStore.getState();
 
       await login('admin@rollon.com', 'admin123');
@@ -79,6 +127,12 @@ describe('authStore', () => {
 
   describe('updateProfile', () => {
     it('should update user profile', async () => {
+      const payload: MockLoginPayload = {
+        user: { id: '1', name: 'Admin User', email: 'admin@rollon.com', role: 'admin' },
+        token: 'token-admin',
+      };
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(createFetchResponse(true, payload));
+
       const { login, updateProfile } = useAuthStore.getState();
 
       await login('admin@rollon.com', 'admin123');

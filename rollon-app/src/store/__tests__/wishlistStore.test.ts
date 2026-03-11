@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useWishlistStore } from '../wishlistStore';
+import type { Product } from '@/types';
 
-const mockProduct = {
+const mockProduct: Product = {
   id: '1',
   name: 'Test Product',
   price: 100,
@@ -13,6 +14,7 @@ const mockProduct = {
   rating: 4,
   reviewCount: 10,
   stock: 5,
+  inStock: true,
 };
 
 describe('wishlistStore', () => {
@@ -31,7 +33,7 @@ describe('wishlistStore', () => {
     it('should add product to wishlist', () => {
       const { addItem } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       
       const items = useWishlistStore.getState().items;
       expect(items).toHaveLength(1);
@@ -41,8 +43,8 @@ describe('wishlistStore', () => {
     it('should not add duplicate product', () => {
       const { addItem } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
-      addItem(mockProduct as any);
+      addItem(mockProduct);
+      addItem(mockProduct);
       
       const items = useWishlistStore.getState().items;
       expect(items).toHaveLength(1);
@@ -51,7 +53,7 @@ describe('wishlistStore', () => {
     it('should add date when item is added', () => {
       const { addItem } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       
       const items = useWishlistStore.getState().items;
       expect(items[0].addedAt).toBeInstanceOf(Date);
@@ -62,7 +64,7 @@ describe('wishlistStore', () => {
     it('should remove product from wishlist', () => {
       const { addItem, removeItem } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       removeItem('1');
       
       const items = useWishlistStore.getState().items;
@@ -72,8 +74,8 @@ describe('wishlistStore', () => {
     it('should not affect other items', () => {
       const { addItem, removeItem } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
-      addItem({ ...mockProduct, id: '2' } as any);
+      addItem(mockProduct);
+      addItem({ ...mockProduct, id: '2' });
       removeItem('1');
       
       const items = useWishlistStore.getState().items;
@@ -86,7 +88,7 @@ describe('wishlistStore', () => {
     it('should add item if not in wishlist', () => {
       const { toggleItem } = useWishlistStore.getState();
       
-      toggleItem(mockProduct as any);
+      toggleItem(mockProduct);
       
       const items = useWishlistStore.getState().items;
       expect(items).toHaveLength(1);
@@ -95,8 +97,8 @@ describe('wishlistStore', () => {
     it('should remove item if already in wishlist', () => {
       const { toggleItem } = useWishlistStore.getState();
       
-      toggleItem(mockProduct as any);
-      toggleItem(mockProduct as any);
+      toggleItem(mockProduct);
+      toggleItem(mockProduct);
       
       const items = useWishlistStore.getState().items;
       expect(items).toHaveLength(0);
@@ -107,7 +109,7 @@ describe('wishlistStore', () => {
     it('should return true for item in wishlist', () => {
       const { addItem, isInWishlist } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
+      addItem(mockProduct);
       
       expect(isInWishlist('1')).toBe(true);
     });
@@ -123,8 +125,8 @@ describe('wishlistStore', () => {
     it('should remove all items from wishlist', () => {
       const { addItem, clearWishlist } = useWishlistStore.getState();
       
-      addItem(mockProduct as any);
-      addItem({ ...mockProduct, id: '2' } as any);
+      addItem(mockProduct);
+      addItem({ ...mockProduct, id: '2' });
       clearWishlist();
       
       const items = useWishlistStore.getState().items;
