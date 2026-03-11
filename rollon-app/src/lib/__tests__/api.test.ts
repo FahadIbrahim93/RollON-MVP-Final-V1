@@ -10,15 +10,15 @@ describe('api', () => {
     });
 
     it('should get product by id', async () => {
-      const product = await api.products.getById('1');
+      const product = await api.products.getById('fb-1');
       expect(product).toBeDefined();
-      expect(product?.id).toBe('1');
+      expect(product?.id).toBe('fb-1');
     });
 
     it('should get product by slug', async () => {
-      const product = await api.products.getBySlug('classic-aluminium-grinder-65mm');
+      const product = await api.products.getBySlug('hb109-hot-silicon-bong');
       expect(product).toBeDefined();
-      expect(product?.slug).toBe('classic-aluminium-grinder-65mm');
+      expect(product?.slug).toBe('hb109-hot-silicon-bong');
     });
 
     it('should return undefined for non-existent product', async () => {
@@ -27,10 +27,10 @@ describe('api', () => {
     });
 
     it('should get products by category', async () => {
-      const products = await api.products.getByCategory('2');
+      const products = await api.products.getByCategory('3');
       expect(products).toBeDefined();
       expect(Array.isArray(products)).toBe(true);
-      products.forEach(p => expect(p.categoryId).toBe('2'));
+      products.forEach(p => expect(p.categoryId).toBe('3'));
     });
 
     it('should get featured products', async () => {
@@ -83,13 +83,13 @@ describe('api', () => {
     });
 
     it('should get order by id', async () => {
-      const order = await api.orders.getById('1');
+      const order = await api.orders.getById('fb-order-1');
       expect(order).toBeDefined();
     });
 
     it('should create new order', async () => {
       const newOrder = await api.orders.create({
-        customerId: '1',
+        customerId: 'fb-customer-1',
         customerName: 'Test User',
         items: [],
         total: 1000,
@@ -117,7 +117,7 @@ describe('api', () => {
     });
 
     it('should get customer by id', async () => {
-      const customer = await api.customers.getById('1');
+      const customer = await api.customers.getById('fb-customer-1');
       expect(customer).toBeDefined();
     });
   });
