@@ -7,7 +7,7 @@ import {
   MapPin, CreditCard as CardIcon, ShoppingCart
 } from 'lucide-react';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice, cn } from '@/lib/utils';
@@ -29,13 +29,16 @@ export function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
-  const { register, trigger, handleSubmit, watch, setValue, formState: { errors } } = useForm<CheckoutForm>({
+  const { register, trigger, handleSubmit, control, setValue, formState: { errors } } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: { paymentMethod: 'cod' },
     mode: 'onTouched',
   });
 
-  const paymentMethod = watch('paymentMethod');
+  const paymentMethod = useWatch({
+    control,
+    name: 'paymentMethod',
+  });
 
   const processOrder = async (data: CheckoutForm) => {
     console.log('Processing order:', data);
