@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 
 const productsHandler = require('../products');
 const ordersHandler = require('../orders');
@@ -21,14 +22,18 @@ function createRes() {
 }
 
 
-function createToken(payload) {
+function createToken(payload, secret = process.env.ROLLON_JWT_SECRET) {
   const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
-  return `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode(payload)}.signature`;
+  const encodedHeader = encode({ alg: 'HS256', typ: 'JWT' });
+  const encodedPayload = encode(payload);
+  const signature = crypto.createHmac('sha256', secret).update(`${encodedHeader}.${encodedPayload}`).digest('base64url');
+  return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
 function installFetchMock() {
   process.env.RollON_Database_KV_REST_API_URL = 'https://mock.upstash.io';
   process.env.RollON_Database_KV_REST_API_TOKEN = 'mock-token';
+  process.env.ROLLON_JWT_SECRET = 'test-secret';
 
   const dataset = {
     products: [
@@ -255,6 +260,28 @@ test('GET /customers requires admin role token', async () => {
 });
 
 
+test('GET /customers returns 500 when jwt secret is not configured', async () => {
+  const res = createRes();
+  const token = createToken({ sub: '1', role: 'admin' });
+  delete process.env.ROLLON_JWT_SECRET;
+
+  await customersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${token}` } }, res);
+
+  assert.equal(res.statusCode, 500);
+  assert.equal(res.payload.error, 'ROLLON_JWT_SECRET is not configured');
+});
+
+test('GET /orders returns 500 when jwt secret is not configured', async () => {
+  const res = createRes();
+  const token = createToken({ sub: '1', role: 'admin' });
+  delete process.env.ROLLON_JWT_SECRET;
+
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${token}` } }, res);
+
+  assert.equal(res.statusCode, 500);
+  assert.equal(res.payload.error, 'ROLLON_JWT_SECRET is not configured');
+});
+
 test('GET /orders rejects malformed bearer token', async () => {
   const res = createRes();
   await ordersHandler({ method: 'GET', query: {}, headers: { authorization: 'Bearer not-a-jwt' } }, res);
@@ -272,6 +299,18 @@ test('GET /orders rejects expired admin token', async () => {
   assert.equal(res.statusCode, 403);
   assert.equal(res.payload.error, 'Admin access required');
   assert.ok(res.payload.requestId);
+});
+
+test('GET /orders rejects forged signature token', async () => {
+  const res = createRes();
+  const encodedHeader = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const encodedPayload = Buffer.from(JSON.stringify({ sub: '1', role: 'admin' })).toString('base64url');
+  const forged = `${encodedHeader}.${encodedPayload}.forged-signature`;
+
+  await ordersHandler({ method: 'GET', query: {}, headers: { authorization: `Bearer ${forged}` } }, res);
+
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.payload.error, 'Admin access required');
 });
 
 test('auth errors include propagated request id', async () => {

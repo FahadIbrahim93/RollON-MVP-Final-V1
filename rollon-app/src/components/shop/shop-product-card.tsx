@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,8 @@ interface ShopProductCardProps {
 }
 
 export function ShopProductCard({ product, index, onAddToCart }: ShopProductCardProps) {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       layout
@@ -40,8 +42,15 @@ export function ShopProductCard({ product, index, onAddToCart }: ShopProductCard
 
           {/* Interaction Overlay */}
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4 z-20">
-            <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-primary px-8 font-black tracking-tight">
-              <Link to={`/product/${product.slug}`}>VIEW SPECIFICATIONS</Link>
+            <Button
+              size="lg"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(`/product/${product.slug}`);
+              }}
+              className="rounded-full bg-white text-black hover:bg-primary px-8 font-black tracking-tight"
+            >
+              VIEW SPECIFICATIONS
             </Button>
             <Button
               variant="ghost"
@@ -73,7 +82,7 @@ export function ShopProductCard({ product, index, onAddToCart }: ShopProductCard
         <div className="p-8 space-y-4 flex-1 flex flex-col justify-between">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-black">{product.category}</span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-white/60 font-black">{product.category}</span>
               <div className="flex items-center gap-1">
                 <Star className="w-3 h-3 text-primary fill-primary" />
                 <span className="text-[10px] text-white/50 font-bold tabular-nums">{product.rating}</span>

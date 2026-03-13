@@ -12,7 +12,7 @@ const navLinks = [
   { label: 'Collections', href: '/shop' },
   { label: 'Engineering', href: '/about' },
   { label: 'Support', href: '/contact' },
-  { label: 'Manifesto', href: '/manifesto' },
+  { label: 'Featured', href: '/shop' },
 ];
 
 export function Navbar() {
@@ -115,7 +115,7 @@ export function Navbar() {
                   size="icon"
                   onClick={() => setIsCartOpen(true)}
                   aria-label="Open shopping cart"
-                  className="relative w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  className="relative w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   <ShoppingBag className="w-5 h-5" />
                   <AnimatePresence>
@@ -138,7 +138,7 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   aria-label="Go to login page"
-                  className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   <Link to="/login">
                     <User className="w-5 h-5" />
@@ -150,7 +150,7 @@ export function Navbar() {
                   size="icon"
                   aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="lg:hidden w-12 h-12 rounded-2xl text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  className="lg:hidden w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 >
                   {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </Button>
@@ -171,7 +171,7 @@ export function Navbar() {
           >
             <div className="flex justify-between items-center p-8">
               <span className="text-xl font-display font-black text-white tracking-widest">MENU</span>
-              <Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)} className="w-12 h-12 rounded-2xl text-white/40">
+              <Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)} className="w-12 h-12 rounded-2xl text-white/60">
                 <X className="w-6 h-6" />
               </Button>
             </div>
@@ -200,7 +200,7 @@ export function Navbar() {
             </div>
 
             <div className="p-8 border-t border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white/40">
+              <div className="flex items-center gap-2 text-white/60">
                 <Globe className="w-4 h-4 text-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest">Global Dispatch</span>
               </div>
@@ -246,7 +246,7 @@ export function Navbar() {
                     <span className="text-xs font-black uppercase tracking-[0.4em]">Search Engine v4.0</span>
                   </div>
                   <h2 className="text-6xl sm:text-8xl font-display font-black text-white tracking-tighter leading-none italic uppercase">
-                    Locate <span className="text-white/40">Artifacts.</span>
+                    Locate <span className="text-white/60">Artifacts.</span>
                   </h2>
                 </div>
 
@@ -263,13 +263,13 @@ export function Navbar() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 mt-12">
-                  <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
+                  <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
                   {['Ceramic v2', 'Titanium Trucks', 'Limited Drops', 'Manifesto'].map((tag) => (
                       <Link
                         key={tag}
-                        to={`/products?q=${encodeURIComponent(tag)}`} // Assuming a search query for trending products
-                        aria-current={location.pathname === `/products?q=${encodeURIComponent(tag)}` ? "page" : undefined}
-                        className={cn("rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/40 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase")}
+                        to={`/shop?search=${encodeURIComponent(tag)}`}
+                        aria-current={location.pathname === '/shop' ? "page" : undefined}
+                        className={cn("rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/60 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase")}
                     >
                       {tag}
                     </Link>

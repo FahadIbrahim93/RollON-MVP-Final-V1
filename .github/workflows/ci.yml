@@ -1,73 +1,72 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  lint-and-test:
+  frontend-quality:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [rollon-app]
+    defaults:
+      run:
+        working-directory: ./rollon-app
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        cache-dependency-path: '${{ matrix.project }}/package-lock.json'
-        
-    - name: Install Dependencies
-      working-directory: ./${{ matrix.project }}
-      run: npm ci
-      
-    - name: Lint
-      working-directory: ./${{ matrix.project }}
-      run: npm run lint
+      - uses: actions/checkout@v4
 
-    - name: Run Tests
-      working-directory: ./${{ matrix.project }}
-      run: npm run test -- --run --coverage
-      
-    - name: Build
-      working-directory: ./${{ matrix.project }}
-      run: npm run build
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: rollon-app/package-lock.json
 
-  security-audit:
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test -- --run
+
+      - name: Build
+        run: npm run build
+
+  api-quality:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [rollon-app]
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        cache-dependency-path: '${{ matrix.project }}/package-lock.json'
-        
-    - name: Install Dependencies
-      working-directory: ./${{ matrix.project }}
-      run: npm ci
-      
-    - name: Audit Dependencies
-      working-directory: ./${{ matrix.project }}
-      run: npm audit --audit-level=high
-      continue-on-error: true
-      
-    - name: Check for vulnerabilities
-      working-directory: ./${{ matrix.project }}
-      run: |
-        npm audit --json > audit-results.json || true
-        if grep -q '"vulnerabilities"' audit-results.json; then
-          echo "Security vulnerabilities found!"
-          cat audit-results.json
-          exit 1
-        fi
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Run API handler tests
+        run: node --test api/__tests__/handlers.test.js
+
+      - name: Run serverless smoke checks
+        run: node scripts/smoke-serverless.mjs
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./rollon-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: rollon-app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies (high+)
+        run: npm audit --audit-level=high

@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useSearchParams } from 'react-router-dom';
@@ -20,12 +20,40 @@ import { ShopProductCard } from '@/components/shop/shop-product-card';
 export function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCategory = searchParams.get('category') || 'all';
-  const [searchQuery, setSearchQuery] = useState('');
+  const selectedSearch = searchParams.get('search') || '';
+  const [searchQuery, setSearchQuery] = useState(selectedSearch);
   const [sortBy, setSortBy] = useState('featured');
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_PRODUCTS);
 
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setSearchQuery(selectedSearch);
+  }, [selectedSearch]);
+
+  const updateParams = (next: { category?: string; search?: string }) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (next.category !== undefined) {
+      if (next.category === 'all' || !next.category) {
+        params.delete('category');
+      } else {
+        params.set('category', next.category);
+      }
+    }
+
+    if (next.search !== undefined) {
+      const trimmed = next.search.trim();
+      if (!trimmed) {
+        params.delete('search');
+      } else {
+        params.set('search', trimmed);
+      }
+    }
+
+    setSearchParams(params);
+  };
 
   const addItem = useCartStore((state) => state.addItem);
 
@@ -93,7 +121,9 @@ export function Shop() {
                   placeholder="Find your aesthetic..."
                   value={searchQuery}
                   onChange={(e) => {
-                    setSearchQuery(e.target.value);
+                    const nextQuery = e.target.value;
+                    setSearchQuery(nextQuery);
+                    updateParams({ search: nextQuery });
                     setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                   }}
                   className="pl-11 pr-4 py-6 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 focus-visible:border-primary/50 transition-all text-white placeholder:text-white/20"
@@ -114,7 +144,7 @@ export function Shop() {
               <Button
                 variant="ghost"
                 onClick={() => {
-                  setSearchParams({});
+                  updateParams({ category: 'all' });
                   setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                 }}
                 className={cn(
@@ -131,7 +161,7 @@ export function Shop() {
                   key={cat.id}
                   variant="ghost"
                   onClick={() => {
-                    setSearchParams({ category: cat.slug });
+                    updateParams({ category: cat.slug });
                     setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                   }}
                   className={cn(
@@ -187,7 +217,7 @@ export function Shop() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setSearchParams({});
+                      updateParams({ category: 'all' });
                       setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                       setIsFilterVisible(false);
                     }}
@@ -203,7 +233,7 @@ export function Shop() {
                       key={cat.id}
                       variant="outline"
                       onClick={() => {
-                        setSearchParams({ category: cat.slug });
+                        updateParams({ category: cat.slug });
                         setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                         setIsFilterVisible(false);
                       }}

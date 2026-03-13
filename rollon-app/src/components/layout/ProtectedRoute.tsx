@@ -14,7 +14,7 @@ import { useAuthStore } from '@/store';
 
 interface ProtectedRouteProps {
     children: ReactNode;
-    role?: 'admin' | 'customer';
+    role?: 'admin' | 'user';
 }
 
 export const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, role }) => {

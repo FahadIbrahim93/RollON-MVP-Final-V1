@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { useAuthStore } from '@/store';
 
-function renderWithRoutes(initialEntry: string, role?: 'admin' | 'customer') {
+function renderWithRoutes(initialEntry: string, role?: 'admin' | 'user') {
   return render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <Routes>
