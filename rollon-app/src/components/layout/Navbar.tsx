@@ -61,7 +61,7 @@ export function Navbar() {
                 <span className="text-2xl font-display font-black text-white tracking-widest leading-none">
                   ROLL<span className="text-primary italic">ON</span>
                 </span>
-                <span className="text-[8px] font-black text-white/30 tracking-[0.4em] uppercase leading-none mt-1">Foundry Excellence</span>
+                <span className="text-[8px] font-black text-white/60 tracking-[0.4em] uppercase leading-none mt-1">Foundry Excellence</span>
               </div>
             </Link>
 
@@ -227,7 +227,7 @@ export function Navbar() {
                 size="icon"
                 aria-label="Close search"
                 onClick={() => setIsSearchOpen(false)}
-                className="w-16 h-16 rounded-3xl text-white/30 hover:text-white hover:bg-white/5 transition-all"
+                className="w-16 h-16 rounded-3xl text-white/60 hover:text-white hover:bg-white/5 transition-all"
               >
                 <X className="w-8 h-8" />
               </Button>

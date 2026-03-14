@@ -290,7 +290,7 @@ export function Checkout() {
                                 <p className={cn("text-lg font-black tracking-tight transition-colors", paymentMethod === pm.id ? "text-white" : "text-white/60")}>
                                   {pm.label}
                                 </p>
-                                <p className="text-sm text-white/30 font-light">{pm.desc}</p>
+                                <p className="text-sm text-white/60 font-light">{pm.desc}</p>
                               </div>
                               <div className={cn(
                                 "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
@@ -325,7 +325,7 @@ export function Checkout() {
                               </div>
                               <div className="flex-1 space-y-1">
                                 <h4 className="text-white font-bold tracking-tight">{item.name}</h4>
-                                <p className="text-white/30 text-xs tracking-widest uppercase font-black">Quantity: {item.quantity}</p>
+                                <p className="text-white/60 text-xs tracking-widest uppercase font-black">Quantity: {item.quantity}</p>
                               </div>
                               <p className="text-white font-black tracking-tighter text-lg">{formatPrice(item.price * item.quantity)}</p>
                             </div>
@@ -420,7 +420,7 @@ export function Checkout() {
                       </div>
                       <div className="space-y-1">
                         <p className="text-xs font-black text-white uppercase tracking-tight">Purchase Integrity</p>
-                        <p className="text-[10px] text-white/30 leading-relaxed font-light">All acquisitions are protected by our elite buyer integrity protocol and 30-day seamless reconciliation policy.</p>
+                        <p className="text-[10px] text-white/60 leading-relaxed font-light">All acquisitions are protected by our elite buyer integrity protocol and 30-day seamless reconciliation policy.</p>
                       </div>
                     </div>
                   </div>
