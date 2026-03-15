@@ -4,6 +4,8 @@ A high-performance, accessible, and secure e-commerce storefront and admin ecosy
 
 ## 🚀 Key Features
 - **Modern Tech Stack**: React 19, Vite 7, TypeScript 5.9.
+- **Premium User Accounts**: Cinematic Account & Rewards dashboard with points and tier tracking.
+- **Robust Auth Flow**: Seamless API integration with resilient local fallback and automatic customer provisioning.
 - **Micro-Animations**: Fluid motion design powered by Framer Motion 12.
 - **Atomic Architecture**: Optimized components for maximum performance and reusability.
 - **Enterprise Security**: Upstash-backed serverless API and zero-trust data handling.
@@ -32,8 +34,8 @@ npm run build
 
 ## ✅ Quality Standards
 We maintain a strict "Zero Warning" baseline:
-- `npm run lint` — ESLint strict scrutiny.
-- `npm test -- --run` — 63/63 passing Vitest suite.
+- `npm run lint` — ESLint strict scrutiny (0 errors/0 warnings).
+- `npm test -- --run` — 87/87 passing Vitest suite.
 - `npm run build` — Verified build stability.
 
 ## ♿ Accessibility Compliance
