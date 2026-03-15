@@ -99,7 +99,7 @@ export function ProductDetail() {
         <div className="px-4 sm:px-6 lg:px-12 xl:px-20 py-8">
           <Link
             to="/shop"
-            className="group inline-flex items-center gap-2 text-white/40 hover:text-white transition-all duration-300"
+            className="group inline-flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300"
           >
             <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-primary/50 group-hover:bg-primary/10 transition-all">
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
@@ -192,10 +192,10 @@ export function ProductDetail() {
                         )}
                       />
                     ))}
-                    <span className="ml-2 text-white/40 font-medium">{product.rating}</span>
+                    <span className="ml-2 text-white/60 font-medium">{product.rating}</span>
                   </div>
                   <Separator orientation="vertical" className="h-4 bg-white/10" />
-                  <span className="text-white/40 font-medium tracking-wide">
+                  <span className="text-white/60 font-medium tracking-wide">
                     {product.reviewCount} <span className="text-xs uppercase ml-1">Reviews</span>
                   </span>
                 </div>
@@ -223,7 +223,7 @@ export function ProductDetail() {
               <div className="space-y-8 pt-6 border-t border-white/5">
                 <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
                   <div className="space-y-3">
-                    <span className="text-xs uppercase tracking-widest text-white/40 font-bold">Quantity</span>
+                    <span className="text-xs uppercase tracking-widest text-white/60 font-bold">Quantity</span>
                     <div className="flex items-center gap-2 p-1.5 bg-white/[0.03] border border-white/10 rounded-2xl">
                       <Button
                   variant="outline"
@@ -302,7 +302,7 @@ export function ProductDetail() {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-white tracking-tight">{feature.text}</h4>
-                      <p className="text-xs text-white/30">{feature.desc}</p>
+                      <p className="text-xs text-white/60">{feature.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -321,7 +321,7 @@ export function ProductDetail() {
                   You May Also <span className="text-primary italic">Like</span>
                 </h2>
               </div>
-              <Button asChild variant="ghost" className="text-white/40 hover:text-white group pr-0">
+              <Button asChild variant="ghost" className="text-white/60 hover:text-white group pr-0">
                 <Link to="/shop" className="flex items-center gap-2">
                   View full collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -349,7 +349,7 @@ export function ProductDetail() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-bold">{related.category}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-white/60 font-bold">{related.category}</p>
                       <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1 tracking-tight">
                         {related.name}
                       </h3>

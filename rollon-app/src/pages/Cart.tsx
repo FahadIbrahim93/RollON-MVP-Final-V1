@@ -47,7 +47,7 @@ export function Cart() {
             className="flex flex-col items-center justify-center py-20"
           >
             <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6">
-              <ShoppingBag className="w-10 h-10 text-white/30" />
+              <ShoppingBag className="w-10 h-10 text-white/60" />
             </div>
             <h2 className="text-2xl font-display font-semibold text-white mb-2">
               Your cart is empty
@@ -124,7 +124,7 @@ export function Cart() {
                       <motion.button
                         whileTap={{ scale: 0.9 }}
                         onClick={() => removeItem(item.productId)}
-                        className="p-2 text-white/40 hover:text-red-400 transition-colors"
+                        className="p-2 text-white/60 hover:text-red-400 transition-colors"
                       >
                         <Trash2 className="w-5 h-5" />
                       </motion.button>
@@ -143,7 +143,7 @@ export function Cart() {
               {/* Clear Cart */}
               <button
                 onClick={clearCart}
-                className="text-white/40 hover:text-white text-sm transition-colors"
+                className="text-white/60 hover:text-white text-sm transition-colors"
               >
                 Clear Cart
               </button>
@@ -196,7 +196,7 @@ export function Cart() {
                   </motion.button>
                 </Link>
 
-                <div className="flex items-center justify-center gap-2 mt-4 text-white/40 text-sm">
+                <div className="flex items-center justify-center gap-2 mt-4 text-white/60 text-sm">
                   <Truck className="w-4 h-4" />
                   Free delivery in Dhaka
                 </div>

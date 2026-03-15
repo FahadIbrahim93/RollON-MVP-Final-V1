@@ -1,26 +1,42 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
 
-const files = [
-  'rollon-app/src/components/layout/Navbar.tsx',
-  'rollon-app/src/pages/Checkout.tsx',
-  'rollon-app/src/components/shop/shop-product-card.tsx',
-  'rollon-app/src/components/ui/label.tsx',
-];
-
+const rootDir = resolve(process.cwd(), 'rollon-app/src');
 const disallowed = ['text-white/40', 'text-white/30'];
+const ignoredDirs = new Set(['assets', 'dist', 'node_modules']);
 
+async function collectTsxFiles(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (!ignoredDirs.has(entry.name)) {
+        files.push(...await collectTsxFiles(fullPath));
+      }
+      continue;
+    }
+
+    if (entry.isFile() && fullPath.endsWith('.tsx')) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
+const tsxFiles = await collectTsxFiles(rootDir);
 const violations = [];
 
-for (const file of files) {
-  const fullPath = resolve(process.cwd(), file);
-  const content = await readFile(fullPath, 'utf8');
+for (const file of tsxFiles) {
+  const content = await readFile(file, 'utf8');
   const lines = content.split('\n');
 
   lines.forEach((line, index) => {
     for (const token of disallowed) {
       if (line.includes(token)) {
-        violations.push(`${file}:${index + 1} contains ${token}`);
+        violations.push(`${file.replace(process.cwd() + '/', '')}:${index + 1} contains ${token}`);
       }
     }
   });
@@ -34,4 +50,4 @@ if (violations.length > 0) {
   process.exit(1);
 }
 
-console.log('Contrast token check passed for guarded UI files.');
+console.log(`Contrast token check passed across ${tsxFiles.length} TSX files.`);

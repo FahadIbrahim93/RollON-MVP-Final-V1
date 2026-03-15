@@ -39,7 +39,7 @@ export function CartDrawer() {
                 </SheetTitle>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">{totalItems} items</span>
+                  <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">{totalItems} items</span>
                 </div>
               </div>
             </div>
@@ -59,7 +59,7 @@ export function CartDrawer() {
                 <h3 className="text-3xl font-display font-black text-white tracking-tight italic uppercase">
                   Your cart is empty
                 </h3>
-                <p className="text-white/30 text-lg font-light max-w-[250px] mx-auto leading-relaxed">
+                <p className="text-white/60 text-lg font-light max-w-[250px] mx-auto leading-relaxed">
                   Your acquisition tray is currently unpopulated. Explore our latest foundry drops.
                 </p>
               </div>

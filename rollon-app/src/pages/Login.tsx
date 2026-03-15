@@ -76,11 +76,11 @@ export function Login() {
               <div>
                 <label className="block text-white/60 text-sm mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
                     {...register('email')}
                     type="email"
-                    className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/30 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
+                    className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
                     placeholder="you@example.com"
                   />
                 </div>
@@ -91,18 +91,18 @@ export function Login() {
               <div>
                 <label className="block text-white/60 text-sm mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
                     {...register('password')}
                     type={showPassword ? 'text' : 'password'}
-                    className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/30 focus:outline-none transition-colors ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
+                    className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
