@@ -67,6 +67,27 @@ All code changes must comply with WCAG 2.1 AA standards:
 
 ## Code Style
 
+## Agent Code of Conduct & Anti-Hallucination Guardrails
+To prevent regressions, broken mock features, and code duplication, ALL AGENTS MUST adhere to these strict rules:
+
+### 1. No "Dummy" UIs
+- NEVER implement a UI element that looks functional but does not work (e.g., an input field without an `onSubmit` or `onChange` handler).
+- If building out a form or search bar, it MUST be fully wired up (e.g., routing to `/shop?search=query`).
+- If you build a button, it MUST have an `onClick` or function as a proper `<Link>`.
+
+### 2. No Ghost Assets (404 Prevention)
+- Do NOT reference images or assets in code (e.g., `src/data/products.ts`) that do not exist in the repository (`public/images/`).
+- Always check the `public/images` directory before hardcoding image paths.
+
+### 3. Kill Prototype/Mock Crutches Promptly
+- Mock data files (`products.ts`) and "fake auth" fallbacks (`VITE_ENABLE_DEMO_AUTH`) are for early prototyping ONLY.
+- When shifting to a production mindset, these fallback mechanisms MUST be removed or explicitly disabled. Do not leave "silent failures" that show mock data when the real API drops. 
+- DUPLICATE DATA IS BANNED: Never create redundant files like `products_main.ts` when `products.ts` exists. Update the single source of truth.
+
+### 4. Catch-All Routing
+- SPAs must always handle unknown routes proactively. Ensure `App.tsx` has a fallback `*` route pointing to a styled `404 Not Found` page.
+
+
 ### Component Structure
 ```tsx
 // Imports

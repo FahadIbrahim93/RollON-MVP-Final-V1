@@ -32,7 +32,11 @@ Deliver a reliable, production-safe commerce backend on Vercel + Upstash with de
 | T18 | Update 10/10 roadmap to 30/60/90 execution model | T16,T17 | Agent | Completed |
 | T19 | Refresh CTO audit with evidence-backed 10+ dimension scoring and hardening plan | T16-T18 | Agent | Completed |
 | T20 | Execute autonomous audit sweep and publish updated CTO scorecard with closure table | T19 | Agent | Completed |
-
+| T21 | Implement functional Navbar search routing to /shop?search={query} | T20 | Agent | Pending |
+| T22 | Clean up missing/404 image assets in mock data | T20 | Agent | Pending |
+| T23 | Remove duplicate mock data files & disable demo auth fallback | T21,T22 | Agent | Pending |
+| T24 | Implement global 404 Not Found route catch-all | T20 | Agent | Pending |
+| T25 | Implement Interactive Admin Analytics (Phase 6) | T23 | Agent | Pending |
 ## Logbook Protocol
 - Entry format: `Task ID | UTC time | Summary | Evidence command | Acceptance result`
 - Required evidence: at least one executable command output.
