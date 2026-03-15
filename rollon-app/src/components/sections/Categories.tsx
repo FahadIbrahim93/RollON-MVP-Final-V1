@@ -46,7 +46,7 @@ export function Categories() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-white/40 text-lg max-w-xl mx-auto font-light leading-relaxed"
+            className="text-white/60 text-lg max-w-xl mx-auto font-light leading-relaxed"
           >
             Navigate through our specialized domains. Each category is a gateway to precision-engineered gear.
           </motion.p>

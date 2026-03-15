@@ -10,9 +10,11 @@ import {
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
 import { formatPrice, cn } from '@/lib/utils';
 import { checkoutSchema, type CheckoutForm } from '@/lib/checkoutSchema';
 import { Footer } from '@/components/layout/Footer';
+import { useCreateOrder } from '@/hooks/useApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 export function Checkout() {
   const items = useCartStore((state) => state.items);
@@ -28,6 +31,8 @@ export function Checkout() {
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const user = useAuthStore((state) => state.user);
+  const createOrderMutation = useCreateOrder();
 
   const { register, trigger, handleSubmit, control, setValue, formState: { errors } } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
@@ -46,17 +51,42 @@ export function Checkout() {
   });
 
   const processOrder = async (data: CheckoutForm) => {
-    void data;
     setIsProcessing(true);
+
+    const customerName = `${data.firstName} ${data.lastName}`.trim();
+
     try {
-      // TODO: Replace with real API call
-      await new Promise((resolve) => setTimeout(resolve, 2500));
-      setIsProcessing(false);
+      await createOrderMutation.mutateAsync({
+        customerId: user?.id ?? `guest-${Date.now()}`,
+        customerName,
+        total: totalPrice,
+        status: 'pending',
+        paymentStatus: 'pending',
+        paymentMethod: data.paymentMethod,
+        items: items.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image,
+        })),
+        shippingAddress: {
+          name: customerName,
+          address: data.address,
+          city: data.city,
+          phone: data.phone,
+          zone: city || undefined,
+        },
+      });
+
       setIsComplete(true);
       clearCart();
+      toast.success('Order placed successfully.');
     } catch (error) {
-      setIsProcessing(false);
       console.error('Order processing failed:', error);
+      toast.error('Order failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -79,7 +109,7 @@ export function Checkout() {
           </div>
           <div className="space-y-2">
             <h1 className="text-4xl font-display font-black text-white tracking-tighter">Your Vault is Empty</h1>
-            <p className="text-white/40 text-lg">You haven't added any premium artifacts to your collection yet.</p>
+            <p className="text-white/60 text-lg">You haven't added any premium artifacts to your collection yet.</p>
           </div>
           <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-primary px-12 h-14 font-black">
             <Link to="/shop">Explore Collection</Link>
@@ -103,7 +133,7 @@ export function Checkout() {
           </div>
           <div className="space-y-4">
             <h1 className="text-5xl font-display font-black text-white tracking-tighter">Order Confirmed</h1>
-            <p className="text-white/40 text-xl font-light leading-relaxed">
+            <p className="text-white/60 text-xl font-light leading-relaxed">
               Your acquisition has been logged. Our logistics team is preparing your premium items for dispatch.
             </p>
           </div>
@@ -127,7 +157,7 @@ export function Checkout() {
 
       <div className="relative z-10">
         <div className="px-4 sm:px-6 lg:px-12 xl:px-20 py-8">
-          <Link to="/cart" className="group inline-flex items-center gap-2 text-white/40 hover:text-white transition-all">
+          <Link to="/cart" className="group inline-flex items-center gap-2 text-white/60 hover:text-white transition-all">
             <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-bold tracking-widest uppercase">Review Cart</span>
           </Link>
@@ -172,42 +202,42 @@ export function Checkout() {
                       >
                         <div className="space-y-2">
                           <h2 className="text-4xl font-display font-black text-white tracking-tighter">Shipping Architecture</h2>
-                          <p className="text-white/40 font-light">Specify the destination for your acquisition.</p>
+                          <p className="text-white/60 font-light">Specify the destination for your acquisition.</p>
                         </div>
 
                         <div className="grid sm:grid-cols-2 gap-8">
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">First Name</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">First Name</Label>
                             <Input {...register('firstName')} placeholder="John" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.firstName && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.firstName.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">Last Name</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Last Name</Label>
                             <Input {...register('lastName')} placeholder="Doe" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.lastName && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.lastName.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">Secure Email</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Secure Email</Label>
                             <Input {...register('email')} type="email" placeholder="john@example.com" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.email && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.email.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">Phone Number</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Phone Number</Label>
                             <Input {...register('phone')} type="tel" placeholder="+880 1XXX XXXXXX" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.phone && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.phone.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">Precise Address</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Precise Address</Label>
                             <Input {...register('address')} placeholder="House, Road, Area" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.address && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.address.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">City Hub</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">City Hub</Label>
                             <Input {...register('city')} placeholder="Dhaka" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.city && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.city.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/30 font-bold ml-1">Postal Code</Label>
+                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Postal Code</Label>
                             <Input {...register('postalCode')} placeholder="1212" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.postalCode && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.postalCode.message}</p>}
                           </div>
@@ -225,7 +255,7 @@ export function Checkout() {
                       >
                         <div className="space-y-2">
                           <h2 className="text-4xl font-display font-black text-white tracking-tighter">Payment Protocol</h2>
-                          <p className="text-white/40 font-light">Select your preferred transaction gateway.</p>
+                          <p className="text-white/60 font-light">Select your preferred transaction gateway.</p>
                         </div>
 
                         <RadioGroup
@@ -260,7 +290,7 @@ export function Checkout() {
                                 <p className={cn("text-lg font-black tracking-tight transition-colors", paymentMethod === pm.id ? "text-white" : "text-white/60")}>
                                   {pm.label}
                                 </p>
-                                <p className="text-sm text-white/30 font-light">{pm.desc}</p>
+                                <p className="text-sm text-white/60 font-light">{pm.desc}</p>
                               </div>
                               <div className={cn(
                                 "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
@@ -284,7 +314,7 @@ export function Checkout() {
                       >
                         <div className="space-y-2">
                           <h2 className="text-4xl font-display font-black text-white tracking-tighter">Final Verification</h2>
-                          <p className="text-white/40 font-light">Confirm the details of your order.</p>
+                          <p className="text-white/60 font-light">Confirm the details of your order.</p>
                         </div>
 
                         <div className="space-y-4 p-8 bg-white/[0.02] border border-white/5 rounded-[2rem] backdrop-blur-sm">
@@ -295,7 +325,7 @@ export function Checkout() {
                               </div>
                               <div className="flex-1 space-y-1">
                                 <h4 className="text-white font-bold tracking-tight">{item.name}</h4>
-                                <p className="text-white/30 text-xs tracking-widest uppercase font-black">Quantity: {item.quantity}</p>
+                                <p className="text-white/60 text-xs tracking-widest uppercase font-black">Quantity: {item.quantity}</p>
                               </div>
                               <p className="text-white font-black tracking-tighter text-lg">{formatPrice(item.price * item.quantity)}</p>
                             </div>
@@ -334,12 +364,12 @@ export function Checkout() {
 
                     <div className="space-y-6 mb-10">
                       <div className="flex justify-between items-center group/line">
-                        <span className="text-white/40 text-sm font-medium tracking-wide">Artifact Subtotal</span>
+                        <span className="text-white/60 text-sm font-medium tracking-wide">Artifact Subtotal</span>
                         <div className="flex-1 border-b border-white/5 mx-4 border-dotted" />
                         <span className="text-white font-bold tabular-nums tracking-tight">{formatPrice(totalPrice)}</span>
                       </div>
                       <div className="flex justify-between items-center group/line">
-                        <span className="text-white/40 text-sm font-medium tracking-wide">Logistics & Handling</span>
+                        <span className="text-white/60 text-sm font-medium tracking-wide">Logistics & Handling</span>
                         <div className="flex-1 border-b border-white/5 mx-4 border-dotted" />
                         <Badge variant="outline" className="text-[10px] font-black tracking-[0.2em] border-primary/20 text-primary bg-primary/5 uppercase px-3">Complimentary</Badge>
                       </div>
@@ -390,7 +420,7 @@ export function Checkout() {
                       </div>
                       <div className="space-y-1">
                         <p className="text-xs font-black text-white uppercase tracking-tight">Purchase Integrity</p>
-                        <p className="text-[10px] text-white/30 leading-relaxed font-light">All acquisitions are protected by our elite buyer integrity protocol and 30-day seamless reconciliation policy.</p>
+                        <p className="text-[10px] text-white/60 leading-relaxed font-light">All acquisitions are protected by our elite buyer integrity protocol and 30-day seamless reconciliation policy.</p>
                       </div>
                     </div>
                   </div>

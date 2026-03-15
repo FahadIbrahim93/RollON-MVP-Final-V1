@@ -102,7 +102,7 @@ export default function Success() {
                         <div className="grid md:grid-cols-2 gap-12 relative z-10 text-left">
                             <div className="space-y-8">
                                 <div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 mb-2 italic">Foundry Manifest ID</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/60 mb-2 italic">Foundry Manifest ID</h3>
                                     <p className="text-3xl font-display font-black text-white tracking-tight tabular-nums">{orderId}</p>
                                 </div>
 

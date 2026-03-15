@@ -9,6 +9,7 @@ npm test -- --run
 npm run build
 popd >/dev/null
 
-node --test "$ROOT_DIR/api/__tests__/handlers.test.js"
+node --test "$ROOT_DIR/api/__tests__/handlers.test.js" "$ROOT_DIR/api/__tests__/contracts.test.js"
+node "$ROOT_DIR/scripts/check-bundle-budget.mjs"
 
 echo "Verification completed successfully."

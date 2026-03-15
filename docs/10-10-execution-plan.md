@@ -1,42 +1,46 @@
-# RollON 10/10 Brainstorm + Execution Plan (Autonomous)
+# RollON 10/10 Production Execution Plan (Updated)
 
-## Brainstorm Outcomes (Critical Paths)
-1. **Trust boundary first**: no 10/10 state is possible until route guarding and API auth are consistent.
-2. **Checkout/admin reliability**: critical revenue and operations paths need end-to-end tests.
-3. **Operational confidence**: release pipeline should reject regressions automatically.
-4. **Accessibility as release gate**: WCAG AA cannot be optional polish.
+Date: 2026-03-12
+Owner: Engineering
 
-## Evidence-Based Priorities
-- Route guard was hardcoded to unauthenticated constants, blocking admin access.
-- Login/register pages used placeholders instead of app auth store flows.
-- Build reproducibility depended on fresh install discipline.
+## Stage 1 — Inventory & Blockers (completed)
+1. Branch + repo health verified (`main` protections assumed external, active feature branch in use).
+2. CI config exists but had failure-prone checks (coverage dependency drift, weak audit gate logic).
+3. Frontend quality gates exist and run locally (`lint`, `test --run`, `build`).
+4. API tests and smoke scripts exist but were not fully wired into CI.
+5. Security scans were partially implemented; static analysis gate (CodeQL) missing.
+6. Docs exist (README, audit docs, hardening docs), but plan needed 30/60/90 alignment.
 
-## Plan to 10/10 (Prioritized)
+## Updated Roadmap to 10/10
 
-### P0 (done in this pass)
-- [x] Replace hardcoded route-guard auth constants with Zustand selectors.
-- [x] Wire login and registration pages to real `authStore` methods.
-- [x] Remove auth placeholder console logs and simulated waits.
-- [x] Raise low-contrast UI text usage on login/register divider labels.
-- [x] Add regression tests for protected route behavior.
+### 0–30 Days (stability + trust boundary)
+- [x] Harden API auth to verify JWT signatures and reject forged tokens.
+- [x] Replace checkout simulation with real order API mutation path.
+- [x] Fix route/query consistency for Shop search links.
+- [x] Wire API unit tests + smoke checks into CI.
+- [x] Refactor CI to deterministic gates: lint, tests, build, API tests, smoke, dependency audit.
+- [x] Add CodeQL workflow for continuous SAST.
 
-### P1 (next)
-- [ ] Add serverless middleware for authN/authZ on sensitive API routes.
-- [ ] Add Playwright E2E for login→admin guard and checkout completion.
-- [ ] Introduce one-command repo verification script from root.
+### 30–60 Days (confidence + depth)
+- [ ] Add Playwright E2E suite for critical paths: login guard, checkout submit, admin access denial.
+- [ ] Add frontend coverage reporting and enforce threshold gate (target 80% global, 95% critical flows).
+- [ ] Add accessibility checks (axe/lighthouse CI) as required PR gate.
+- [ ] Add performance budgets (bundle size + route-level budget checks).
 
-### P2 (hardening)
-- [ ] Add bundle budget checks for admin analytics chunk.
-- [ ] Add structured API logging + correlation IDs.
-- [ ] Add production runbook and rollback checklist.
+### 60–90 Days (operational maturity)
+- [ ] Add structured observability: Sentry + correlation IDs + alert routing.
+- [ ] Publish rollback runbook and canary/recovery protocol with drill evidence.
+- [ ] Add dependency governance (Dependabot + monthly review cadence + SBOM export).
+- [ ] Add incident response templates and production readiness sign-off checklist.
 
-## Autonomous Completion Sweep Log
-| Item | Status | Verification |
-|---|---|---|
-| ProtectedRoute selector-based auth | ✅ Completed | Unit tests + lint/build |
-| Login/Register connected to store auth | ✅ Completed | Vitest + build |
-| Protected route regression tests | ✅ Completed | `ProtectedRoute.test.tsx` |
-| WCAG contrast improvement (or label) | ✅ Completed | Code inspection + lint |
+## Acceptance Criteria for “10/10 Ready”
+- CI green on every PR: lint, unit/integration tests, build, API smoke, security scan.
+- No critical/high open security findings.
+- Coverage threshold met and enforced.
+- Critical e2e user journeys are deterministic and passing.
+- Accessibility + performance budgets pass in CI.
+- Rollback and monitoring docs exist and are exercised.
 
-## Blockers / Unknowns
-- Backend auth endpoints (`/auth/login`, `/auth/register`, `/auth/me`) are assumed external; full 10/10 auth requires end-to-end backend contract validation.
+## Known Constraints / Risks
+- Local environment blocks installing additional npm packages from registry (`403`), so some tooling upgrades may need CI-only rollout or internal mirror.
+- Audit endpoint availability may vary by network policy; CodeQL helps maintain baseline security coverage.

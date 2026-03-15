@@ -219,7 +219,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="text-xl text-white/40 max-w-lg leading-relaxed font-light"
+              className="text-xl text-white/60 max-w-lg leading-relaxed font-light"
             >
               Experience the pinnacle of craftmanship. Our limited-edition accessories combine futuristic materials with timeless design.
             </motion.p>
@@ -263,7 +263,7 @@ export function Hero() {
                     <badge.icon className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-widest">{badge.text}</span>
                   </div>
-                  <p className="text-[10px] text-white/30 ml-6 uppercase tracking-wider">{badge.sub}</p>
+                  <p className="text-[10px] text-white/60 ml-6 uppercase tracking-wider">{badge.sub}</p>
                 </div>
               ))}
             </motion.div>
@@ -330,7 +330,7 @@ export function Hero() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-20"
       >
         <div className="w-[1px] h-12 bg-gradient-to-t from-primary to-transparent" />
-        <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold">Scroll Down</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-white/60 font-bold">Scroll Down</span>
       </motion.div>
 
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10" />
