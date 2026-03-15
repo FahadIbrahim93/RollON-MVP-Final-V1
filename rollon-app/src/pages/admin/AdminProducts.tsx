@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/table';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useProducts, useCategories } from '@/hooks';
+import { useProducts, useCategories, useCreateProduct, useUpdateProduct, useDeleteProduct } from '@/hooks';
 import type { Product, Category } from '@/types';
 import { toast } from 'sonner';
 
@@ -90,6 +90,9 @@ export function AdminProducts() {
 
     const { data: products = [] } = useProducts();
     const { data: categories = [] } = useCategories();
+    const createProduct = useCreateProduct();
+    const updateProduct = useUpdateProduct();
+    const deleteProduct = useDeleteProduct();
 
     // Filter products
     const filteredProducts = products.filter((product: Product) => {
@@ -107,7 +110,7 @@ export function AdminProducts() {
     );
 
     const handleAdd = () => {
-        setFormData({ name: '', description: '', price: 0, category: '', stock: 0 });
+        setFormData({ name: '', description: '', price: 0, category: '', stock: 0, image: '' });
         setIsAddDialogOpen(true);
     };
 
@@ -121,14 +124,58 @@ export function AdminProducts() {
         setIsDeleteDialogOpen(true);
     };
 
-    const confirmDelete = () => {
-        toast.success(`Product "${selectedProduct?.name}" deleted successfully`);
-        setIsDeleteDialogOpen(false);
+    const confirmDelete = async () => {
+        if (!selectedProduct) return;
+        try {
+            await deleteProduct.mutateAsync(selectedProduct.id);
+            toast.success(`Product "${selectedProduct.name}" deleted successfully`);
+            setIsDeleteDialogOpen(false);
+        } catch {
+            toast.error('Failed to delete product');
+        }
     };
 
-    const saveProduct = () => {
-        toast.success('Product saved successfully');
-        setIsAddDialogOpen(false);
+    const saveProduct = async () => {
+        try {
+            if (formData.id) {
+                // Update existing
+                await updateProduct.mutateAsync({
+                    id: formData.id,
+                    updates: formData
+                });
+                toast.success('Product updated successfully');
+            } else {
+                // Create new
+                const categoryObj = categories.find(c => c.name === formData.category);
+                const newProduct: Product = {
+                    ...formData as Product,
+                    id: `prod-${Date.now()}`,
+                    slug: formData.name?.toLowerCase().replace(/ /g, '-') || `prod-${Date.now()}`,
+                    categoryId: categoryObj?.id || '6',
+                    image: formData.image || '/images/products/richer-papers.png', // Default placeholder
+                    inStock: (formData.stock || 0) > 0,
+                    rating: 0,
+                    reviewCount: 0,
+                    featured: false
+                };
+                await createProduct.mutateAsync(newProduct);
+                toast.success('Product created successfully');
+            }
+            setIsAddDialogOpen(false);
+        } catch {
+            toast.error('Failed to save product');
+        }
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData({ ...formData, image: reader.result as string });
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const getStockStatus = (stock: number) => {
@@ -353,9 +400,24 @@ export function AdminProducts() {
                         </div>
                         <div>
                             <Label>Product Image</Label>
-                            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center bg-muted/50">
-                                <ImageIcon className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                                <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
+                            <div className="relative border-2 border-dashed border-border rounded-lg p-8 text-center bg-muted/50 hover:bg-muted/80 transition-colors">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                                {formData.image && formData.image !== '/images/products/placeholder.png' ? (
+                                    <div className="flex flex-col items-center">
+                                        <img src={formData.image} alt="Preview" className="h-32 object-contain mb-4 rounded-md" />
+                                        <p className="text-sm text-foreground">Click or drag to change image</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <ImageIcon className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                                        <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

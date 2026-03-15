@@ -1,0 +1,85 @@
+[0m[0m
+[0m[4mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx[24m[0m
+[0m  [2m73:20[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:73:20[0m
+[0m  71 |               className="absolute w-1 h-1 bg-primary/40 rounded-full"[0m
+[0m  72 |               initial={{[0m
+[0m> 73 |                 x: Math.random() * window.innerWidth,[0m
+[0m     |                    ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  74 |                 y: Math.random() * window.innerHeight,[0m
+[0m  75 |               }}[0m
+[0m  76 |               animate={{  [2mreact-hooks/purity[22m[0m
+[0m  [2m74:20[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:74:20[0m
+[0m  72 |               initial={{[0m
+[0m  73 |                 x: Math.random() * window.innerWidth,[0m
+[0m> 74 |                 y: Math.random() * window.innerHeight,[0m
+[0m     |                    ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  75 |               }}[0m
+[0m  76 |               animate={{[0m
+[0m  77 |                 y: [null, -100],                                       [2mreact-hooks/purity[22m[0m
+[0m  [2m81:27[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:81:27[0m
+[0m  79 |               }}[0m
+[0m  80 |               transition={{[0m
+[0m> 81 |                 duration: Math.random() * 3 + 2,[0m
+[0m     |                           ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  82 |                 repeat: Infinity,[0m
+[0m  83 |                 delay: Math.random() * 2,[0m
+[0m  84 |               }}                                                      [2mreact-hooks/purity[22m[0m
+[0m  [2m83:24[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:83:24[0m
+[0m  81 |                 duration: Math.random() * 3 + 2,[0m
+[0m  82 |                 repeat: Infinity,[0m
+[0m> 83 |                 delay: Math.random() * 2,[0m
+[0m     |                        ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  84 |               }}[0m
+[0m  85 |               style={{[0m
+[0m  86 |                 left: `${Math.random() * 100}%`,                              [2mreact-hooks/purity[22m[0m
+[0m  [2m86:26[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:86:26[0m
+[0m  84 |               }}[0m
+[0m  85 |               style={{[0m
+[0m> 86 |                 left: `${Math.random() * 100}%`,[0m
+[0m     |                          ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  87 |                 top: `${Math.random() * 100}%`,[0m
+[0m  88 |               }}[0m
+[0m  89 |             />                                                                         [2mreact-hooks/purity[22m[0m
+[0m  [2m87:25[22m  [31merror[39m  Error: Cannot call impure function during render[0m
+[0m[0m
+[0m`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).[0m
+[0m[0m
+[0mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\NotFound.tsx:87:25[0m
+[0m  85 |               style={{[0m
+[0m  86 |                 left: `${Math.random() * 100}%`,[0m
+[0m> 87 |                 top: `${Math.random() * 100}%`,[0m
+[0m     |                         ^^^^^^^^^^^^^ Cannot call impure function[0m
+[0m  88 |               }}[0m
+[0m  89 |             />[0m
+[0m  90 |           ))}                                                                             [2mreact-hooks/purity[22m[0m
+[0m[0m
+[0m[4mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\pages\admin\AdminProducts.tsx[24m[0m
+[0m  [2m133:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m165:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\fhdib\Downloads\Kimi_Agent_Deployment_v1\rollon-app\src\store\databaseStore.ts[24m[0m
+[0m   [2m95:17[22m  [31merror[39m  'password' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m105:33[22m  [31merror[39m  '_' is assigned a value but never used         [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 10 problems (10 errors, 0 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m

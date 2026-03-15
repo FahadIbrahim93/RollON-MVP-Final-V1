@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, User, Menu, X, Globe, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, X, LogOut, Settings, LayoutDashboard, Globe, Sparkles } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +23,26 @@ export function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const totalItems = useCartStore((state) => state.totalItems);
   const setIsCartOpen = useCartStore((state) => state.setCartOpen);
+  const { user, isAuthenticated, logout } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    setIsUserMenuOpen(false);
+    navigate('/');
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -123,7 +143,6 @@ export function Navbar() {
                       <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-
                         exit={{ scale: 0 }}
                         className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full text-[10px] font-black text-black flex items-center justify-center border-2 border-black"
                       >
@@ -133,17 +152,85 @@ export function Navbar() {
                   </AnimatePresence>
                 </Button>
 
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Go to login page"
-                  className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
-                >
-                  <Link to="/login">
-                    <User className="w-5 h-5" />
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <div className="relative">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="w-12 h-12 rounded-2xl p-1 text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all overflow-hidden"
+                    >
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-xl" />
+                      ) : (
+                        <User className="w-5 h-5" />
+                      )}
+                    </Button>
+
+                    <AnimatePresence>
+                      {isUserMenuOpen && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-40" 
+                            onClick={() => setIsUserMenuOpen(false)} 
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className="absolute right-0 mt-2 w-56 p-2 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                          >
+                            <div className="px-4 py-3 border-b border-white/10 mb-2">
+                              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Signed in as</p>
+                              <p className="text-sm font-bold text-white truncate">{user?.name}</p>
+                              <p className="text-xs text-white/60 truncate">{user?.email}</p>
+                            </div>
+
+                            {user?.role === 'admin' && (
+                              <Link
+                                to="/admin"
+                                onClick={() => setIsUserMenuOpen(false)}
+                                className="flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 rounded-xl transition-colors mb-1"
+                              >
+                                <LayoutDashboard className="w-4 h-4" />
+                                Admin Panel
+                              </Link>
+                            )}
+
+                            <Link
+                              to="/account"
+                              onClick={() => setIsUserMenuOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors mb-1"
+                            >
+                              <Settings className="w-4 h-4" />
+                              Account Settings
+                            </Link>
+
+                            <button
+                              onClick={handleLogout}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-red-400 hover:bg-red-400/10 rounded-xl transition-colors"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              Logout
+                            </button>
+                          </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Go to login page"
+                    className="hidden sm:inline-flex w-12 h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+                  >
+                    <Link to="/login">
+                      <User className="w-5 h-5" />
+                    </Link>
+                  </Button>
+                )}
 
                 <Button
                   variant="ghost"
@@ -252,24 +339,26 @@ export function Navbar() {
 
                 <div className="relative group">
                   <Search className="absolute left-8 top-1/2 -translate-y-1/2 w-10 h-10 text-white/10 group-focus-within:text-primary transition-all duration-500" />
-                  <Input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="WHEELS / DECKS / BEARINGS / CLOTHING"
-                    autoFocus
-                    className="w-full pl-24 pr-12 py-12 rounded-[2.5rem] bg-white/[0.03] border-white/10 text-3xl h-auto placeholder:text-white/[0.05] focus:border-primary/50 focus:bg-white/[0.05] transition-all font-display font-black tracking-tight"
-                  />
+                  <form onSubmit={handleSearchSubmit} className="w-full">
+                    <Input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="VAPORIZERS / GRINDERS / ROLLING PAPERS / BONGS / OCB"
+                      autoFocus
+                      className="w-full pl-24 pr-12 py-12 rounded-[2.5rem] bg-white/[0.03] border-white/10 text-3xl h-auto placeholder:text-white/[0.05] focus:border-primary/50 focus:bg-white/[0.05] transition-all font-display font-black tracking-tight"
+                    />
+                  </form>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 mt-12">
                   <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em] w-full mb-2">Trending Products:</span>
-                  {['Ceramic v2', 'Titanium Trucks', 'Limited Drops', 'Manifesto'].map((tag) => (
-                      <Link
-                        key={tag}
-                        to={`/shop?search=${encodeURIComponent(tag)}`}
-                        aria-current={location.pathname === '/shop' ? "page" : undefined}
-                        className={cn("rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/60 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase")}
+                  {['Vaporizers', 'Grinders', 'Rolling Papers', 'Bongs', 'OCB'].map((tag) => (
+                    <Link
+                      key={tag}
+                      to={`/shop?search=${encodeURIComponent(tag)}`}
+                      aria-current={location.pathname === '/shop' ? "page" : undefined}
+                      className={cn("rounded-full bg-white/5 border-white/5 hover:border-primary/40 text-white/60 hover:text-primary px-8 py-6 h-auto transition-all font-black text-xs tracking-widest uppercase")}
                     >
                       {tag}
                     </Link>

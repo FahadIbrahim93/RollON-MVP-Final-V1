@@ -46,22 +46,25 @@ export function Cart() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center justify-center py-20"
           >
-            <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6">
-              <ShoppingBag className="w-10 h-10 text-white/60" />
+            <div className="relative mb-8">
+              <div className="w-32 h-32 bg-gradient-to-br from-gray-900 to-gray-800 rounded-full flex items-center justify-center shadow-2xl border border-white/10">
+                <ShoppingBag className="w-14 h-14 text-primary" />
+              </div>
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
             </div>
-            <h2 className="text-2xl font-display font-semibold text-white mb-2">
-              Your cart is empty
+            <h2 className="text-3xl font-display font-bold text-white mb-3">
+              Your Vault is Empty
             </h2>
-            <p className="text-white/50 mb-8">
-              Add some products to get started
+            <p className="text-white/50 mb-10 text-lg max-w-md text-center">
+              Discover our premium selection of artifacts to elevate your collection
             </p>
             <Link to="/shop">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-green-400 to-green-500 rounded-full text-black font-semibold"
+                className="px-10 py-5 bg-gradient-to-r from-[#39FF14] to-green-400 rounded-full text-black font-bold text-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
               >
-                Continue Shopping
+                Browse Collection
               </motion.button>
             </Link>
           </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -30,6 +30,14 @@ export function Register() {
     resolver: zodResolver(registerSchema),
     mode: 'onTouched'
   });
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const processRegister = async (data: RegisterForm) => {
     const isRegistered = await registerUser(data.name, data.email, data.password);

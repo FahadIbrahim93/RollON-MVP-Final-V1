@@ -1,11 +1,5 @@
-import {
-  products as mockProducts,
-  categories as mockCategories,
-  testimonials as mockTestimonials,
-  orders as mockOrders,
-  customers as mockCustomers,
-  paymentMethods,
-} from '../data/products';
+import { testimonials as mockTestimonials, paymentMethods } from '../data/products';
+import { useDatabaseStore } from '../store/databaseStore';
 import type { Category, Customer, Order, Product, Testimonial } from '@/types';
 
 const API_DELAY = 300;
@@ -63,6 +57,11 @@ const unwrapList = <T>(payload: ListResponse<T>): T[] => {
   return Array.isArray(payload) ? payload : payload.items;
 };
 
+const getStoreProducts = () => useDatabaseStore.getState().products;
+const getStoreCategories = () => useDatabaseStore.getState().categories;
+const getStoreOrders = () => useDatabaseStore.getState().orders;
+const getStoreCustomers = () => useDatabaseStore.getState().customers;
+
 const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise<T>) => {
   if (!USE_REMOTE) {
     return mockFn();
@@ -78,32 +77,32 @@ const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise
 
 export const api = {
   products: {
-    getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), () => simulateApiCall(mockProducts)),
+    getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), async () => simulateApiCall(getStoreProducts())),
 
     getById: async (id: string) =>
-      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => mockProducts.find((p) => p.id === id)),
+      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => getStoreProducts().find((p) => p.id === id)),
 
     getBySlug: async (slug: string) =>
       withFallback<Product | undefined>(
         () => fetchJson(`/products?slug=${encodeURIComponent(slug)}`),
-        async () => mockProducts.find((p) => p.slug === slug),
+        async () => getStoreProducts().find((p) => p.slug === slug),
       ),
 
     getByCategory: async (categoryId: string) =>
       withFallback<Product[]>(
         async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?categoryId=${encodeURIComponent(categoryId)}`)),
-        async () => mockProducts.filter((p) => p.categoryId === categoryId),
+        async () => getStoreProducts().filter((p) => p.categoryId === categoryId),
       ),
 
     getFeatured: async () =>
-      withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => mockProducts.filter((p) => p.featured)),
+      withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => getStoreProducts().filter((p) => p.featured)),
 
     search: async (query: string) =>
       withFallback<Product[]>(
         async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?search=${encodeURIComponent(query)}`)),
         async () => {
           const lowerQuery = query.toLowerCase();
-          return mockProducts.filter(
+          return getStoreProducts().filter(
             (p) =>
               p.name.toLowerCase().includes(lowerQuery) ||
               p.description.toLowerCase().includes(lowerQuery) ||
@@ -111,22 +110,37 @@ export const api = {
           );
         },
       ),
+
+    create: async (product: Product) => {
+      useDatabaseStore.getState().addProduct(product);
+      return product;
+    },
+
+    update: async (id: string, updates: Partial<Product>) => {
+      useDatabaseStore.getState().updateProduct(id, updates);
+      return { id, ...updates };
+    },
+
+    delete: async (id: string) => {
+      useDatabaseStore.getState().deleteProduct(id);
+      return { success: true };
+    },
   },
 
   categories: {
-    getAll: async () => withFallback<Category[]>(() => fetchJson('/categories'), () => simulateApiCall(mockCategories)),
+    getAll: async () => withFallback<Category[]>(() => fetchJson('/categories'), () => simulateApiCall(getStoreCategories())),
 
     getById: async (id: string) =>
       withFallback<Category | undefined>(async () => {
         const categories = await fetchJson<Category[]>('/categories');
         return categories.find((c) => c.id === id);
-      }, async () => mockCategories.find((c) => c.id === id)),
+      }, async () => getStoreCategories().find((c) => c.id === id)),
 
     getBySlug: async (slug: string) =>
       withFallback<Category | undefined>(async () => {
         const categories = await fetchJson<Category[]>('/categories');
         return categories.find((c) => c.slug === slug);
-      }, async () => mockCategories.find((c) => c.slug === slug)),
+      }, async () => getStoreCategories().find((c) => c.slug === slug)),
   },
 
   testimonials: {
@@ -134,36 +148,44 @@ export const api = {
   },
 
   orders: {
-    getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), () => simulateApiCall(mockOrders)),
+    getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), async () => simulateApiCall(getStoreOrders())),
 
     getById: async (id: string) =>
-      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => mockOrders.find((o) => o.id === id)),
+      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => getStoreOrders().find((o) => o.id === id)),
 
-    create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) =>
-      withFallback<Order>(
+    create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) => {
+      const newOrder: Order = {
+        ...order,
+        id: Math.random().toString(36).slice(2, 11),
+        orderNumber: `ORD-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      
+      if (!USE_REMOTE) {
+        useDatabaseStore.getState().addOrder(newOrder);
+        return newOrder;
+      }
+      
+      return withFallback<Order>(
         () =>
           fetchJson('/orders', {
             method: 'POST',
             body: JSON.stringify(order),
           }),
-        async () => ({
-          ...order,
-          id: Math.random().toString(36).slice(2, 11),
-          orderNumber: `ORD-${Date.now()}`,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }),
-      ),
+        async () => newOrder,
+      );
+    },
   },
 
   customers: {
-    getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), () => simulateApiCall(mockCustomers)),
+    getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), async () => simulateApiCall(getStoreCustomers())),
 
     getById: async (id: string) =>
       withFallback<Customer | undefined>(async () => {
         const customers = await fetchJson<Customer[]>('/customers');
         return customers.find((c) => c.id === id);
-      }, async () => mockCustomers.find((c) => c.id === id)),
+      }, async () => getStoreCustomers().find((c) => c.id === id)),
   },
 
   payment: {

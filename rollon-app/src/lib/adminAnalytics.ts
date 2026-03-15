@@ -93,5 +93,34 @@ export function buildAdminAnalytics(orders: Order[], monthsToShow = 6): Analytic
     .sort((a, b) => (b.units === a.units ? b.revenue - a.revenue : b.units - a.units))
     .slice(0, 5);
 
+  // Fallback Mock Data for Demos when Database is Empty (DEV ONLY)
+  const totalRealOrders = monthlyMap.size > 0 ? Array.from(monthlyMap.values()).reduce((sum, v) => sum + v.orders, 0) : 0;
+  
+  if (totalRealOrders === 0 && import.meta.env.DEV && import.meta.env.MODE !== 'test') {
+    return {
+      monthlyRevenue: Array.from({ length: monthsToShow }).map((_, i) => {
+        const date = new Date(now.getFullYear(), now.getMonth() - (monthsToShow - 1 - i), 1);
+        return {
+          month: date.toLocaleDateString('en-US', { month: 'short' }),
+          revenue: 12500 + (i * 4500) + Math.floor(Math.random() * 2000),
+          orders: 45 + (i * 12) + Math.floor(Math.random() * 10),
+        };
+      }),
+      segmentedCustomers: [
+        { name: 'VIP (৳20k+)', value: 12, color: '#f97316' },
+        { name: 'Loyal (৳8k-20k)', value: 45, color: '#22d3ee' },
+        { name: 'Growing (৳2k-8k)', value: 128, color: '#a855f7' },
+        { name: 'New (<৳2k)', value: 312, color: '#10b981' }
+      ],
+      bestSellers: [
+        { name: 'Titanium Grinder Pro', units: 145, revenue: 435000 },
+        { name: 'Glass Beaker Bong', units: 112, revenue: 336000 },
+        { name: 'Richer Kingslim Papers', units: 890, revenue: 178000 },
+        { name: 'Activated Carbon Filters', units: 450, revenue: 112500 },
+        { name: 'Silicone Storage Jar', units: 230, revenue: 69000 }
+      ]
+    };
+  }
+
   return { monthlyRevenue, segmentedCustomers, bestSellers };
 }

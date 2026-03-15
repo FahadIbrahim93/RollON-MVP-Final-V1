@@ -93,15 +93,25 @@ describe('authStore', () => {
       expect(useAuthStore.getState().user?.role).toBe('user');
     });
 
-    it('should fail registration when API fails', async () => {
+    it('should register locally when API fails', async () => {
       vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network failure'));
 
       const { register } = useAuthStore.getState();
-      const result = await register('New User', 'new@example.com', 'password123');
+      const result = await register('New Local User', 'local@example.com', 'password123');
 
+      expect(result).toBe(true);
+      expect(useAuthStore.getState().isAuthenticated).toBe(true);
+      expect(useAuthStore.getState().user?.name).toBe('New Local User');
+      expect(useAuthStore.getState().user?.email).toBe('local@example.com');
+    });
+
+    it('should fail registration locally if email already exists', async () => {
+      vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network failure'));
+      const { register, logout } = useAuthStore.getState();
+      await register('First User', 'duplicate@example.com', 'password123');
+      logout();
+      const result = await register('Second User', 'duplicate@example.com', 'password123');
       expect(result).toBe(false);
-      expect(useAuthStore.getState().isAuthenticated).toBe(false);
-      expect(useAuthStore.getState().user).toBeNull();
     });
   });
 

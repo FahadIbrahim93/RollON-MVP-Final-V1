@@ -274,7 +274,7 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative hidden lg:block"
+            className="relative"
           >
             <motion.div
               style={{
@@ -292,14 +292,20 @@ export function Hero() {
                 className="relative rounded-3xl overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-3xl -z-10" />
-                <img
-                  src="/images/hero-product.png"
-                  alt="Premium Product"
-                  className="w-full h-auto filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="700" viewBox="0 0 600 700"%3E%3Crect fill="%23111" width="600" height="700" rx="40"/%3E%3Ctext fill="%234ade80" font-family="sans-serif" font-size="32" font-weight="black" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EROLLON PREMIUM%3C/text%3E%3C/svg%3E';
-                  }}
-                />
+                <picture>
+                  <source srcSet="/images/hero-product.webp" type="image/webp" />
+                  <source srcSet="/images/hero-product.jpg" type="image/jpeg" />
+                  <img
+                    src="/images/hero-product.png"
+                    alt="RollON Premium Smoking Accessories"
+                    loading="eager"
+                    fetchPriority="high"
+                    className="w-full h-auto filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="700" viewBox="0 0 600 700"%3E%3Crect fill="%23111" width="600" height="700" rx="40"/%3E%3Ctext fill="%234ade80" font-family="sans-serif" font-size="32" font-weight="black" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EROLLON PREMIUM%3C/text%3E%3C/svg%3E';
+                    }}
+                  />
+                </picture>
 
                 {/* Float Elements */}
                 <div className="absolute top-10 right-10 flex flex-col items-end gap-2">

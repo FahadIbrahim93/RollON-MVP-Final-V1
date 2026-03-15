@@ -26,7 +26,9 @@ const About = React.lazy(() => import('@/pages/About').then(m => ({ default: m.A
 const Contact = React.lazy(() => import('@/pages/Contact').then(m => ({ default: m.Contact })));
 const Login = React.lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })));
 const Register = React.lazy(() => import('@/pages/Register').then(m => ({ default: m.Register })));
+const Account = React.lazy(() => import('@/pages/Account').then(m => ({ default: m.Account })));
 const Success = React.lazy(() => import('@/pages/Success'));
+const NotFound = React.lazy(() => import('@/pages/NotFound').then(m => ({ default: m.NotFound })));
 
 // Admin Pages
 const AdminDashboard = React.lazy(() => import('@/pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
@@ -60,6 +62,7 @@ function App() {
               <Route path="/contact" element={withTransition(Contact)} />
               <Route path="/login" element={withTransition(Login)} />
               <Route path="/register" element={withTransition(Register)} />
+              <Route path="/account" element={<ProtectedRoute>{withTransition(Account)}</ProtectedRoute>} />
               <Route path="/success" element={withTransition(Success)} />
 
               {/* Admin Routes — protected: requires admin role, redirects to /login */}
@@ -67,6 +70,9 @@ function App() {
               <Route path="/admin/products" element={<ProtectedRoute role="admin">{withTransition(AdminProducts)}</ProtectedRoute>} />
               <Route path="/admin/orders" element={<ProtectedRoute role="admin">{withTransition(AdminOrders)}</ProtectedRoute>} />
               <Route path="/admin/customers" element={<ProtectedRoute role="admin">{withTransition(AdminCustomers)}</ProtectedRoute>} />
+              
+              {/* Catch-all 404 Route */}
+              <Route path="*" element={withTransition(NotFound)} />
             </Routes>
           </AnimatePresence>
         </Suspense>

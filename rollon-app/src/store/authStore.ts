@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useDatabaseStore } from './databaseStore';
 
 interface User {
   id: string;
@@ -23,33 +24,6 @@ interface AuthState {
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-const DEMO_AUTH_ENABLED = import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true';
-
-// --- JWT Simulation Utilities ---
-const encodeMockJWT = (user: User) => {
-  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-  const payload = btoa(JSON.stringify({ ...user, exp: Date.now() + 86400000 })); // 1 day
-  const signature = 'mock_signature_' + Math.random().toString(36).slice(2, 11);
-  return `${header}.${payload}.${signature}`;
-};
-
-const decodeMockJWT = (token: string): User | null => {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-    const payload = JSON.parse(atob(parts[1]));
-    if (payload.exp && payload.exp < Date.now()) return null;
-    return {
-      id: String(payload.id),
-      name: String(payload.name),
-      email: String(payload.email),
-      role: payload.role as 'user' | 'admin',
-      avatar: payload.avatar ? String(payload.avatar) : undefined,
-    };
-  } catch {
-    return null;
-  }
-};
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -68,44 +42,40 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ email, password }),
           });
 
-          if (!response.ok) {
-            throw new Error('Login failed');
+          if (response.ok) {
+            const data = await response.json();
+            set({
+              user: data.user,
+              token: data.token,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            return true;
           }
-
-          const data = await response.json();
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false
-          });
-          return true;
+          
+          throw new Error('API Login failed');
         } catch {
+          // Local Database Fallback
+          const localUser = useDatabaseStore.getState().verifyPassword(email, password);
+          
+          if (localUser) {
+            console.warn('Backend offline: Using local database fallback for login.');
+            set({
+              user: {
+                id: localUser.id,
+                name: localUser.name,
+                email: localUser.email,
+                role: localUser.role as "user" | "admin",
+                avatar: localUser.avatar
+              },
+              token: 'local-token-' + Date.now(),
+              isAuthenticated: true,
+              isLoading: false
+            });
+            return true;
+          }
+
           set({ isLoading: false });
-
-          const demoAdminEmail = import.meta.env.VITE_DEMO_ADMIN_EMAIL;
-          const demoAdminPassword = import.meta.env.VITE_DEMO_ADMIN_PASSWORD;
-          const demoUserEmail = import.meta.env.VITE_DEMO_USER_EMAIL;
-          const demoUserPassword = import.meta.env.VITE_DEMO_USER_PASSWORD;
-
-          if (!DEMO_AUTH_ENABLED || !demoAdminEmail || !demoAdminPassword || !demoUserEmail || !demoUserPassword) {
-            return false;
-          }
-
-          if (email === demoAdminEmail && password === demoAdminPassword) {
-            const user: User = { id: '1', name: 'Admin User', email: demoAdminEmail, role: 'admin' };
-            const token = encodeMockJWT(user);
-            set({ user, token, isAuthenticated: true, isLoading: false });
-            return true;
-          }
-
-          if (email === demoUserEmail && password === demoUserPassword) {
-            const user: User = { id: '2', name: 'Test Customer', email: demoUserEmail, role: 'user' };
-            const token = encodeMockJWT(user);
-            set({ user, token, isAuthenticated: true, isLoading: false });
-            return true;
-          }
-
           return false;
         }
       },
@@ -132,8 +102,50 @@ export const useAuthStore = create<AuthState>()(
           });
           return true;
         } catch {
-          set({ isLoading: false });
-          return false;
+          // Local Database Fallback
+          const dbUsers = useDatabaseStore.getState().users;
+          
+          if (dbUsers.some(u => u.email === email)) {
+            set({ isLoading: false });
+            return false;
+          }
+
+          const newUser = {
+            id: 'user-' + Date.now(),
+            name,
+            email,
+            password,  // Will be hashed in addUser
+            role: 'user' as const,
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name.replace(' ', '')}`
+          };
+          
+          useDatabaseStore.getState().addUser(newUser);
+          
+          // Also create a Customer record so they show up in the Admin Dashboard
+          useDatabaseStore.getState().addCustomer({
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            phone: '', // Default empty
+            totalSpent: 0,
+            orders: 0,
+            createdAt: new Date().toISOString()
+          });
+
+          set({
+            user: {
+              id: newUser.id,
+              name: newUser.name,
+              email: newUser.email,
+              role: newUser.role,
+              avatar: newUser.avatar
+            },
+            token: 'local-token-' + Date.now(),
+            isAuthenticated: true,
+            isLoading: false
+          });
+          
+          return true;
         }
       },
 
@@ -163,13 +175,6 @@ export const useAuthStore = create<AuthState>()(
             get().logout();
           }
         } catch {
-          if (DEMO_AUTH_ENABLED && token.includes('.')) {
-            const user = decodeMockJWT(token);
-            if (user) {
-              set({ user, isAuthenticated: true });
-              return;
-            }
-          }
           get().logout();
         }
       },

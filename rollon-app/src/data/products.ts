@@ -65,6 +65,29 @@ export const categories: Category[] = [
 
 export const products: Product[] = [
   {
+    id: 'richer-kingslim',
+    name: 'Richer Rolling Quality Kingslim Size',
+    slug: 'richer-kingslim-papers',
+    description: 'Premium, elegant gold-foiled rolling papers. Kingslim size for a superior experience. Features a sleek black design with gold accents indicating the ultimate rolling quality.',
+    price: 350,
+    originalPrice: 450,
+    image: '/images/products/richer-papers.png',
+    category: 'Rolling Papers',
+    categoryId: '4',
+    tags: ['kingslim', 'premium', 'papers', 'gold-foil'],
+    stock: 150,
+    inStock: true,
+    rating: 5.0,
+    reviewCount: 42,
+    specifications: {
+      'Size': 'Kingslim',
+      'Material': 'Premium unbleached paper',
+      'Packaging': 'Black w/ Gold Foil',
+    },
+    featured: true,
+    new: true
+  },
+  {
     id: 'fb-1',
     name: 'HB109 Hot Silicon Bong',
     slug: 'hb109-hot-silicon-bong',
@@ -175,116 +198,6 @@ export const products: Product[] = [
       'Size': 'Standard'
     },
     featured: true
-  },
-  {
-    id: 'fb-6',
-    name: 'Titanium Anodized Ashtray',
-    slug: 'titanium-anodized-ashtray',
-    description: 'Heavy-duty metal ashtray with a stunning anodized titanium-style colorful finish. Sleek, heat-resistant, and adds a premium futuristic look to any setup.',
-    price: 1800,
-    image: '/images/products/ashtray-titanium.jpg',
-    category: 'Accessories',
-    categoryId: '6',
-    tags: ['ashtray', 'titanium', 'metal', 'anodized'],
-    stock: 12,
-    inStock: true,
-    rating: 4.9,
-    reviewCount: 18,
-    specifications: {
-      'Material': 'Anodized Metal',
-      'Finish': 'Titanium Gradient',
-      'Heat Resistance': 'High',
-      'Design': 'Sleek Circular'
-    },
-    featured: false
-  },
-  {
-    id: 'fb-7',
-    name: 'Snoop Dogg Lighter & Rolling Papers',
-    slug: 'snoop-dogg-rolling-collection',
-    description: 'Official Snoop Dogg branded king-size rolling papers and matching lighter set. Part of the specialized artist collection for a premium rolling experience.',
-    price: 850,
-    image: '/images/products/papers-snoop.jpg',
-    category: 'Rolling Papers',
-    categoryId: '4',
-    tags: ['rolling papers', 'snoop dogg', 'king size', 'collection'],
-    stock: 50,
-    inStock: true,
-    rating: 4.7,
-    reviewCount: 40,
-    specifications: {
-      'Type': 'King Size',
-      'Branding': 'Snoop Dogg',
-      'Includes': 'Papers + Lighter',
-      'Origin': 'Official Merch'
-    },
-    featured: true
-  },
-  {
-    id: 'fb-8',
-    name: '6-inch Plain Silicon Bong (Yellow/Blue)',
-    slug: 'plain-silicon-bong-6inch',
-    description: 'Simple and durable 6-inch silicon bongs available in solid vibrant yellow or blue. Includes a glass bowl for purity and ease of cleaning.',
-    price: 1450,
-    image: '/images/products/bong-plain-silicon.jpg',
-    category: 'Water Pipes',
-    categoryId: '3',
-    tags: ['silicon', 'plain', 'portable', 'durable'],
-    stock: 18,
-    inStock: true,
-    rating: 4.5,
-    reviewCount: 10,
-    specifications: {
-      'Material': 'Silicone',
-      'Height': '6 inch',
-      'Bowl': 'Glass',
-      'Colors': 'Yellow, Blue'
-    },
-    featured: false
-  },
-  {
-    id: 'fb-9',
-    name: 'Donut Pattern Silicon Bong',
-    slug: 'donut-pattern-silicon-bong',
-    description: 'Fun and colorful silicon bong with an all-over donut repeat pattern. Heat resistant and virtually unbreakable, perfect for travel.',
-    price: 1950,
-    image: '/images/products/bong-donut-silicon.jpg',
-    category: 'Water Pipes',
-    categoryId: '3',
-    tags: ['silicon', 'donut', 'pattern', 'pop art'],
-    stock: 10,
-    inStock: true,
-    rating: 4.8,
-    reviewCount: 6,
-    specifications: {
-      'Material': 'Silicon',
-      'Pattern': 'Donut Repeat',
-      'Durability': 'Unbreakable',
-      'Feature': 'Heat Resistant'
-    },
-    featured: false
-  },
-  {
-    id: 'fb-10',
-    name: 'Santa Themed Metal Grinder',
-    slug: 'santa-themed-metal-grinder',
-    description: 'Festive holiday-themed metal grinder with detailed Christmas illustrations. High-quality construction for daily use and efficient grinding.',
-    price: 1350,
-    image: '/images/products/grinder-santa.jpg',
-    category: 'Grinders',
-    categoryId: '2',
-    tags: ['grinder', 'metal', 'santa', 'festive'],
-    stock: 5,
-    inStock: true,
-    rating: 4.6,
-    reviewCount: 4,
-    specifications: {
-      'Material': 'Zinc Alloy',
-      'Theme': 'Santa Claus',
-      'Layers': '4-Piece',
-      'Edition': 'Limited'
-    },
-    featured: false
   }
 ];
 

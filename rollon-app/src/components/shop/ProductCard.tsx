@@ -48,15 +48,23 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group"
     >
       <Link to={`/product/${product.slug}`}>
-        <div className="relative bg-card rounded-xl overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-2">
+        <div className="relative bg-card rounded-xl overflow-hidden border border-border/50 transition-all duration-500 hover:border-primary/60 hover:shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.3)] hover:-translate-y-3">
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden bg-muted">
             <motion.img
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover"
-              animate={{ scale: isHovered ? 1.08 : 1 }}
-              transition={{ duration: 0.4 }}
+              animate={{ scale: isHovered ? 1.1 : 1 }}
+              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
+
+            {/* Gradient Overlay on Hover */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
             />
 
             {/* Badges */}
@@ -147,15 +155,26 @@ export function ProductCard({ product }: ProductCardProps) {
               </span>
             </div>
 
-            {/* Price */}
+            {/* Price with Smooth Transitions */}
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-primary">
+              <motion.span
+                className="text-lg font-bold text-primary"
+                animate={{
+                  scale: isHovered ? 1.05 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+              >
                 ৳{(product.salePrice || product.price).toLocaleString()}
-              </span>
+              </motion.span>
               {product.salePrice && (
-                <span className="text-sm text-muted-foreground line-through">
+                <motion.span
+                  className="text-sm text-muted-foreground line-through"
+                  initial={{ opacity: 0.7 }}
+                  animate={{ opacity: isHovered ? 1 : 0.7 }}
+                  transition={{ duration: 0.2 }}
+                >
                   ৳{product.price.toLocaleString()}
-                </span>
+                </motion.span>
               )}
             </div>
 

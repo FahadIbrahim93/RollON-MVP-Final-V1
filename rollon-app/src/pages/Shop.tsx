@@ -1,8 +1,8 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Search, SlidersHorizontal, ChevronDown, SearchX } from 'lucide-react';
 
 
 import { useProducts, useCategories } from '@/hooks/useApi';
@@ -254,14 +254,14 @@ export function Shop() {
         {/* Product Matrix */}
         <section ref={sectionRef} className="px-4 sm:px-6 lg:px-12 xl:px-20 py-24">
           {isProductsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ProductSkeleton key={i} />
               ))}
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
                 <AnimatePresence mode="popLayout">
                   {visibleProducts.map((product, index) => (
                     <ShopProductCard
@@ -281,19 +281,23 @@ export function Shop() {
                   animate={{ opacity: 1 }}
                   className="text-center py-40 space-y-8"
                 >
-                  <div className="w-32 h-32 bg-white/[0.03] border border-white/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                    <Search className="w-12 h-12 text-white/10" />
+                  <div className="relative mb-8">
+                    <div className="w-32 h-32 bg-gradient-to-br from-gray-900 to-gray-800 rounded-full flex items-center justify-center mx-auto shadow-2xl border border-white/10">
+                      <SearchX className="w-14 h-14 text-primary" />
+                    </div>
+                    <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
                   </div>
                   <div className="space-y-4">
-                    <h3 className="text-3xl font-display font-black text-white tracking-tighter">Negative Match Found</h3>
-                    <p className="text-white/60 text-lg max-w-sm mx-auto">None of our current artifacts match your specific criteria. Try reframing your search.</p>
+                    <h3 className="text-3xl font-display font-black text-white tracking-tighter">No Results Found</h3>
+                    <p className="text-white/60 text-lg max-w-sm mx-auto">We couldn't find any artifacts matching your criteria. Try adjusting your search or explore our collection.</p>
                   </div>
-                  <Button
-                    onClick={() => { setSearchQuery(''); setSearchParams({}); setVisibleCount(INITIAL_VISIBLE_PRODUCTS); }}
-                    className="rounded-full bg-white text-black hover:bg-primary px-12 h-14 font-black shadow-2xl"
-                  >
-                    Reset Exploration
-                  </Button>
+                  <Link to="/shop">
+                    <Button
+                      className="rounded-full bg-gradient-to-r from-[#39FF14] to-green-400 hover:from-[#39FF14]/90 hover:to-green-400/90 text-black hover:text-black px-12 h-14 font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
+                    >
+                      Browse All Products
+                    </Button>
+                  </Link>
                 </motion.div>
               )}
 
