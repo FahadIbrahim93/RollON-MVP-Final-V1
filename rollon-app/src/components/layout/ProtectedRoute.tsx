@@ -17,7 +17,7 @@ interface ProtectedRouteProps {
     role?: 'admin' | 'user';
 }
 
-export const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, role }) => {
+export const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, role }): ReactNode => {
     const location = useLocation();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const userRole = useAuthStore((state) => state.user?.role);

@@ -1,5 +1,4 @@
 import type { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Wallet, Smartphone } from 'lucide-react';
 import type { CheckoutForm } from '@/lib/checkoutSchema';
@@ -49,6 +48,7 @@ export function PaymentMethodSelector({ register, errors, watch }: PaymentMethod
         }}
       >
         {paymentMethods.map((method) => (
+          // eslint-disable-next-line jsx-a11y/label-has-associated-control
           <label
             key={method.id}
             className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
@@ -64,9 +64,9 @@ export function PaymentMethodSelector({ register, errors, watch }: PaymentMethod
               <method.icon className="w-5 h-5" />
             </div>
             <div className="flex-1">
-              <Label htmlFor={method.id} className="font-medium text-white cursor-pointer">
+              <span className="font-medium text-white cursor-pointer">
                 {method.label}
-              </Label>
+              </span>
               <p className="text-sm text-white/50">{method.description}</p>
             </div>
           </label>

@@ -85,10 +85,11 @@ export function Register() {
             <form onSubmit={handleSubmit(processRegister)} className="space-y-6">
               {/* Name */}
               <div>
-                <label className="block text-white/60 text-sm mb-2">Full Name</label>
+                <label htmlFor="name" className="block text-white/60 text-sm mb-2">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
+                    id="name"
                     {...register('name')}
                     type="text"
                     className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
@@ -100,10 +101,11 @@ export function Register() {
 
               {/* Email */}
               <div>
-                <label className="block text-white/60 text-sm mb-2">Email Address</label>
+                <label htmlFor="email" className="block text-white/60 text-sm mb-2">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
+                    id="email"
                     {...register('email')}
                     type="email"
                     className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
@@ -115,10 +117,11 @@ export function Register() {
 
               {/* Password */}
               <div>
-                <label className="block text-white/60 text-sm mb-2">Password</label>
+                <label htmlFor="password" className="block text-white/60 text-sm mb-2">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
+                    id="password"
                     {...register('password')}
                     type={showPassword ? 'text' : 'password'}
                     className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}
@@ -138,10 +141,11 @@ export function Register() {
 
               {/* Confirm Password */}
               <div>
-                <label className="block text-white/60 text-sm mb-2">Confirm Password</label>
+                <label htmlFor="confirmPassword" className="block text-white/60 text-sm mb-2">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
+                    id="confirmPassword"
                     {...register('confirmPassword')}
                     type={showPassword ? 'text' : 'password'}
                     className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-xl text-white placeholder:text-white/60 focus:outline-none transition-colors ${errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-white/10 focus:border-green-400/50'}`}

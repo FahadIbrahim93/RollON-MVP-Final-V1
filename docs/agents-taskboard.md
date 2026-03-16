@@ -43,6 +43,12 @@ Deliver a reliable, production-safe commerce backend on Vercel + Upstash with de
 | T30 | Implement Cinematic Account & Rewards Page | T20 | Agent | Completed |
 | T31 | Harden registration with automatic customer provisioning | T20 | Agent | Completed |
 | T32 | Consolidate 10/10 Production-Ready State | T24-T31 | Agent | Completed |
+| T33 | Phase 0: Repo cleanup, .gitattributes, .editorconfig, version bump | None | OpenCode | Completed |
+| T34 | Install & configure @vitest/coverage-v8 | T33 | OpenCode | Completed |
+| T35 | Install eslint-plugin-jsx-a11y | T34 | OpenCode | Completed |
+| T36 | Write unit tests for Login.tsx & Register.tsx | T35 | OpenCode | Completed |
+| T37 | Fix failing tests (price formatting, mocks) | T36 | OpenCode | Completed |
+| T38 | Fix jsx-a11y label accessibility errors | T37 | OpenCode | Completed |
 ## Logbook Protocol
 - Entry format: `Task ID | UTC time | Summary | Evidence command | Acceptance result`
 - Required evidence: at least one executable command output.
@@ -79,3 +85,9 @@ Deliver a reliable, production-safe commerce backend on Vercel + Upstash with de
 - `T30 | 2026-03-16T01:05Z | Created premium Account & Rewards dashboard with tier tracking and order visualization | ls src/pages/Account.tsx | ✅`
 - `T31 | 2026-03-16T01:10Z | Hardened auth flow with automatic customer record creation and API fallback logic | npm test -- --run | ✅`
 - `T32 | 2026-03-16T01:15Z | Reached 10/10 Scorecard: 0 ESLint errors, 87/87 tests passed, Documentation synced | npx eslint src && npm test -- --run | ✅`
+- `T33 | 2026-03-16T22:50Z | Phase 0: Cleanup repo, create .gitattributes/.editorconfig, bump version to 1.0.0-beta.1 | npm run build | ✅`
+- `T34 | 2026-03-16T22:51Z | Install @vitest/coverage-v8, configure coverage in vite.config.ts | npm run build | ✅`
+- `T35 | 2026-03-16T22:52Z | Install eslint-plugin-jsx-a11y, add to eslint.config.js | npm run lint | ✅`
+- `T36 | 2026-03-16T22:53Z | Write 29 unit tests for Login.tsx & Register.tsx | npm test -- --run | ✅`
+- `T37 | 2026-03-16T22:54Z | Fix 9 failing tests (price formatting, ProductDetail mocking, button text) | npm test -- --run | ✅`
+- `T38 | 2026-03-16T22:55Z | Fix jsx-a11y errors: add htmlFor/id labels in Login/Register forms | npm run lint | ✅`

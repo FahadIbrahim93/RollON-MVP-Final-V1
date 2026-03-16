@@ -18,8 +18,18 @@ npm run dev
 ```bash
 npm run lint     # ESLint
 npm test -- --run  # Vitest
+npm run test:coverage  # Vitest with coverage
 npm run build   # TypeScript + Vite
 ```
+
+## Test Coverage
+Run `npm run test:coverage` to generate coverage reports. The project uses `@vitest/coverage-v8` provider.
+
+## Current Status (March 16, 2026)
+- **Version**: 1.0.0-beta.1
+- **Tests**: 141 passing
+- **Lint**: 0 errors
+- **Build**: Passing
 
 ## Accessibility Requirements
 

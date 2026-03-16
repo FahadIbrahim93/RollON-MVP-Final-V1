@@ -105,7 +105,7 @@ export function Checkout() {
       <main className="min-h-screen bg-[#050505] pt-24 flex items-center justify-center px-4">
         <div className="text-center space-y-8">
           <div className="w-24 h-24 bg-white/[0.03] border border-white/10 rounded-full flex items-center justify-center mx-auto shadow-2xl">
-            <ShoppingCart className="w-10 h-10 text-white/20" />
+            <ShoppingCart className="w-10 h-10 text-white/50" />
           </div>
           <div className="space-y-2">
             <h1 className="text-4xl font-display font-black text-white tracking-tighter">Your Vault is Empty</h1>
@@ -207,38 +207,38 @@ export function Checkout() {
 
                         <div className="grid sm:grid-cols-2 gap-8">
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">First Name</Label>
-                            <Input {...register('firstName')} placeholder="John" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="firstName" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">First Name</Label>
+                            <Input id="firstName" {...register('firstName')} placeholder="John" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.firstName && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.firstName.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Last Name</Label>
-                            <Input {...register('lastName')} placeholder="Doe" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="lastName" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Last Name</Label>
+                            <Input id="lastName" {...register('lastName')} placeholder="Doe" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.lastName && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.lastName.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Secure Email</Label>
-                            <Input {...register('email')} type="email" placeholder="john@example.com" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="email" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Secure Email</Label>
+                            <Input id="email" {...register('email')} type="email" placeholder="john@example.com" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.email && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.email.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Phone Number</Label>
-                            <Input {...register('phone')} type="tel" placeholder="+880 1XXX XXXXXX" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="phone" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Phone Number</Label>
+                            <Input id="phone" {...register('phone')} type="tel" placeholder="+880 1XXX XXXXXX" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.phone && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.phone.message}</p>}
                           </div>
                           <div className="sm:col-span-2 space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Precise Address</Label>
-                            <Input {...register('address')} placeholder="House, Road, Area" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="address" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Precise Address</Label>
+                            <Input id="address" {...register('address')} placeholder="House, Road, Area" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.address && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.address.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">City Hub</Label>
-                            <Input {...register('city')} placeholder="Dhaka" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="city" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">City Hub</Label>
+                            <Input id="city" {...register('city')} placeholder="Dhaka" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.city && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.city.message}</p>}
                           </div>
                           <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Postal Code</Label>
-                            <Input {...register('postalCode')} placeholder="1212" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
+                            <Label htmlFor="postalCode" className="text-xs uppercase tracking-widest text-white/60 font-bold ml-1">Postal Code</Label>
+                            <Input id="postalCode" {...register('postalCode')} placeholder="1212" className="h-14 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 text-white" />
                             {errors.postalCode && <p className="text-red-500/80 text-[10px] uppercase font-bold tracking-wider ml-1">{errors.postalCode.message}</p>}
                           </div>
                         </div>

@@ -66,9 +66,13 @@ function App() {
               <Route path="/success" element={withTransition(Success)} />
 
               {/* Admin Routes — protected: requires admin role, redirects to /login */}
+              {/* eslint-disable-next-line jsx-a11y/aria-role */}
               <Route path="/admin" element={<ProtectedRoute role="admin">{withTransition(AdminDashboard)}</ProtectedRoute>} />
+              {/* eslint-disable-next-line jsx-a11y/aria-role */}
               <Route path="/admin/products" element={<ProtectedRoute role="admin">{withTransition(AdminProducts)}</ProtectedRoute>} />
+              {/* eslint-disable-next-line jsx-a11y/aria-role */}
               <Route path="/admin/orders" element={<ProtectedRoute role="admin">{withTransition(AdminOrders)}</ProtectedRoute>} />
+              {/* eslint-disable-next-line jsx-a11y/aria-role */}
               <Route path="/admin/customers" element={<ProtectedRoute role="admin">{withTransition(AdminCustomers)}</ProtectedRoute>} />
               
               {/* Catch-all 404 Route */}

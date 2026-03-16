@@ -93,8 +93,9 @@ export function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-white/60 text-sm mb-2">Your Name</label>
+                    <label htmlFor="contact-name" className="block text-white/60 text-sm mb-2">Your Name</label>
                     <input
+                      id="contact-name"
                       type="text"
                       required
                       value={formData.name}
@@ -104,8 +105,9 @@ export function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block text-white/60 text-sm mb-2">Your Email</label>
+                    <label htmlFor="contact-email" className="block text-white/60 text-sm mb-2">Your Email</label>
                     <input
+                      id="contact-email"
                       type="email"
                       required
                       value={formData.email}
@@ -116,8 +118,9 @@ export function Contact() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Subject</label>
+                  <label htmlFor="contact-subject" className="block text-white/60 text-sm mb-2">Subject</label>
                   <input
+                    id="contact-subject"
                     type="text"
                     required
                     value={formData.subject}
@@ -127,8 +130,9 @@ export function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/60 text-sm mb-2">Message</label>
+                  <label htmlFor="contact-message" className="block text-white/60 text-sm mb-2">Message</label>
                   <textarea
+                    id="contact-message"
                     required
                     rows={5}
                     value={formData.message}

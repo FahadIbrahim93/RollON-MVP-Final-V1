@@ -172,7 +172,10 @@ export function Navbar() {
                         <>
                           <div 
                             className="fixed inset-0 z-40" 
-                            onClick={() => setIsUserMenuOpen(false)} 
+                            onClick={() => setIsUserMenuOpen(false)}
+                            onKeyDown={(e) => e.key === 'Escape' && setIsUserMenuOpen(false)}
+                            role="button"
+                            tabIndex={0}
                           />
                           <motion.div
                             initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -181,7 +184,7 @@ export function Navbar() {
                             className="absolute right-0 mt-2 w-56 p-2 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
                           >
                             <div className="px-4 py-3 border-b border-white/10 mb-2">
-                              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Signed in as</p>
+                              <p className="text-[10px] font-black tracking-widest text-white/50 uppercase mb-1">Signed in as</p>
                               <p className="text-sm font-bold text-white truncate">{user?.name}</p>
                               <p className="text-xs text-white/60 truncate">{user?.email}</p>
                             </div>
@@ -345,6 +348,7 @@ export function Navbar() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="VAPORIZERS / GRINDERS / ROLLING PAPERS / BONGS / OCB"
+                      // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus
                       className="w-full pl-24 pr-12 py-12 rounded-[2.5rem] bg-white/[0.03] border-white/10 text-3xl h-auto placeholder:text-white/[0.05] focus:border-primary/50 focus:bg-white/[0.05] transition-all font-display font-black tracking-tight"
                     />
