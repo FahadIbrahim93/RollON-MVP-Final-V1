@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>()(
           throw new Error('API Login failed');
         } catch {
           // Local Database Fallback
-          const localUser = useDatabaseStore.getState().verifyPassword(email, password);
+          const localUser = await useDatabaseStore.getState().verifyPassword(email, password);
           
           if (localUser) {
             console.warn('Backend offline: Using local database fallback for login.');
@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>()(
                 role: localUser.role as "user" | "admin",
                 avatar: localUser.avatar
               },
-              token: 'local-token-' + Date.now(),
+              token: crypto.randomUUID(),
               isAuthenticated: true,
               isLoading: false
             });
@@ -118,8 +118,7 @@ export const useAuthStore = create<AuthState>()(
             role: 'user' as const,
             avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name.replace(' ', '')}`
           };
-          
-          useDatabaseStore.getState().addUser(newUser);
+          await useDatabaseStore.getState().addUser(newUser);
           
           // Also create a Customer record so they show up in the Admin Dashboard
           useDatabaseStore.getState().addCustomer({
@@ -140,7 +139,7 @@ export const useAuthStore = create<AuthState>()(
               role: newUser.role,
               avatar: newUser.avatar
             },
-            token: 'local-token-' + Date.now(),
+            token: crypto.randomUUID(),
             isAuthenticated: true,
             isLoading: false
           });

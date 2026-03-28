@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Plus, Minus, ShoppingBag, Trash2, ArrowRight, ShieldCheck, Truck, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '@/store/cartStore';
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { shallow } from 'zustand/shallow';
 
 export function CartDrawer() {
   const items = useCartStore((state) => state.items);
@@ -20,8 +22,12 @@ export function CartDrawer() {
   const setIsCartOpen = useCartStore((state) => state.setCartOpen);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
-  const totalItems = useCartStore((state) => state.totalItems);
-  const totalPrice = useCartStore((state) => state.totalPrice);
+  const { totalItems, totalPrice } = useCartStore(
+    useCallback(
+      (state) => ({ totalItems: state.totalItems, totalPrice: state.totalPrice }),
+      []
+    )
+  );
   const clearCart = useCartStore((state) => state.clearCart);
 
   return (

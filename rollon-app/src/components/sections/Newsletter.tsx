@@ -82,14 +82,14 @@ export function Newsletter() {
               >
                 <div className="flex flex-col sm:flex-row gap-3">
                   <div className="relative flex-1 group/input">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/input:text-primary transition-colors" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 group-focus-within/input:text-primary transition-colors" />
                     <Input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="ACCESS KEY (EMAIL)"
                       disabled={isSubmitted}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-14 pl-12 rounded-2xl focus-visible:ring-primary/20 transition-all font-mono text-xs tracking-widest uppercase"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/50 h-14 pl-12 rounded-2xl focus-visible:ring-primary/20 transition-all font-mono text-xs tracking-widest uppercase"
                     />
                   </div>
                   <Button

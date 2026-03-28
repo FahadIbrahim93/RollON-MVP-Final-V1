@@ -106,9 +106,9 @@ export function Account() {
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-white mb-1 flex items-center justify-between">
                     {item.label}
-                    <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="w-4 h-4 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" />
                   </h3>
-                  <p className="text-sm text-white/40">{item.description}</p>
+                  <p className="text-sm text-white/50">{item.description}</p>
                 </div>
               </motion.button>
             ))}
@@ -131,12 +131,12 @@ export function Account() {
               <div className="flex items-center gap-8">
                 <div className="text-center">
                   <p className="text-3xl font-black text-primary">750</p>
-                  <p className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Points</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Points</p>
                 </div>
                 <div className="w-px h-12 bg-white/10" />
                 <div className="text-center">
                   <p className="text-3xl font-black text-white">12</p>
-                  <p className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Orders</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Orders</p>
                 </div>
               </div>
             </div>

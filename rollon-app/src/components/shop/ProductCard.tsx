@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
@@ -13,20 +13,20 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+function ProductCardComponent({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const { addItem } = useCartStore();
+  const addItem = useCartStore((state) => state.addItem);
   const { isInWishlist, toggleItem } = useWishlistStore();
   const isWishlisted = isInWishlist(product.id);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
     toast.success(`${product.name} added to cart`);
-  };
+  }, [addItem, product]);
 
-  const handleWishlist = (e: React.MouseEvent) => {
+  const handleWishlist = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     toggleItem(product);
@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
     } else {
       toast.success(`${product.name} added to wishlist`);
     }
-  };
+  }, [toggleItem, product, isWishlisted]);
 
   return (
     <motion.div
@@ -193,3 +193,5 @@ export function ProductCard({ product }: ProductCardProps) {
     </motion.div>
   );
 }
+
+export const ProductCard = memo(ProductCardComponent);

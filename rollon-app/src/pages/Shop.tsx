@@ -115,7 +115,7 @@ export function Shop() {
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
             <div className="flex items-center gap-4 w-full lg:w-auto">
               <div className="relative group flex-1 lg:w-80">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-primary transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 group-focus-within:text-primary transition-colors" />
                 <Input
                   type="text"
                   placeholder="Find your aesthetic..."
@@ -126,12 +126,13 @@ export function Shop() {
                     updateParams({ search: nextQuery });
                     setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                   }}
-                  className="pl-11 pr-4 py-6 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 focus-visible:border-primary/50 transition-all text-white placeholder:text-white/20"
+                  className="pl-11 pr-4 py-6 bg-white/[0.03] border-white/10 rounded-2xl focus-visible:ring-primary/20 focus-visible:border-primary/50 transition-all text-white placeholder:text-white/50"
                 />
               </div>
               <Button
                 variant="outline"
                 size="icon"
+                aria-label="Toggle filters"
                 onClick={() => setIsFilterVisible(!isFilterVisible)}
                 className={cn("h-12 w-12 rounded-2xl lg:hidden transition-all", isFilterVisible && "bg-primary text-black border-primary")}
               >
@@ -197,7 +198,7 @@ export function Shop() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-hover:text-primary pointer-events-none transition-colors" />
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 group-hover:text-primary pointer-events-none transition-colors" />
                 </div>
 
               </div>

@@ -1,6 +1,17 @@
 const crypto = require('node:crypto');
 const { HttpError } = require('./http');
 
+// Fail-fast: Validate JWT_SECRET at module load time.
+// If missing, the serverless function will crash on cold-start rather than
+// silently running unauthenticated requests.
+const JWT_SECRET = process.env.ROLLON_JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error(
+    'FATAL: ROLLON_JWT_SECRET environment variable is not configured. ' +
+    'Server cannot start without a JWT signing secret.'
+  );
+}
+
 function extractBearerToken(req) {
   const authHeader = req?.headers?.authorization || req?.headers?.Authorization;
   if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
@@ -64,12 +75,7 @@ function requireAdmin(req) {
     throw new HttpError(401, 'Authentication token required');
   }
 
-  const secret = process.env.ROLLON_JWT_SECRET;
-  if (!secret) {
-    throw new HttpError(500, 'ROLLON_JWT_SECRET is not configured');
-  }
-
-  const payload = verifyHs256Signature(token, secret);
+  const payload = verifyHs256Signature(token, JWT_SECRET);
   if (!payload || payload.role !== 'admin') {
     throw new HttpError(403, 'Admin access required');
   }

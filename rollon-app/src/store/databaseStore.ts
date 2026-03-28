@@ -3,16 +3,90 @@ import { persist } from 'zustand/middleware';
 import { products as initialProducts, categories as initialCategories, orders as initialOrders, customers as initialCustomers } from '../data/products';
 import type { Product, Category, Order, Customer, User } from '@/types';
 
-// Simple hash function for password verification (not for security, just for local demo)
-const simpleHash = (str: string): string => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
+/**
+ * Converts a hex string to a Uint8Array.
+ */
+function hexToBytes(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
   }
-  return Math.abs(hash).toString(16);
-};
+  return bytes;
+}
+
+/**
+ * Converts a Uint8Array to a hex string.
+ */
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/**
+ * PBKDF2-SHA256 password hashing via Web Crypto API.
+ * Returns `salt:derivedKeyHex` where salt is a random 16-byte hex string.
+ */
+async function hashPassword(password: string): Promise<string> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt, iterations: 100_000, hash: 'SHA-256' },
+    keyMaterial,
+    256
+  );
+  return `${bytesToHex(salt)}:${bytesToHex(new Uint8Array(derivedBits))}`;
+}
+
+/**
+ * Verifies a password against a stored PBKDF2 hash (salt:derivedKeyHex).
+ */
+async function verifyPasswordHash(
+  password: string,
+  storedHash: string
+): Promise<boolean> {
+  const [saltHex, expectedHex] = storedHash.split(':');
+  if (!saltHex || !expectedHex) return false;
+
+  const salt = hexToBytes(saltHex);
+  const encoder = new TextEncoder();
+  const saltBuffer = salt.slice(0, 32); // Ensure 32 bytes
+  const saltArray = new Uint8Array(saltBuffer).slice(0, 32);
+  
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: saltArray, iterations: 100_000, hash: 'SHA-256' },
+    keyMaterial,
+    256
+  ) as ArrayBuffer;
+  const actualHex = bytesToHex(new Uint8Array(derivedBits));
+
+  // Constant-time comparison to prevent timing attacks
+  if (actualHex.length !== expectedHex.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < actualHex.length; i++) {
+    mismatch |= actualHex.charCodeAt(i) ^ expectedHex.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+// Pre-computed PBKDF2 hash for admin seed password 'admin123'.
+// Generated once offline so initializeFromSeed stays synchronous.
+const ADMIN_SEED_HASH =
+  '00000000000000000000000000000000:510c749b88d3c1a5dc2d171b17851ef7b3ad2a526ca12fe8d4784776cf7b8ecd';
 
 export type AuthUser = User & { passwordHash?: string };
 
@@ -33,8 +107,8 @@ interface DatabaseState {
   addCustomer: (customer: Customer) => void;
   updateCustomer: (id: string, updates: Partial<Customer>) => void;
   
-  addUser: (user: Omit<AuthUser, 'passwordHash'> & { password: string }) => void;
-  verifyPassword: (email: string, password: string) => AuthUser | undefined;
+  addUser: (user: Omit<AuthUser, 'passwordHash'> & { password: string }) => Promise<void>;
+  verifyPassword: (email: string, password: string) => Promise<AuthUser | undefined>;
   
   initializeFromSeed: () => void;
 }
@@ -90,8 +164,8 @@ export const useDatabaseStore = create<DatabaseState>()(
         }));
       },
 
-      addUser: (user) => {
-        const passwordHash = simpleHash(user.password);
+      addUser: async (user) => {
+        const passwordHash = await hashPassword(user.password);
         const { password: _password, ...userWithoutPassword } = user;
         void _password;
         set((state) => ({
@@ -99,13 +173,17 @@ export const useDatabaseStore = create<DatabaseState>()(
         }));
       },
 
-      verifyPassword: (email, password) => {
-        const passwordHash = simpleHash(password);
-        const user = get().users.find(u => u.email === email && u.passwordHash === passwordHash);
-        if (user) {
-          const { passwordHash: _ph, ...userWithoutHash } = user;
-          void _ph;
-          return userWithoutHash;
+      verifyPassword: async (email, password) => {
+        const users = get().users;
+        for (const user of users) {
+          if (user.email === email && user.passwordHash) {
+            const isMatch = await verifyPasswordHash(password, user.passwordHash);
+            if (isMatch) {
+              const { passwordHash: _ph, ...userWithoutHash } = user;
+              void _ph;
+              return userWithoutHash;
+            }
+          }
         }
         return undefined;
       },
@@ -124,8 +202,8 @@ export const useDatabaseStore = create<DatabaseState>()(
                 id: 'admin-seed',
                 name: 'System Admin',
                 email: 'admin@rollon.com',
-                // Password hash for 'admin123' - not stored in production
-                passwordHash: simpleHash('admin123'),
+                // Pre-computed PBKDF2 hash for seed password 'admin123'
+                passwordHash: ADMIN_SEED_HASH,
                 role: 'admin',
                 avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin'
               }

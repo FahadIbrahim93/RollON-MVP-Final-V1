@@ -207,7 +207,7 @@ export function ProductDetail() {
                     {formatPrice(product.price)}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-2xl text-white/20 line-through font-light decoration-red-500/30">
+                    <span className="text-2xl text-white/50 line-through font-light decoration-red-500/30">
                       {formatPrice(product.originalPrice)}
                     </span>
                   )}

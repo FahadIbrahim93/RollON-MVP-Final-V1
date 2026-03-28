@@ -205,7 +205,7 @@ export function Hero() {
               >
                 UNMATCHED <br />
                 <span className="text-primary italic">PRECISION.</span> <br />
-                <span className="text-white/20">PURE ART.</span>
+                <span className="text-white/50">PURE ART.</span>
               </motion.h1>
 
               {/* Decorative text */}
