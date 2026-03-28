@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { shallow } from 'zustand/shallow';
 
 export function CartDrawer() {
   const items = useCartStore((state) => state.items);
