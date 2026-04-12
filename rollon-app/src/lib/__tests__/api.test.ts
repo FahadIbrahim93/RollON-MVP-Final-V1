@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { api } from '../../lib/api';
+import { useDatabaseStore } from '@/store/databaseStore';
+
+beforeAll(() => {
+  useDatabaseStore.getState().initializeFromSeed();
+});
 
 describe('api', () => {
   describe('products', () => {

@@ -341,7 +341,7 @@ export function Navbar() {
                 </div>
 
                 <div className="relative group">
-                  <Search className="absolute left-8 top-1/2 -translate-y-1/2 w-10 h-10 text-white/10 group-focus-within:text-primary transition-all duration-500" />
+                  <Search className="absolute left-8 top-1/2 -translate-y-1/2 w-10 h-10 text-white/30 group-focus-within:text-primary transition-all duration-500" />
                   <form onSubmit={handleSearchSubmit} className="w-full">
                     <Input
                       type="text"

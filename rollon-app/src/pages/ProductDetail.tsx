@@ -188,7 +188,7 @@ export function ProductDetail() {
                           "w-5 h-5",
                           i < Math.floor(product.rating)
                             ? "text-primary fill-primary"
-                            : "text-white/10 fill-white/10"
+                            : "text-white/30 fill-white/30"
                         )}
                       />
                     ))}

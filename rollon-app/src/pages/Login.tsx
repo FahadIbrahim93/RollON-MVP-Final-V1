@@ -126,7 +126,7 @@ export function Login() {
                   <input type="checkbox" className="w-4 h-4 accent-green-400 rounded" />
                   <span className="text-white/60 text-sm">Remember me</span>
                 </label>
-                <Link to="/forgot-password" className="text-green-400 text-sm hover:underline">
+                <Link to="/contact" className="text-green-400 text-sm hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -153,10 +153,10 @@ export function Login() {
 
             {/* Social Login */}
             <div className="grid grid-cols-2 gap-4">
-              <button className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+              <button aria-label="Sign in with Google" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
                 Google
               </button>
-              <button className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+              <button aria-label="Sign in with Facebook" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
                 Facebook
               </button>
             </div>

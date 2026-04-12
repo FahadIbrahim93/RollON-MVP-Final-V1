@@ -1,6 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+
+vi.mock('@/store/cartStore', () => ({
+    useCartStore: vi.fn(),
+}));
+
 import { CartDrawer } from '../CartDrawer';
 import { useCartStore } from '@/store/cartStore';
 import type { Product } from '@/types';
@@ -20,14 +25,32 @@ const mockProduct: Product = {
     inStock: true,
 };
 
+let storeState: ReturnType<typeof createStoreState>;
+const mockedUseCartStore = useCartStore as unknown as ReturnType<typeof vi.fn>;
+
+const createStoreState = (overrides: Partial<Record<string, any>> = {}) => ({
+    items: [],
+    isOpen: true,
+    totalItems: 0,
+    totalPrice: 0,
+    setCartOpen: vi.fn(),
+    removeItem: vi.fn(),
+    updateQuantity: vi.fn(),
+    clearCart: vi.fn(),
+    ...overrides,
+});
+
 const renderWithRouter = (component: React.ReactNode) => {
     return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 
 describe('CartDrawer', () => {
     beforeEach(() => {
-        useCartStore.getState().clearCart();
-        useCartStore.getState().setCartOpen(true);
+        vi.clearAllMocks();
+        storeState = createStoreState();
+        mockedUseCartStore.mockImplementation((selector: any) => {
+            return typeof selector === 'function' ? selector(storeState) : storeState;
+        });
     });
 
     it('should render empty cart message when no items', () => {
@@ -36,7 +59,16 @@ describe('CartDrawer', () => {
     });
 
     it('should render cart items when items exist', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{
+                ...mockProduct,
+                productId: mockProduct.id,
+                quantity: 1,
+            }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -44,8 +76,15 @@ describe('CartDrawer', () => {
     });
 
     it('should display correct item count in header', () => {
-        useCartStore.getState().addItem(mockProduct);
-        useCartStore.getState().addItem({ ...mockProduct, id: '2', price: 200 });
+        storeState = createStoreState({
+            items: [
+                { ...mockProduct, productId: mockProduct.id, quantity: 1 },
+                { ...mockProduct, id: '2', productId: '2', price: 200, quantity: 1 },
+            ],
+            totalItems: 2,
+            totalPrice: 300,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -53,8 +92,15 @@ describe('CartDrawer', () => {
     });
 
     it('should display correct total price', async () => {
-        useCartStore.getState().addItem(mockProduct);
-        useCartStore.getState().addItem({ ...mockProduct, id: '2', price: 200 });
+        storeState = createStoreState({
+            items: [
+                { ...mockProduct, productId: mockProduct.id, quantity: 1 },
+                { ...mockProduct, id: '2', productId: '2', price: 200, quantity: 1 },
+            ],
+            totalItems: 2,
+            totalPrice: 300,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -65,7 +111,12 @@ describe('CartDrawer', () => {
     });
 
     it('should have settle manifest button', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{ ...mockProduct, productId: mockProduct.id, quantity: 1 }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -73,7 +124,12 @@ describe('CartDrawer', () => {
     });
 
     it('should have purge case button', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{ ...mockProduct, productId: mockProduct.id, quantity: 1 }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -81,7 +137,12 @@ describe('CartDrawer', () => {
     });
 
     it('should display trust badges when items exist', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{ ...mockProduct, productId: mockProduct.id, quantity: 1 }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -90,7 +151,12 @@ describe('CartDrawer', () => {
     });
 
     it('should link to checkout', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{ ...mockProduct, productId: mockProduct.id, quantity: 1 }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
+        mockedUseCartStore.mockImplementation((selector: any) => (typeof selector === 'function' ? selector(storeState) : storeState));
 
         renderWithRouter(<CartDrawer />);
 
@@ -99,7 +165,11 @@ describe('CartDrawer', () => {
     });
 
     it('should show quantity badge on item', () => {
-        useCartStore.getState().addItem(mockProduct);
+        storeState = createStoreState({
+            items: [{ ...mockProduct, productId: mockProduct.id, quantity: 1 }],
+            totalItems: 1,
+            totalPrice: 100,
+        });
 
         renderWithRouter(<CartDrawer />);
 

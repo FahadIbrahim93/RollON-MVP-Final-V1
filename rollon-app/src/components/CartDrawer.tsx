@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Plus, Minus, ShoppingBag, Trash2, ArrowRight, ShieldCheck, Truck, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '@/store/cartStore';
@@ -21,12 +20,8 @@ export function CartDrawer() {
   const setIsCartOpen = useCartStore((state) => state.setCartOpen);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
-  const { totalItems, totalPrice } = useCartStore(
-    useCallback(
-      (state) => ({ totalItems: state.totalItems, totalPrice: state.totalPrice }),
-      []
-    )
-  );
+  const totalItems = useCartStore((state) => state.totalItems);
+  const totalPrice = useCartStore((state) => state.totalPrice);
   const clearCart = useCartStore((state) => state.clearCart);
 
   return (
@@ -56,7 +51,7 @@ export function CartDrawer() {
             <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
               <div className="relative">
                 <div className="w-32 h-32 bg-white/[0.02] rounded-[3rem] flex items-center justify-center border border-white/5 border-dashed">
-                  <ShoppingBag className="w-12 h-12 text-white/10" />
+                  <ShoppingBag className="w-12 h-12 text-white/30" />
                 </div>
                 <div className="absolute -top-4 -right-4 w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center blur-sm" />
               </div>

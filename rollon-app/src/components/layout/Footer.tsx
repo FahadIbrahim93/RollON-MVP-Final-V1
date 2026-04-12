@@ -13,15 +13,15 @@ const footerLinks = {
   ],
   support: [
     { label: 'Concierge Help', href: '/contact' },
-    { label: 'Order Tracking', href: '/tracking' },
-    { label: 'Quality Guide', href: '/quality' },
-    { label: 'Shipping Policy', href: '/shipping' },
+    { label: 'Order Tracking', href: '/account' },
+    { label: 'Quality Guide', href: '/about' },
+    { label: 'Shipping Policy', href: '/contact' },
   ],
   company: [
     { label: 'Our Story', href: '/about' },
-    { label: 'Engineering', href: '/engineering' },
-    { label: 'Partners', href: '/partners' },
-    { label: 'Legal', href: '/terms' },
+    { label: 'Engineering', href: '/about' },
+    { label: 'Partners', href: '/contact' },
+    { label: 'Legal', href: '/contact' },
   ],
 };
 

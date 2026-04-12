@@ -40,7 +40,7 @@ export function Categories() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-5xl sm:text-6xl lg:text-8xl font-display font-black text-white mb-6 tracking-tighter"
           >
-            DOMAIN <span className="text-white/10 italic">OF</span> <span className="text-primary italic transition-all duration-700 hover:text-white">STYLE</span>
+            DOMAIN <span className="text-white/30 italic">OF</span> <span className="text-primary italic transition-all duration-700 hover:text-white">STYLE</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

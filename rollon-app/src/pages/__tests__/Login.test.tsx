@@ -66,7 +66,13 @@ describe('Login', () => {
 
     it('renders sign in button', () => {
       renderLogin();
-      expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
+    });
+
+    it('renders google and facebook buttons', () => {
+      renderLogin();
+      expect(screen.getByRole('button', { name: /sign in with google/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /sign in with facebook/i })).toBeInTheDocument();
     });
 
     it('renders forgot password link', () => {
@@ -93,7 +99,7 @@ describe('Login', () => {
       await user.type(passwordInput, 'password123');
       await user.tab();
       
-      await user.click(screen.getByRole('button', { name: /sign in/i }));
+      await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
       await waitFor(() => {
         expect(screen.getByText(/invalid email address/i)).toBeInTheDocument();
@@ -112,7 +118,7 @@ describe('Login', () => {
       await user.type(passwordInput, 'short');
       await user.tab();
       
-      await user.click(screen.getByRole('button', { name: /sign in/i }));
+      await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
       await waitFor(() => {
         expect(screen.getByText(/password must be at least 8 characters/i)).toBeInTheDocument();
@@ -131,7 +137,7 @@ describe('Login', () => {
       await user.type(passwordInput, 'password123');
       await user.tab();
       
-      await user.click(screen.getByRole('button', { name: /sign in/i }));
+      await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
       await waitFor(() => {
         expect(screen.getByText(/invalid email address/i)).toBeInTheDocument();
@@ -146,7 +152,7 @@ describe('Login', () => {
       await user.type(emailInput, 'test@example.com');
       await user.tab();
       
-      await user.click(screen.getByRole('button', { name: /sign in/i }));
+      await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
       await waitFor(() => {
         expect(screen.getByText(/password must be at least 8 characters/i)).toBeInTheDocument();

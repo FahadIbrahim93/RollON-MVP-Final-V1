@@ -57,8 +57,7 @@ async function verifyPasswordHash(
 
   const salt = hexToBytes(saltHex);
   const encoder = new TextEncoder();
-  const saltBuffer = salt.slice(0, 32); // Ensure 32 bytes
-  const saltArray = new Uint8Array(saltBuffer).slice(0, 32);
+  const saltArray = new Uint8Array(salt.slice(0, 16));
   
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
@@ -82,11 +81,6 @@ async function verifyPasswordHash(
   }
   return mismatch === 0;
 }
-
-// Pre-computed PBKDF2 hash for admin seed password 'admin123'.
-// Generated once offline so initializeFromSeed stays synchronous.
-const ADMIN_SEED_HASH =
-  '00000000000000000000000000000000:510c749b88d3c1a5dc2d171b17851ef7b3ad2a526ca12fe8d4784776cf7b8ecd';
 
 export type AuthUser = User & { passwordHash?: string };
 
@@ -197,17 +191,7 @@ export const useDatabaseStore = create<DatabaseState>()(
             categories: initialCategories,
             orders: initialOrders,
             customers: initialCustomers,
-            users: [
-              {
-                id: 'admin-seed',
-                name: 'System Admin',
-                email: 'admin@rollon.com',
-                // Pre-computed PBKDF2 hash for seed password 'admin123'
-                passwordHash: ADMIN_SEED_HASH,
-                role: 'admin',
-                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin'
-              }
-            ],
+            users: [],
           });
         }
       },

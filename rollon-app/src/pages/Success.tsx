@@ -149,7 +149,7 @@ export default function Success() {
                             </div>
                             <div className="text-right">
                                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 mb-1 block italic underline decoration-primary/20">Authorized Security</span>
-                                <p className="text-[9px] font-mono text-white/10 tracking-widest truncate max-w-[200px]">AUTH_SIG: B82X-091L-Z991-P011</p>
+                                <p className="text-[9px] font-mono text-white/50 tracking-widest truncate max-w-[200px]">AUTH_SIG: B82X-091L-Z991-P011</p>
                             </div>
                         </div>
                     </motion.div>

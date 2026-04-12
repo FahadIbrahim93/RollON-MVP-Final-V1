@@ -122,7 +122,7 @@ export function Features() {
                             <feature.icon className="h-6 w-6 text-white/60 group-hover:text-primary transition-colors" />
                           </div>
                           {/* Step number decorator */}
-                          <span className="absolute -top-2 -right-2 text-[10px] font-black text-white/10 group-hover:text-primary/30 transition-colors">
+                          <span className="absolute -top-2 -right-2 text-[10px] font-black text-white/40 group-hover:text-primary/30 transition-colors">
                             0{index + 1}
                           </span>
                         </div>

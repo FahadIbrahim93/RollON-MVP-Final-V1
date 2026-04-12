@@ -78,7 +78,7 @@ export function Testimonials() {
                               "w-5 h-5 transition-colors duration-500",
                               i < testimonials[currentIndex].rating
                                 ? 'text-primary fill-primary shadow-[0_0_20px_rgba(74,222,128,0.2)]'
-                                : 'text-white/10 fill-white/10'
+                                : 'text-white/30 fill-white/30'
                             )}
                           />
                         ))}

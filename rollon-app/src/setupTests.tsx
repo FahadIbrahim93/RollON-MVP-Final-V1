@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import React from 'react';
 import { vi } from 'vitest';
 
 // Mock ResizeObserver for Radix UI components
@@ -37,23 +38,80 @@ vi.mock('@radix-ui/react-dialog', () => ({
   Description: ({ children }: any) => <p>{children}</p>,
 }));
 
+vi.mock('zustand/middleware', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('zustand/middleware')>();
+  return {
+    ...actual,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    persist: (config: any, _options: any) => config,
+  };
+});
+
 // Mock Framer Motion to skip animations in tests
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const filterMotionProps = ({
+  initial: _initial,
+  animate: _animate,
+  exit: _exit,
+  transition: _transition,
+  variants: _variants,
+  whileHover: _whileHover,
+  whileTap: _whileTap,
+  drag: _drag,
+  dragConstraints: _dragConstraints,
+  layout: _layout,
+  onAnimationComplete: _onAnimationComplete,
+  onViewportBoxUpdate: _onViewportBoxUpdate,
+  whileDrag: _whileDrag,
+  whileFocus: _whileFocus,
+  whileInView: _whileInView,
+  whileScroll: _whileScroll,
+  whileDragEnd: _whileDragEnd,
+  whileHoverEnd: _whileHoverEnd,
+  ...rest
+}: any) => rest;
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+const motionTags = [
+  'a',
+  'article',
+  'aside',
+  'button',
+  'div',
+  'footer',
+  'form',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'header',
+  'img',
+  'input',
+  'label',
+  'li',
+  'main',
+  'nav',
+  'ol',
+  'p',
+  'section',
+  'span',
+  'svg',
+  'ul',
+] as const;
+
+const createMotionElement = (tag: string): ((props: any) => React.ReactElement) => 
+  ({ children, ...props }: any) => React.createElement(tag, filterMotionProps(props), children);
+
 vi.mock('framer-motion', async (importOriginal) => {
   const actual = await importOriginal<typeof import('framer-motion')>();
+
   return {
     ...actual,
     motion: {
       ...actual.motion,
-      div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-      button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-      span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
-      h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-      h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-      h3: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
-      h4: ({ children, ...props }: any) => <h4 {...props}>{children}</h4>,
-      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-      section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-      main: ({ children, ...props }: any) => <main {...props}>{children}</main>,
+      ...Object.fromEntries(motionTags.map((tag) => [tag, createMotionElement(tag)])),
     },
     AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
   };

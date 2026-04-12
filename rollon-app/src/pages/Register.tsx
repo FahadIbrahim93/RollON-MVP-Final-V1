@@ -188,10 +188,10 @@ export function Register() {
 
             {/* Social Login */}
             <div className="grid grid-cols-2 gap-4">
-              <button className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+              <button aria-label="Sign up with Google" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
                 Google
               </button>
-              <button className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+              <button aria-label="Sign up with Facebook" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
                 Facebook
               </button>
             </div>
