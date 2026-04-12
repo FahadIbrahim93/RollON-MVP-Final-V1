@@ -49,6 +49,49 @@ describe('api', () => {
       expect(products).toBeDefined();
       expect(Array.isArray(products)).toBe(true);
     });
+
+    it('should create a new product', async () => {
+      const newProduct = {
+        id: 'test-product-1',
+        name: 'Test Product',
+        slug: 'test-product',
+        description: 'Test description',
+        price: 1999,
+        originalPrice: 2999,
+        image: '/images/test.jpg',
+        category: 'Test',
+        categoryId: '1',
+        tags: ['test'],
+        rating: 4.5,
+        reviewCount: 10,
+        inStock: true,
+        stock: 100,
+      };
+      const created = await api.products.create(newProduct);
+      expect(created).toBeDefined();
+      expect(created.id).toBe('test-product-1');
+      expect(created.name).toBe('Test Product');
+      
+      const products = await api.products.getAll();
+      expect(products.some(p => p.id === 'test-product-1')).toBe(true);
+    });
+
+    it('should update an existing product', async () => {
+      const updates = { name: 'Updated Product Name', price: 2999 };
+      const updated = await api.products.update('test-product-1', updates);
+      expect(updated).toBeDefined();
+      expect(updated.name).toBe('Updated Product Name');
+      expect(updated.price).toBe(2999);
+    });
+
+    it('should delete a product', async () => {
+      const result = await api.products.delete('test-product-1');
+      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      
+      const products = await api.products.getAll();
+      expect(products.some(p => p.id === 'test-product-1')).toBe(false);
+    });
   });
 
   describe('categories', () => {

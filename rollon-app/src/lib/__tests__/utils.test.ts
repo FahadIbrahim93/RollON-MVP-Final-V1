@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatPrice, cn } from '../utils';
+import { formatPrice, cn, truncate } from '../utils';
 
 describe('utils', () => {
   describe('formatPrice', () => {
@@ -29,6 +29,18 @@ describe('utils', () => {
     it('should handle empty strings', () => {
       const result = cn('foo', '', 'bar');
       expect(result).toBe('foo bar');
+    });
+  });
+
+  describe('truncate', () => {
+    it('should return original string if shorter than length', () => {
+      const result = truncate('hello', 10);
+      expect(result).toBe('hello');
+    });
+
+    it('should truncate string and add ellipsis when longer than length', () => {
+      const result = truncate('hello world', 5);
+      expect(result).toBe('hello...');
     });
   });
 });
