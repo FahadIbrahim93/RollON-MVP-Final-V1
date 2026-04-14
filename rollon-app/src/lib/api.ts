@@ -5,7 +5,7 @@ import type { Category, Customer, Order, Product, Testimonial } from '@/types';
 const API_DELAY = 300;
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const USE_REMOTE = import.meta.env.VITE_USE_REMOTE_API === 'true';
-
+const ALLOW_REMOTE_FALLBACK = import.meta.env.VITE_ENABLE_REMOTE_FALLBACK === 'true';
 
 function getAuthToken(): string | null {
   if (typeof window === 'undefined') {
@@ -62,7 +62,11 @@ const getStoreCategories = () => useDatabaseStore.getState().categories;
 const getStoreOrders = () => useDatabaseStore.getState().orders;
 const getStoreCustomers = () => useDatabaseStore.getState().customers;
 
-const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise<T>) => {
+const withFallback = async <T>(
+  remoteFn: () => Promise<T>,
+  mockFn: () => Promise<T>,
+  resourceLabel: string,
+) => {
   if (!USE_REMOTE) {
     return mockFn();
   }
@@ -70,32 +74,38 @@ const withFallback = async <T>(remoteFn: () => Promise<T>, mockFn: () => Promise
   try {
     return await remoteFn();
   } catch (error) {
-    console.warn('Remote API unavailable, falling back to local dataset.', error);
+    if (!ALLOW_REMOTE_FALLBACK) {
+      throw new Error(`Remote API request failed for ${resourceLabel}. Set VITE_ENABLE_REMOTE_FALLBACK=true to opt in to local fallback.`);
+    }
+
+    console.warn(`Remote API unavailable for ${resourceLabel}; falling back to local dataset.`, error);
     return mockFn();
   }
 };
 
 export const api = {
   products: {
-    getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), async () => simulateApiCall(getStoreProducts())),
+    getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), async () => simulateApiCall(getStoreProducts()), 'products.getAll'),
 
     getById: async (id: string) =>
-      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => getStoreProducts().find((p) => p.id === id)),
+      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => getStoreProducts().find((p) => p.id === id), 'products.getById'),
 
     getBySlug: async (slug: string) =>
       withFallback<Product | undefined>(
         () => fetchJson(`/products?slug=${encodeURIComponent(slug)}`),
         async () => getStoreProducts().find((p) => p.slug === slug),
+        'products.getBySlug',
       ),
 
     getByCategory: async (categoryId: string) =>
       withFallback<Product[]>(
         async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?categoryId=${encodeURIComponent(categoryId)}`)),
         async () => getStoreProducts().filter((p) => p.categoryId === categoryId),
+        'products.getByCategory',
       ),
 
     getFeatured: async () =>
-      withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => getStoreProducts().filter((p) => p.featured)),
+      withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => getStoreProducts().filter((p) => p.featured), 'products.getFeatured'),
 
     search: async (query: string) =>
       withFallback<Product[]>(
@@ -109,6 +119,7 @@ export const api = {
               p.tags?.some((t) => t.toLowerCase().includes(lowerQuery)),
           );
         },
+        'products.search',
       ),
 
     create: async (product: Product) => {
@@ -128,19 +139,19 @@ export const api = {
   },
 
   categories: {
-    getAll: async () => withFallback<Category[]>(() => fetchJson('/categories'), () => simulateApiCall(getStoreCategories())),
+    getAll: async () => withFallback<Category[]>(() => fetchJson('/categories'), () => simulateApiCall(getStoreCategories()), 'categories.getAll'),
 
     getById: async (id: string) =>
       withFallback<Category | undefined>(async () => {
         const categories = await fetchJson<Category[]>('/categories');
         return categories.find((c) => c.id === id);
-      }, async () => getStoreCategories().find((c) => c.id === id)),
+      }, async () => getStoreCategories().find((c) => c.id === id), 'categories.getById'),
 
     getBySlug: async (slug: string) =>
       withFallback<Category | undefined>(async () => {
         const categories = await fetchJson<Category[]>('/categories');
         return categories.find((c) => c.slug === slug);
-      }, async () => getStoreCategories().find((c) => c.slug === slug)),
+      }, async () => getStoreCategories().find((c) => c.slug === slug), 'categories.getBySlug'),
   },
 
   testimonials: {
@@ -148,10 +159,10 @@ export const api = {
   },
 
   orders: {
-    getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), async () => simulateApiCall(getStoreOrders())),
+    getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), async () => simulateApiCall(getStoreOrders()), 'orders.getAll'),
 
     getById: async (id: string) =>
-      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => getStoreOrders().find((o) => o.id === id)),
+      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => getStoreOrders().find((o) => o.id === id), 'orders.getById'),
 
     create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) => {
       const newOrder: Order = {
@@ -174,18 +185,19 @@ export const api = {
             body: JSON.stringify(order),
           }),
         async () => newOrder,
+        'orders.create',
       );
     },
   },
 
   customers: {
-    getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), async () => simulateApiCall(getStoreCustomers())),
+    getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), async () => simulateApiCall(getStoreCustomers()), 'customers.getAll'),
 
     getById: async (id: string) =>
       withFallback<Customer | undefined>(async () => {
         const customers = await fetchJson<Customer[]>('/customers');
         return customers.find((c) => c.id === id);
-      }, async () => getStoreCustomers().find((c) => c.id === id)),
+      }, async () => getStoreCustomers().find((c) => c.id === id), 'customers.getById'),
   },
 
   payment: {
