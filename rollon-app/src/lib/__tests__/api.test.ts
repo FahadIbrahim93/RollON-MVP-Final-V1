@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { api } from '../../lib/api';
 import { useDatabaseStore } from '@/store/databaseStore';
 
-beforeAll(() => {
+beforeEach(() => {
   useDatabaseStore.getState().initializeFromSeed();
 });
 
@@ -12,6 +12,7 @@ describe('api', () => {
       const products = await api.products.getAll();
       expect(products).toBeDefined();
       expect(Array.isArray(products)).toBe(true);
+      expect(products.length).toBeGreaterThan(0);
     });
 
     it('should get product by id', async () => {
@@ -26,8 +27,13 @@ describe('api', () => {
       expect(product?.slug).toBe('hb109-hot-silicon-bong');
     });
 
-    it('should return undefined for non-existent product', async () => {
-      const product = await api.products.getById('999');
+    it('should return undefined for non-existent product id', async () => {
+      const product = await api.products.getById('missing-product-id');
+      expect(product).toBeUndefined();
+    });
+
+    it('should return undefined for non-existent product slug', async () => {
+      const product = await api.products.getBySlug('missing-product-slug');
       expect(product).toBeUndefined();
     });
 
@@ -35,19 +41,37 @@ describe('api', () => {
       const products = await api.products.getByCategory('3');
       expect(products).toBeDefined();
       expect(Array.isArray(products)).toBe(true);
-      products.forEach(p => expect(p.categoryId).toBe('3'));
+      products.forEach((product) => expect(product.categoryId).toBe('3'));
     });
 
-    it('should get featured products', async () => {
+    it('should return empty array for unknown category', async () => {
+      const products = await api.products.getByCategory('does-not-exist');
+      expect(products).toEqual([]);
+    });
+
+    it('should get featured products only', async () => {
       const products = await api.products.getFeatured();
       expect(products).toBeDefined();
       expect(Array.isArray(products)).toBe(true);
+      expect(products.length).toBeGreaterThan(0);
+      products.forEach((product) => expect(product.featured).toBe(true));
     });
 
-    it('should search products', async () => {
-      const products = await api.products.search('grinder');
-      expect(products).toBeDefined();
-      expect(Array.isArray(products)).toBe(true);
+    it('should search products case-insensitively', async () => {
+      const products = await api.products.search('GRINDER');
+      expect(products.length).toBeGreaterThan(0);
+      expect(products.some((product) => product.name.toLowerCase().includes('grinder'))).toBe(true);
+    });
+
+    it('should search products using tag matches', async () => {
+      const products = await api.products.search('rick and morty');
+      expect(products.length).toBeGreaterThan(0);
+      expect(products.some((product) => product.tags?.some((tag) => tag.toLowerCase().includes('rick and morty')))).toBe(true);
+    });
+
+    it('should return empty search results for unknown terms', async () => {
+      const products = await api.products.search('zzzz-no-product-match-zzzz');
+      expect(products).toEqual([]);
     });
 
     it('should create a new product', async () => {
@@ -67,30 +91,64 @@ describe('api', () => {
         inStock: true,
         stock: 100,
       };
+
       const created = await api.products.create(newProduct);
-      expect(created).toBeDefined();
       expect(created.id).toBe('test-product-1');
-      expect(created.name).toBe('Test Product');
-      
+
       const products = await api.products.getAll();
-      expect(products.some(p => p.id === 'test-product-1')).toBe(true);
+      expect(products.some((product) => product.id === 'test-product-1')).toBe(true);
     });
 
-    it('should update an existing product', async () => {
+    it('should update an existing product and persist in store', async () => {
       const updates = { name: 'Updated Product Name', price: 2999 };
-      const updated = await api.products.update('test-product-1', updates);
-      expect(updated).toBeDefined();
-      expect(updated.name).toBe('Updated Product Name');
-      expect(updated.price).toBe(2999);
+      const updated = await api.products.update('fb-1', updates);
+      expect(updated).toEqual({ id: 'fb-1', ...updates });
+
+      const product = await api.products.getById('fb-1');
+      expect(product?.name).toBe('Updated Product Name');
+      expect(product?.price).toBe(2999);
     });
 
-    it('should delete a product', async () => {
-      const result = await api.products.delete('test-product-1');
-      expect(result).toBeDefined();
+    it('should not create a record when updating unknown product id', async () => {
+      const result = await api.products.update('missing-id', { name: 'Ignored Update' });
+      expect(result).toEqual({ id: 'missing-id', name: 'Ignored Update' });
+
+      const product = await api.products.getById('missing-id');
+      expect(product).toBeUndefined();
+    });
+
+    it('should delete an existing product', async () => {
+      await api.products.create({
+        id: 'test-product-delete',
+        name: 'Delete Product',
+        slug: 'delete-product',
+        description: 'Delete description',
+        price: 1000,
+        originalPrice: 1200,
+        image: '/images/delete.jpg',
+        category: 'Test',
+        categoryId: '1',
+        tags: ['delete'],
+        rating: 4,
+        reviewCount: 1,
+        inStock: true,
+        stock: 1,
+      });
+
+      const result = await api.products.delete('test-product-delete');
       expect(result.success).toBe(true);
-      
-      const products = await api.products.getAll();
-      expect(products.some(p => p.id === 'test-product-1')).toBe(false);
+
+      const product = await api.products.getById('test-product-delete');
+      expect(product).toBeUndefined();
+    });
+
+    it('should return success when deleting unknown product id', async () => {
+      const before = (await api.products.getAll()).length;
+      const result = await api.products.delete('not-in-store');
+      const after = (await api.products.getAll()).length;
+
+      expect(result).toEqual({ success: true });
+      expect(after).toBe(before);
     });
   });
 
@@ -108,10 +166,20 @@ describe('api', () => {
       expect(category?.id).toBe('1');
     });
 
+    it('should return undefined for unknown category id', async () => {
+      const category = await api.categories.getById('missing-category-id');
+      expect(category).toBeUndefined();
+    });
+
     it('should get category by slug', async () => {
       const category = await api.categories.getBySlug('vaporizers');
       expect(category).toBeDefined();
       expect(category?.slug).toBe('vaporizers');
+    });
+
+    it('should return undefined for unknown category slug', async () => {
+      const category = await api.categories.getBySlug('missing-category-slug');
+      expect(category).toBeUndefined();
     });
   });
 
@@ -120,6 +188,7 @@ describe('api', () => {
       const testimonials = await api.testimonials.getAll();
       expect(testimonials).toBeDefined();
       expect(Array.isArray(testimonials)).toBe(true);
+      expect(testimonials.length).toBeGreaterThan(0);
     });
   });
 
@@ -133,9 +202,15 @@ describe('api', () => {
     it('should get order by id', async () => {
       const order = await api.orders.getById('fb-order-1');
       expect(order).toBeDefined();
+      expect(order?.id).toBe('fb-order-1');
     });
 
-    it('should create new order', async () => {
+    it('should return undefined for unknown order id', async () => {
+      const order = await api.orders.getById('missing-order-id');
+      expect(order).toBeUndefined();
+    });
+
+    it('should create new order and persist in store', async () => {
       const newOrder = await api.orders.create({
         customerId: 'fb-customer-1',
         customerName: 'Test User',
@@ -151,9 +226,13 @@ describe('api', () => {
           phone: '0123456789',
         },
       });
-      expect(newOrder).toBeDefined();
+
       expect(newOrder.orderNumber).toBeDefined();
       expect(newOrder.id).toBeDefined();
+
+      const persisted = await api.orders.getById(newOrder.id);
+      expect(persisted).toBeDefined();
+      expect(persisted?.customerId).toBe('fb-customer-1');
     });
   });
 
@@ -162,11 +241,18 @@ describe('api', () => {
       const customers = await api.customers.getAll();
       expect(customers).toBeDefined();
       expect(Array.isArray(customers)).toBe(true);
+      expect(customers.length).toBeGreaterThan(0);
     });
 
     it('should get customer by id', async () => {
       const customer = await api.customers.getById('fb-customer-1');
       expect(customer).toBeDefined();
+      expect(customer?.id).toBe('fb-customer-1');
+    });
+
+    it('should return undefined for unknown customer id', async () => {
+      const customer = await api.customers.getById('missing-customer-id');
+      expect(customer).toBeUndefined();
     });
   });
 
@@ -175,6 +261,7 @@ describe('api', () => {
       const methods = await api.payment.getMethods();
       expect(methods).toBeDefined();
       expect(Array.isArray(methods)).toBe(true);
+      expect(methods.length).toBeGreaterThan(0);
     });
   });
 });
