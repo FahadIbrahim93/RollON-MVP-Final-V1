@@ -94,6 +94,7 @@ rollon-app/
 - Key schema documented in `docs/database-architecture.md`
 - Catalog research notes (Facebook metadata + data sourcing): `docs/catalog-research.md`
 - Execution taskboard and agent protocol: `docs/agents-taskboard.md`
+- AI contributor execution guide: `docs/ai-contributor-playbook.md`
 - Production hardening checklist: `docs/production-hardening.md`
 - React frontend can use remote API or local fallback mode
 
@@ -103,7 +104,7 @@ rollon-app/
 - Environment variables for secrets
 - Form validation with Zod
 - Input sanitization
-- 0 npm vulnerabilities
+- Vulnerability status must be verified in CI (do not assume local `npm audit` always works in restricted environments)
 
 ## ♿ Accessibility
 
