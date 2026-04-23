@@ -8,6 +8,10 @@
   [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-4.2.1-38B2AC?logo=tailwind-css&logoColor=white)](#)
   [![Zustand 5](https://img.shields.io/badge/Zustand-5.0.11-8C5A3E)](#)
   [![TypeScript](https://img.shields.io/badge/TypeScript-%7E5.9.3-3178C6?logo=typescript&logoColor=white)](#)
+  <br/><br/>
+  <a href="https://rollon-delta.vercel.app">
+    <img src="https://img.shields.io/badge/LIVE%20DEMO-rollon--delta.vercel.app-2ECC71?style=for-the-badge" alt="Live Demo" />
+  </a>
 </div>
 
 <br/>
@@ -56,9 +60,25 @@ Follow these steps to run the RollON storefront locally.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/rollon-app.git
-cd rollon-app
+git clone https://github.com/FahadIbrahim93/RollON-MVP-Final-V1.git
+cd RollON-MVP-Final-V1/rollon-app
 ```
+
+---
+
+## 🚀 Live Demo
+
+**🌐 Production URL:** https://rollon-delta.vercel.app
+
+The deployed version includes:
+- Full e-commerce storefront with product catalog
+- Shopping cart with persistent state
+- Checkout flow with form validation
+- Admin dashboard for products/orders/customers
+- Full mobile responsive design
+- Dark mode aesthetics
+
+---
 
 ### 2. Install Dependencies
 ```bash
@@ -123,4 +143,5 @@ rollon-app/
 
 <div align="center">
   <p>Built as a showcase for <b>Hope Theory</b> — Pushing the boundaries of web experiences.</p>
+  <p><i>Freelance project by Fahad Ibrahim (@hopetheory__)</i></p>
 </div>
