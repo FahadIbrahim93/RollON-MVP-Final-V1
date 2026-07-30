@@ -24,7 +24,7 @@ Highlights:
 ## Demo (useful links)
 
 - Live site: https://rollon-delta.vercel.app
-- Demo screenshot / hero: (live demo)
+- Demo screenshot / hero: `rollon-app/public/assets/hero.svg`
 
 ---
 
