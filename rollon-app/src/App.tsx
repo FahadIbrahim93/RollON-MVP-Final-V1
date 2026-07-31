@@ -1,11 +1,9 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { LoadingFallback } from '@/components/common/LoadingFallback';
-import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { Toaster } from 'sonner';
 
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -30,29 +28,16 @@ const Account = React.lazy(() => import('@/pages/Account').then(m => ({ default:
 const Success = React.lazy(() => import('@/pages/Success'));
 const NotFound = React.lazy(() => import('@/pages/NotFound').then(m => ({ default: m.NotFound })));
 
-// Admin Pages
-const AdminDashboard = React.lazy(() => import('@/pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
-const AdminProducts = React.lazy(() => import('@/pages/admin/AdminProducts').then(m => ({ default: m.AdminProducts })));
-const AdminOrders = React.lazy(() => import('@/pages/admin/AdminOrders').then(m => ({ default: m.AdminOrders })));
-const AdminCustomers = React.lazy(() => import('@/pages/admin/AdminCustomers').then(m => ({ default: m.AdminCustomers })));
-
 function App() {
-  const location = useLocation();
-  const isAdminPath = location.pathname.startsWith('/admin');
-
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {!isAdminPath && (
-        <>
-          <Navbar />
-          <CartDrawer />
-        </>
-      )}
+      <Navbar />
+      <CartDrawer />
       <Toaster position="top-right" expand={false} richColors />
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
           <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
+            <Routes>
               <Route path="/" element={withTransition(Home)} />
               <Route path="/shop" element={withTransition(Shop)} />
               <Route path="/product/:slug" element={withTransition(ProductDetail)} />
@@ -62,20 +47,8 @@ function App() {
               <Route path="/contact" element={withTransition(Contact)} />
               <Route path="/login" element={withTransition(Login)} />
               <Route path="/register" element={withTransition(Register)} />
-              <Route path="/account" element={<ProtectedRoute>{withTransition(Account)}</ProtectedRoute>} />
+              <Route path="/account" element={withTransition(Account)} />
               <Route path="/success" element={withTransition(Success)} />
-
-              {/* Admin Routes — protected: requires admin role, redirects to /login */}
-              {/* eslint-disable-next-line jsx-a11y/aria-role */}
-              <Route path="/admin" element={<ProtectedRoute role="admin">{withTransition(AdminDashboard)}</ProtectedRoute>} />
-              {/* eslint-disable-next-line jsx-a11y/aria-role */}
-              <Route path="/admin/products" element={<ProtectedRoute role="admin">{withTransition(AdminProducts)}</ProtectedRoute>} />
-              {/* eslint-disable-next-line jsx-a11y/aria-role */}
-              <Route path="/admin/orders" element={<ProtectedRoute role="admin">{withTransition(AdminOrders)}</ProtectedRoute>} />
-              {/* eslint-disable-next-line jsx-a11y/aria-role */}
-              <Route path="/admin/customers" element={<ProtectedRoute role="admin">{withTransition(AdminCustomers)}</ProtectedRoute>} />
-              
-              {/* Catch-all 404 Route */}
               <Route path="*" element={withTransition(NotFound)} />
             </Routes>
           </AnimatePresence>
