@@ -17,10 +17,7 @@ export default defineConfig([
       reactRefresh.configs.vite,
       jsxA11y.flatConfigs.recommended,
     ],
-    rules: {
-      // Allow 'any' in test files for flexibility
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
+    rules: {},
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

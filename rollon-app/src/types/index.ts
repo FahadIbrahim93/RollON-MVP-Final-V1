@@ -102,16 +102,3 @@ export interface User {
     role: 'user' | 'admin';
     avatar?: string;
 }
-
-// Type for product categories as a union type
-export type ProductCategory = 'grinders' | 'papers' | 'vaporizers' | 'accessories' | 'lighters' | 'water-pipes';
-
-// Canonical Address interface (can be used by Customer as well)
-export interface Address {
-    fullName: string;
-    phone: string;
-    street: string;
-    city: string;
-    postalCode: string;
-    zone?: string; // Specific to Bangladesh
-}
