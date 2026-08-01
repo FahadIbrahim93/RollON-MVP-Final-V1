@@ -5,46 +5,42 @@ import { CheckCircle2, Package, ArrowRight, Printer, Share2, Sparkles, Globe } f
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCartStore } from '@/store/cartStore';
-import type { Order } from '@/types';
-
-// This would typically come from a context or prop after successful order creation
-const mockOrder: Order = {
-    id: '1',
-    orderNumber: 'RON-2026-006', // Example order number
-    customerId: 'current_user_id', // This would come from auth
-    customerName: 'John Doe', // This would come from auth
-    total: 7200, // This would be calculated from cart
-    status: 'pending',
-    paymentStatus: 'completed',
-    paymentMethod: 'bKash',
-    createdAt: new Date().toISOString(),
-    items: [], // This would come from cart
-    shippingAddress: {
-        name: 'John Doe',
-        address: '123 Main St',
-        city: 'Dhaka',
-        phone: '01712345678'
-    }
-};
-
+import { toast } from 'sonner';
 
 export default function Success() {
     const [searchParams] = useSearchParams();
-    // In a real app, the orderId would be passed from the checkout process
-    // or extracted from the URL if the backend redirects with it.
-    // For now, we'll generate a more deterministic "fake" ID if not in search params,
-    // or try to use a part of the mock order number.
-    const orderIdFromParams = searchParams.get('id');
-    const orderId = orderIdFromParams || mockOrder.orderNumber;
+    // Order ID comes from the checkout flow via the URL query param.
+    // Fall back to a fixed placeholder (avoid impure Date.now() during render).
+    const orderId = searchParams.get('id') || 'RON-NEW';
 
     const clearCart = useCartStore((state) => state.clearCart);
 
     useEffect(() => {
-        // In a real app, you might want to verify the order status with the backend
-        // before clearing the cart.
         clearCart();
         window.scrollTo(0, 0);
     }, [clearCart]);
+
+    const handlePrint = () => {
+        window.print();
+    };
+
+    const handleShare = async () => {
+        const shareUrl = window.location.href;
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'RollON Order Confirmation',
+                    text: `Your RollON order ${orderId} is confirmed!`,
+                    url: shareUrl,
+                });
+            } else {
+                await navigator.clipboard.writeText(shareUrl);
+                toast.success('Order link copied to clipboard');
+            }
+        } catch {
+            // User cancelled share — no-op
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#050505] pt-32 pb-20 px-6 overflow-hidden relative">
@@ -140,10 +136,10 @@ export default function Success() {
 
                         <div className="mt-12 pt-12 border-t border-white/5 flex flex-wrap items-center justify-between gap-6">
                             <div className="flex items-center gap-6">
-                                <Button variant="ghost" className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
+                                <Button variant="ghost" onClick={handlePrint} className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
                                     <Printer className="w-4 h-4" /> Print Receipt
                                 </Button>
-                                <Button variant="ghost" className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
+                                <Button variant="ghost" onClick={handleShare} className="text-white/60 hover:text-white gap-2 font-black tracking-widest text-[10px] uppercase h-12 px-6 bg-white/5 rounded-2xl">
                                     <Share2 className="w-4 h-4" /> Share Access
                                 </Button>
                             </div>

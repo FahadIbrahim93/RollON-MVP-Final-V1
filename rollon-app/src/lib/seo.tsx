@@ -11,7 +11,7 @@ interface SEOConfig {
   jsonLd?: Record<string, unknown>;
 }
 
-const SITE_URL = 'https://rollon.com.bd';
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://rollon-delta.vercel.app';
 
 const upsertMetaTag = (selector: string, attributes: Record<string, string>) => {
   let tag = document.head.querySelector<HTMLMetaElement>(selector);
@@ -70,7 +70,7 @@ export function useDocumentSEO({
   title,
   description,
   canonicalPath,
-  image = '/images/og-image.jpg',
+  image = import.meta.env.VITE_SITE_URL + '/images/og-image.jpg',
   keywords = 'smoking accessories, grinders, vaporizers, rolling papers, lighters, Bangladesh, online shop',
   type = 'website',
   jsonLd,

@@ -10,24 +10,24 @@ const footerLinks = {
     { label: 'Limited Drops', href: '/shop?tag=limited' },
   ],
   support: [
-    { label: 'Concierge Help', href: '/contact' },
+    { label: 'Contact Us', href: '/contact' },
     { label: 'Order Tracking', href: '/account' },
-    { label: 'Quality Guide', href: '/about' },
     { label: 'Shipping Policy', href: '/contact' },
+    { label: 'Returns & Exchanges', href: '/contact' },
   ],
   company: [
     { label: 'Our Story', href: '/about' },
-    { label: 'Engineering', href: '/about' },
-    { label: 'Partners', href: '/contact' },
-    { label: 'Legal', href: '/contact' },
+    { label: 'FAQ', href: '/contact' },
+    { label: 'Terms of Service', href: '/contact' },
+    { label: 'Privacy Policy', href: '/contact' },
   ],
 };
 
 const socialLinks = [
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Facebook, href: '#', label: 'Facebook' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
+  { icon: Facebook, href: 'https://facebook.com/rollon', label: 'Facebook' },
+  { icon: Instagram, href: 'https://instagram.com/rollon', label: 'Instagram' },
+  { icon: Twitter, href: 'https://twitter.com/rollon', label: 'Twitter' },
+  { icon: Youtube, href: 'https://youtube.com/@rollon', label: 'YouTube' },
 ];
 
 export function Footer() {
@@ -135,11 +135,16 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-8">
-            <Link to="/privacy" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
-            <Link to="/terms" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
-            <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[10px] font-black uppercase tracking-widest">
-              STATUS: <span className="text-primary">OPERATIONAL</span>
-            </div>
+            <Link to="/contact" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Privacy</Link>
+            <Link to="/contact" className="text-white/50 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors">Terms</Link>
+            <a
+              href="https://wa.me/8801870489448"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[10px] font-black uppercase tracking-widest hover:text-primary hover:border-primary/30 transition-colors"
+            >
+              SUPPORT: <span className="text-primary">WHATSAPP</span>
+            </a>
           </div>
         </div>
       </div>

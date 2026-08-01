@@ -89,24 +89,24 @@ export const siteConfig: SiteConfig = {
   tagline: 'Premium Smoking Accessories',
   description: 'Your one-stop shop for premium smoking accessories in Bangladesh. Quality products, fast delivery.',
   keywords: ['smoking accessories', 'vaporizers', 'grinders', 'water pipes', 'rolling papers', 'Bangladesh'],
-  email: 'support@rollon.com',
-  phone: '+880****9448',
+  email: 'support@rollon.com.bd',
+  phone: '+880 1870-489448',
   address: 'Dhaka, Bangladesh',
   social: {
     facebook: 'https://facebook.com/rollon',
     instagram: 'https://instagram.com/rollon',
     whatsapp: 'https://wa.me/8801870489448',
   },
-  footerText: '© 2024 RollON. All rights reserved.',
+  footerText: `© ${new Date().getFullYear()} RollON. All rights reserved.`,
 };
 
 export const brandConfig: BrandConfig = {
   primary: '#D4AF37',
   secondary: '#1A1A1A',
   accent: '#FF6B35',
-  logo: '/assets/logo.svg',
+  logo: '/assets/hero.svg',
   favicon: '/favicon.svg',
-  heroImage: '/assets/hero.jpg',
+  heroImage: '/assets/hero.svg',
   heroTitle: 'Premium Smoking Accessories',
   heroSubtitle: 'Discover our curated collection of vaporizers, grinders, water pipes, and more.',
   heroCTA: 'Shop Now',
@@ -133,9 +133,4 @@ export const features: FeatureFlags = {
   whyChooseUs: true,
   accounts: true,
   contactForm: true,
-};
-
-/** Format price using configured currency */
-export const formatPrice = (price: number): string => {
-  return `${commerceConfig.currencySymbol}${price.toLocaleString(commerceConfig.currencyLocale)}`;
 };

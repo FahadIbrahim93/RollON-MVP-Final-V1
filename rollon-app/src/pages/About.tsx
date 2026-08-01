@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { Award, Users, Globe, TrendingUp } from 'lucide-react';
+import { Award, Package, MapPin, ShieldCheck } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
 
 const stats = [
-  { icon: Users, value: '10K+', label: 'Happy Customers' },
-  { icon: Award, value: '500+', label: 'Products' },
-  { icon: Globe, value: '64+', label: 'Cities Served' },
-  { icon: TrendingUp, value: '99%', label: 'Satisfaction Rate' },
+  { icon: Package, value: '50+', label: 'Curated Products' },
+  { icon: MapPin, value: 'Dhaka', label: 'City-Wide Delivery' },
+  { icon: ShieldCheck, value: '100%', label: 'Secure Checkout' },
+  { icon: Award, value: '24h', label: 'Dispatch Time' },
 ];
 
 const values = [

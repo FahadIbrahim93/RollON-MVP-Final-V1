@@ -160,9 +160,9 @@ export function Register() {
                 <input type="checkbox" required className="w-4 h-4 mt-1 accent-green-400 rounded" />
                 <span className="text-white/60 text-sm">
                   I agree to the{' '}
-                  <Link to="/terms" className="text-green-400 hover:underline">Terms of Service</Link>
+                  <Link to="/contact" className="text-green-400 hover:underline">Terms of Service</Link>
                   {' '}and{' '}
-                  <Link to="/privacy" className="text-green-400 hover:underline">Privacy Policy</Link>
+                  <Link to="/contact" className="text-green-400 hover:underline">Privacy Policy</Link>
                 </span>
               </label>
 
@@ -178,23 +178,6 @@ export function Register() {
                 <ArrowRight className="w-4 h-4" />
               </motion.button>
             </form>
-
-            {/* Divider */}
-            <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/60 text-sm">or</span>
-              <div className="flex-1 h-px bg-white/10" />
-            </div>
-
-            {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
-              <button aria-label="Sign up with Google" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
-                Google
-              </button>
-              <button aria-label="Sign up with Facebook" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
-                Facebook
-              </button>
-            </div>
 
             {/* Login Link */}
             <p className="text-center text-white/60 mt-6">

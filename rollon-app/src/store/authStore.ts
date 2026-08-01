@@ -48,16 +48,22 @@ export const useAuthStore = create<AuthState>()(
               user: data.user,
               token: data.token,
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
             });
             return true;
           }
-          
+
           throw new Error('API Login failed');
         } catch {
-          // Local Database Fallback
+          // Local Database Fallback — DEV ONLY.
+          // Production must never silently fall back to fake auth.
+          if (!import.meta.env.DEV) {
+            set({ isLoading: false });
+            return false;
+          }
+
           const localUser = await useDatabaseStore.getState().verifyPassword(email, password);
-          
+
           if (localUser) {
             console.warn('Backend offline: Using local database fallback for login.');
             set({
@@ -65,12 +71,12 @@ export const useAuthStore = create<AuthState>()(
                 id: localUser.id,
                 name: localUser.name,
                 email: localUser.email,
-                role: localUser.role as "user" | "admin",
-                avatar: localUser.avatar
+                role: localUser.role as 'user' | 'admin',
+                avatar: localUser.avatar,
               },
               token: crypto.randomUUID(),
               isAuthenticated: true,
-              isLoading: false
+              isLoading: false,
             });
             return true;
           }
@@ -98,14 +104,19 @@ export const useAuthStore = create<AuthState>()(
             user: data.user,
             token: data.token,
             isAuthenticated: true,
-            isLoading: false
+            isLoading: false,
           });
           return true;
         } catch {
-          // Local Database Fallback
+          // Local Database Fallback — DEV ONLY.
+          if (!import.meta.env.DEV) {
+            set({ isLoading: false });
+            return false;
+          }
+
           const dbUsers = useDatabaseStore.getState().users;
-          
-          if (dbUsers.some(u => u.email === email)) {
+
+          if (dbUsers.some((u) => u.email === email)) {
             set({ isLoading: false });
             return false;
           }
@@ -114,21 +125,21 @@ export const useAuthStore = create<AuthState>()(
             id: 'user-' + Date.now(),
             name,
             email,
-            password,  // Will be hashed in addUser
+            password,
             role: 'user' as const,
-            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name.replace(' ', '')}`
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name.replace(' ', '')}`,
           };
           await useDatabaseStore.getState().addUser(newUser);
-          
+
           // Also create a Customer record so they show up in the Admin Dashboard
           useDatabaseStore.getState().addCustomer({
             id: newUser.id,
             name: newUser.name,
             email: newUser.email,
-            phone: '', // Default empty
+            phone: '',
             totalSpent: 0,
             orders: 0,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
           });
 
           set({
@@ -137,13 +148,13 @@ export const useAuthStore = create<AuthState>()(
               name: newUser.name,
               email: newUser.email,
               role: newUser.role,
-              avatar: newUser.avatar
+              avatar: newUser.avatar,
             },
             token: crypto.randomUUID(),
             isAuthenticated: true,
-            isLoading: false
+            isLoading: false,
           });
-          
+
           return true;
         }
       },
@@ -183,8 +194,8 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
-        isAuthenticated: state.isAuthenticated
+        isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

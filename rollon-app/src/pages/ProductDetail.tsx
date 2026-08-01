@@ -8,12 +8,14 @@ import {
 } from 'lucide-react';
 import { useProductBySlug, useProductsByCategory } from '@/hooks';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { formatPrice, cn } from '@/lib/utils';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { buildProductJsonLd, useDocumentSEO } from '@/lib/seo';
+import { toast } from 'sonner';
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -22,6 +24,10 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+  const wishlist = useWishlistStore((state) => state.items);
+  const addToWishlist = useWishlistStore((state) => state.addItem);
+  const removeFromWishlist = useWishlistStore((state) => state.removeItem);
+  const isInWishlist = product ? wishlist.some((item) => item.product.id === product.id) : false;
 
   const location = useLocation();
 
@@ -148,15 +154,38 @@ export function ProductDetail() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:border-primary/50 hover:text-primary transition-all shadow-xl"
-                    aria-label="Add to wishlist"
+                    aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                    onClick={() => {
+                      if (!product) return;
+                      if (isInWishlist) {
+                        removeFromWishlist(product.id);
+                        toast.success('Removed from wishlist');
+                      } else {
+                        addToWishlist(product);
+                        toast.success('Added to wishlist');
+                      }
+                    }}
                   >
-                    <Heart className="w-5 h-5" />
+                    <Heart className={cn("w-5 h-5", isInWishlist && "fill-primary text-primary")} />
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:border-primary/50 hover:text-primary transition-all shadow-xl"
                     aria-label="Share product"
+                    onClick={() => {
+                      if (!product) return;
+                      if (navigator.share) {
+                        navigator.share({
+                          title: product.name,
+                          text: product.description,
+                          url: window.location.href,
+                        }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(window.location.href);
+                        toast.success('Link copied to clipboard');
+                      }
+                    }}
                   >
                     <Share2 className="w-5 h-5" />
                   </motion.button>

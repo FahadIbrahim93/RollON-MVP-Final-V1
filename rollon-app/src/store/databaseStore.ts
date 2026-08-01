@@ -198,6 +198,14 @@ export const useDatabaseStore = create<DatabaseState>()(
     }),
     {
       name: 'rollon-database',
+      // Never persist user credentials (password hashes) to localStorage.
+      // Users exist only in memory for the dev-only local auth fallback.
+      partialize: (state) => ({
+        products: state.products,
+        categories: state.categories,
+        orders: state.orders,
+        customers: state.customers,
+      }),
       onRehydrateStorage: () => (state) => {
         if (state && import.meta.env.DEV) {
           state.initializeFromSeed();

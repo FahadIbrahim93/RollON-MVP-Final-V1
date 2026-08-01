@@ -6,7 +6,6 @@ const API_DELAY = 300;
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const USE_REMOTE = import.meta.env.VITE_USE_REMOTE_API === 'true';
 
-
 function getAuthToken(): string | null {
   if (typeof window === 'undefined') {
     return null;
@@ -49,7 +48,6 @@ const fetchJson = async <T>(path: string, init?: RequestInit): Promise<T> => {
 
   return response.json();
 };
-
 
 type ListResponse<T> = T[] | { items: T[]; total?: number; page?: number; limit?: number };
 
@@ -161,12 +159,11 @@ export const api = {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      
+
       if (!USE_REMOTE) {
         useDatabaseStore.getState().addOrder(newOrder);
-        return newOrder;
       }
-      
+
       return withFallback<Order>(
         () =>
           fetchJson('/orders', {

@@ -16,6 +16,10 @@ function SmokeParticles() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Respect user's reduced-motion preference (WCAG 2.3.3)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
     let animationId: number;
     const particles: Array<{
       x: number;
@@ -33,7 +37,10 @@ function SmokeParticles() {
       canvas.height = window.innerHeight;
     };
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize, { passive: true });
+
+    // Fewer particles on mobile for performance
+    const particleCount = window.innerWidth < 768 ? 12 : 25;
 
     const createParticle = () => {
       return {
@@ -49,7 +56,7 @@ function SmokeParticles() {
     };
 
     // Initialize particles
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < particleCount; i++) {
       const p = createParticle();
       p.y = Math.random() * canvas.height;
       p.life = Math.random() * p.maxLife;
@@ -105,6 +112,7 @@ function SmokeParticles() {
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none"
       style={{ zIndex: 1 }}
+      aria-hidden="true"
     />
   );
 }
@@ -294,9 +302,8 @@ export function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-3xl -z-10" />
                 <picture>
                   <source srcSet="/images/hero-product.webp" type="image/webp" />
-                  <source srcSet="/images/hero-product.jpg" type="image/jpeg" />
                   <img
-                    src="/images/hero-product.png"
+                    src="/images/hero-product.jpg"
                     alt="RollON Premium Smoking Accessories"
                     loading="eager"
                     fetchPriority="high"

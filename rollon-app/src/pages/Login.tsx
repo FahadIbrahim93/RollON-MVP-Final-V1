@@ -144,23 +144,6 @@ export function Login() {
               </motion.button>
             </form>
 
-            {/* Divider */}
-            <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/60 text-sm">or</span>
-              <div className="flex-1 h-px bg-white/10" />
-            </div>
-
-            {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
-              <button aria-label="Sign in with Google" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
-                Google
-              </button>
-              <button aria-label="Sign in with Facebook" className="py-3 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
-                Facebook
-              </button>
-            </div>
-
             {/* Register Link */}
             <p className="text-center text-white/60 mt-6">
               Don't have an account?{' '}

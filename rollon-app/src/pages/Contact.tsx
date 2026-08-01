@@ -1,7 +1,34 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react';
+import { Mail, MapPin, Send, Clock, MessageCircle } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
+
+const WHATSAPP_NUMBER = '8801870489448';
+
+const contactInfo = [
+  {
+    icon: MessageCircle,
+    title: 'WhatsApp',
+    lines: ['+880 1870-489448'],
+    href: `https://wa.me/${WHATSAPP_NUMBER}`,
+    linkLabel: 'Chat with us',
+  },
+  {
+    icon: Mail,
+    title: 'Email',
+    lines: ['support@rollon.com.bd'],
+  },
+  {
+    icon: MapPin,
+    title: 'Location',
+    lines: ['Dhaka, Bangladesh'],
+  },
+  {
+    icon: Clock,
+    title: 'Hours',
+    lines: ['Mon - Sat: 10AM - 8PM', 'Sunday: 12PM - 6PM'],
+  },
+];
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -10,12 +37,30 @@ export function Contact() {
     subject: '',
     message: '',
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
+    setIsSending(true);
+
+    const text = [
+      `Hi RollON!`,
+      ``,
+      `Name: ${formData.name}`,
+      `Email: ${formData.email}`,
+      `Subject: ${formData.subject}`,
+      ``,
+      formData.message,
+    ].join('\n');
+
+    // Open WhatsApp with the pre-filled message
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+
+    // Reset after a brief delay
+    setTimeout(() => {
+      setIsSending(false);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    }, 1500);
   };
 
   return (
@@ -53,30 +98,25 @@ export function Contact() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-              <Mail className="w-6 h-6 text-green-400 mb-4" />
-              <h3 className="text-white font-display font-semibold mb-2">Email</h3>
-              <p className="text-white/60">support@rollon.bd</p>
-              <p className="text-white/60">sales@rollon.bd</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-              <Phone className="w-6 h-6 text-green-400 mb-4" />
-              <h3 className="text-white font-display font-semibold mb-2">Phone</h3>
-              <p className="text-white/60">+880 1234-567890</p>
-              <p className="text-white/60">+880 9876-543210</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-              <MapPin className="w-6 h-6 text-green-400 mb-4" />
-              <h3 className="text-white font-display font-semibold mb-2">Address</h3>
-              <p className="text-white/60">123 Gulshan Avenue</p>
-              <p className="text-white/60">Dhaka 1212, Bangladesh</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-              <Clock className="w-6 h-6 text-green-400 mb-4" />
-              <h3 className="text-white font-display font-semibold mb-2">Hours</h3>
-              <p className="text-white/60">Mon - Sat: 9AM - 8PM</p>
-              <p className="text-white/60">Sunday: 10AM - 6PM</p>
-            </div>
+            {contactInfo.map((item) => (
+              <div key={item.title} className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                <item.icon className="w-6 h-6 text-green-400 mb-4" />
+                <h3 className="text-white font-display font-semibold mb-2">{item.title}</h3>
+                {item.lines.map((line) => (
+                  <p key={line} className="text-white/60">{line}</p>
+                ))}
+                {item.href && (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-3 text-sm font-medium text-green-400 hover:text-green-300 transition-colors"
+                  >
+                    {item.linkLabel} →
+                  </a>
+                )}
+              </div>
+            ))}
           </motion.div>
 
           {/* Contact Form */}
@@ -90,6 +130,9 @@ export function Contact() {
               <h2 className="text-2xl font-display font-semibold text-white mb-6">
                 Send us a Message
               </h2>
+              <p className="text-white/50 text-sm mb-6">
+                Messages open directly in WhatsApp — the fastest way to reach us.
+              </p>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
@@ -145,9 +188,10 @@ export function Contact() {
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-gradient-to-r from-green-400 to-green-500 rounded-full text-black font-semibold flex items-center gap-2"
+                  disabled={isSending}
+                  className="px-8 py-4 bg-gradient-to-r from-green-400 to-green-500 rounded-full text-black font-semibold flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {isSubmitted ? 'Message Sent!' : 'Send Message'}
+                  {isSending ? 'Opening WhatsApp...' : 'Send via WhatsApp'}
                   <Send className="w-4 h-4" />
                 </motion.button>
               </form>

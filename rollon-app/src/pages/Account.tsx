@@ -20,6 +20,10 @@ export function Account() {
     navigate('/');
   };
 
+  const handleComingSoon = (feature: string) => {
+    toast.info(`${feature} is coming soon`);
+  };
+
   const menuItems = [
     { icon: Package, label: 'My Orders', description: 'Track, return or buy things again', color: 'text-blue-400' },
     { icon: Shield, label: 'Login & Security', description: 'Edit login, name, and mobile number', color: 'text-green-400' },
@@ -49,8 +53,9 @@ export function Account() {
                     </div>
                   )}
                 </div>
-                <button 
+                <button
                   aria-label="Change profile picture"
+                  onClick={() => handleComingSoon('Profile photo upload')}
                   className="absolute -right-2 -bottom-2 w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-black shadow-lg hover:scale-110 transition-transform active:scale-95"
                 >
                   <Camera className="w-5 h-5" />
@@ -98,6 +103,7 @@ export function Account() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
+                onClick={() => handleComingSoon(item.label)}
                 className="group flex items-start gap-6 p-6 bg-white/5 border border-white/5 rounded-3xl hover:border-white/20 transition-all text-left"
               >
                 <div className={`p-4 bg-white/5 rounded-2xl ${item.color} group-hover:scale-110 transition-transform`}>
@@ -114,7 +120,7 @@ export function Account() {
             ))}
           </div>
 
-          {/* Account Analytics / Quick Stats */}
+          {/* Coming Soon Banner */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -122,22 +128,18 @@ export function Account() {
             className="mt-12 p-8 bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 rounded-[2.5rem] relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] -mr-32 -mt-32 rounded-full" />
-            
+
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div>
                 <h3 className="text-2xl font-display font-black text-white mb-2">Member Rewards</h3>
-                <p className="text-white/60 text-sm max-w-md">You're currently in our Silver Tier. Earn 250 more points to reach Gold status and unlock free express shipping.</p>
+                <p className="text-white/60 text-sm max-w-md">
+                  Order history, loyalty points, and exclusive member perks are on the way. Your orders are saved with your account.
+                </p>
               </div>
-              <div className="flex items-center gap-8">
-                <div className="text-center">
-                  <p className="text-3xl font-black text-primary">750</p>
-                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Points</p>
-                </div>
-                <div className="w-px h-12 bg-white/10" />
-                <div className="text-center">
-                  <p className="text-3xl font-black text-white">12</p>
-                  <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold">Orders</p>
-                </div>
+              <div className="flex items-center gap-4">
+                <span className="px-5 py-2.5 bg-white/10 border border-white/10 rounded-full text-sm font-bold text-white/80 uppercase tracking-widest">
+                  Coming Soon
+                </span>
               </div>
             </div>
           </motion.div>
