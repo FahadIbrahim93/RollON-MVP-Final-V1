@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, User, Menu, X, LogOut, Settings, LayoutDashboard, Globe, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, X, LogOut, Settings, Globe, Sparkles } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
@@ -170,8 +170,8 @@ export function Navbar() {
                     <AnimatePresence>
                       {isUserMenuOpen && (
                         <>
-                          <div 
-                            className="fixed inset-0 z-40" 
+                          <div
+                            className="fixed inset-0 z-40"
                             onClick={() => setIsUserMenuOpen(false)}
                             onKeyDown={(e) => e.key === 'Escape' && setIsUserMenuOpen(false)}
                             role="button"
@@ -188,17 +188,6 @@ export function Navbar() {
                               <p className="text-sm font-bold text-white truncate">{user?.name}</p>
                               <p className="text-xs text-white/60 truncate">{user?.email}</p>
                             </div>
-
-                            {user?.role === 'admin' && (
-                              <Link
-                                to="/admin"
-                                onClick={() => setIsUserMenuOpen(false)}
-                                className="flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 rounded-xl transition-colors mb-1"
-                              >
-                                <LayoutDashboard className="w-4 h-4" />
-                                Admin Panel
-                              </Link>
-                            )}
 
                             <Link
                               to="/account"

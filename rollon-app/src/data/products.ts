@@ -1,4 +1,4 @@
-import type { Product, Category, Testimonial, Order, Customer } from '@/types';
+import type { Product, Category, Testimonial } from '@/types';
 
 export const categories: Category[] = [
   {
@@ -18,7 +18,7 @@ export const categories: Category[] = [
     description: 'Precision grinding tools for the perfect consistency',
     image: '/images/categories/grinders.jpg',
     icon: 'CircleDot',
-    productCount: 2,
+    productCount: 1,
     gradient: 'from-purple-500 to-pink-500'
   },
   {
@@ -28,7 +28,7 @@ export const categories: Category[] = [
     description: 'Smooth filtration for a refined experience',
     image: '/images/categories/vaporizers.jpg',
     icon: 'Droplets',
-    productCount: 5,
+    productCount: 3,
     gradient: 'from-cyan-500 to-blue-500'
   },
   {
@@ -58,7 +58,7 @@ export const categories: Category[] = [
     description: 'Essential extras to complete your setup',
     image: '/images/categories/accessories.jpg',
     icon: 'Package',
-    productCount: 2,
+    productCount: 1,
     gradient: 'from-emerald-500 to-teal-500'
   }
 ];
@@ -88,7 +88,7 @@ export const products: Product[] = [
     new: true
   },
   {
-    id: 'fb-1',
+    id: 'hb109-silicon',
     name: 'HB109 Hot Silicon Bong',
     slug: 'hb109-hot-silicon-bong',
     description: '5-inch compact silicon bong with heat-resistant properties. Features a honeycomb texture and comes in various trippy color patterns including Green/Pink and Blue/Pink swirls. Perfect for convenient, durable use.',
@@ -112,7 +112,7 @@ export const products: Product[] = [
     new: true
   },
   {
-    id: 'fb-2',
+    id: 'cherry-pipe-8inch',
     name: '8-inch Cherry Pattern Water Pipe',
     slug: 'cherry-pattern-glass-pipe-8inch',
     description: 'Elegant 8-inch glass water pipe with a clean white base decorated with red cherry graphics. Comes with a high-quality glass stem and 14mm bowl for smooth, clean hits.',
@@ -134,7 +134,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 'fb-3',
+    id: 'clear-beaker-10inch',
     name: '10-inch Clear Beaker Water Pipe',
     slug: 'clear-beaker-bong-10inch',
     description: 'Classic clear glass beaker bong for smooth filtration. Includes a 14mm diffuser downstem and bowl for high-quality hits. The design prioritizes purity and cooling.',
@@ -156,7 +156,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 'fb-4',
+    id: 'wooden-grinder-3rd-gen',
     name: '3rd Gen Wooden Grinder',
     slug: 'wooden-grinder-3rd-gen',
     description: 'Premium light wood exterior with sharp metal teeth inside for efficient and smooth grinding of dry herbs. High-quality construction that combines natural aesthetics with industrial performance.',
@@ -178,7 +178,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 'fb-5',
+    id: 'rick-morty-tray',
     name: 'Rick and Morty Rolling Tray',
     slug: 'rick-and-morty-metal-tray',
     description: 'Durable metal rolling tray featuring high-detail, trippy Rick and Morty artwork. Perfect for organizing rolling accessories and keeping your setup clean.',
@@ -220,48 +220,4 @@ export const testimonials: Testimonial[] = [
     rating: 4,
     quote: 'Great experience shopping here. The bKash payment was smooth and I got my order quickly. Highly recommend the silicon bongs.',
   }
-];
-
-export const orders: Order[] = [
-  {
-    id: 'fb-order-1',
-    orderNumber: 'ORD-MOCK-1',
-    customerId: 'fb-customer-1',
-    customerName: 'Test User',
-    total: 1000,
-    status: 'pending',
-    paymentStatus: 'pending',
-    paymentMethod: 'cod',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    items: [],
-    shippingAddress: {
-      name: 'Test',
-      address: 'Test',
-      city: 'Dhaka',
-      phone: '0123456789',
-    },
-  },
-];
-
-export const customers: Customer[] = [
-  {
-    id: 'fb-customer-1',
-    name: 'Test User',
-    email: 'test@example.com',
-    phone: '0123456789',
-    totalSpent: 1000,
-    orders: 1,
-    createdAt: new Date().toISOString(),
-    address: 'Test',
-    city: 'Dhaka'
-  }
-];
-
-export const paymentMethods = [
-  { id: 'bkash', name: 'bKash', icon: 'Smartphone', color: '#E2136E' },
-  { id: 'nagad', name: 'Nagad', icon: 'Wallet', color: '#F7931E' },
-  { id: 'rocket', name: 'Rocket', icon: 'Rocket', color: '#8C3494' },
-  { id: 'card', name: 'Credit/Debit Card', icon: 'CreditCard', color: '#1E40AF' },
-  { id: 'cod', name: 'Cash on Delivery', icon: 'Banknote', color: '#10B981' }
 ];

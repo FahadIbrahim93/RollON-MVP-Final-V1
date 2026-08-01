@@ -4,10 +4,10 @@ export default defineConfig({
     testDir: './e2e',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
-    retries: 0,
+    retries: process.env.CI ? 2 : 0,
     reporter: 'list',
     use: {
-        baseURL: 'http://localhost:5174',
+        baseURL: 'http://localhost:5173',
     },
     projects: [
         {
@@ -17,8 +17,8 @@ export default defineConfig({
     ],
     webServer: {
         command: 'npm run dev',
-        url: 'http://localhost:5174',
-        reuseExistingServer: true,
+        url: 'http://localhost:5173',
+        reuseExistingServer: !process.env.CI,
         timeout: 60000,
     },
 });

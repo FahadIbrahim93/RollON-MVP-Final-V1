@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0-beta.1",
   "type": "module",
+  "description": "A modern, configuration-driven e-commerce storefront for premium smoking accessories",
+  "homepage": "https://rollon-delta.vercel.app",
+  "author": "Fahad Ibrahim <FahadIbrahim93@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -63,5 +67,9 @@
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   }
 }

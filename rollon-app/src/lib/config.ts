@@ -1,6 +1,6 @@
 /**
  * RollON Template Configuration
- * 
+ *
  * This file contains all customizable site configuration.
  * To customize for a new business, update these values and rebuild.
  */
@@ -90,7 +90,7 @@ export const siteConfig: SiteConfig = {
   description: 'Your one-stop shop for premium smoking accessories in Bangladesh. Quality products, fast delivery.',
   keywords: ['smoking accessories', 'vaporizers', 'grinders', 'water pipes', 'rolling papers', 'Bangladesh'],
   email: 'support@rollon.com',
-  phone: '+8801870489448',
+  phone: '+880****9448',
   address: 'Dhaka, Bangladesh',
   social: {
     facebook: 'https://facebook.com/rollon',
@@ -105,7 +105,7 @@ export const brandConfig: BrandConfig = {
   secondary: '#1A1A1A',
   accent: '#FF6B35',
   logo: '/assets/logo.svg',
-  favicon: '/assets/favicon.svg',
+  favicon: '/favicon.svg',
   heroImage: '/assets/hero.jpg',
   heroTitle: 'Premium Smoking Accessories',
   heroSubtitle: 'Discover our curated collection of vaporizers, grinders, water pipes, and more.',

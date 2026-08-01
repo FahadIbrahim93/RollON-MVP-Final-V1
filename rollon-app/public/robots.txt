@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Disallow admin and private paths
 Disallow: /admin/
+Disallow: /account/
+
+# Sitemap location
+Sitemap: https://rollon-delta.vercel.app/sitemap.xml

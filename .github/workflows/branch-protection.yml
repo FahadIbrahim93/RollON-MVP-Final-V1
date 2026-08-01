@@ -5,10 +5,10 @@ on:
     branches: [main]
 
 jobs:
-  setup-protection:
+  reminder:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure branch protection
+      - name: Branch protection reminder
         run: |
           echo "Branch protection should be configured manually in GitHub UI"
           echo "Go to: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/settings/branches"

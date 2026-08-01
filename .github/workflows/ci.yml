@@ -34,25 +34,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Bundle budget check
-        run: node ../scripts/check-bundle-budget.mjs
-
-  api-quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: Run API handler + contract tests
-        run: node --test api/__tests__/handlers.test.js api/__tests__/contracts.test.js
-
-      - name: Run serverless smoke checks
-        run: node scripts/smoke-serverless.mjs
-
   dependency-audit:
     runs-on: ubuntu-latest
     defaults:

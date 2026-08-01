@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter, Youtube, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -33,13 +31,8 @@ const socialLinks = [
 ];
 
 export function Footer() {
-  const footerRef = useRef<HTMLDivElement>(null);
-
   return (
-    <footer
-      ref={footerRef}
-      className="relative bg-[#050505] pt-32 pb-12 overflow-hidden border-t border-white/5"
-    >
+    <footer className="relative bg-[#050505] pt-32 pb-12 overflow-hidden border-t border-white/5">
       {/* Subtle Background Glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/5 blur-[150px] opacity-20 pointer-events-none" />
 
@@ -59,15 +52,14 @@ export function Footer() {
 
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
-                <motion.a
+                <a
                   key={social.label}
                   href={social.href}
-                  whileHover={{ y: -5, color: '#4ade80' }}
-                  className="h-12 w-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/60 transition-all duration-300 hover:border-primary/30"
                   aria-label={social.label}
+                  className="h-12 w-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/60 transition-all duration-300 hover:border-primary/30"
                 >
                   <social.icon className="w-5 h-5" />
-                </motion.a>
+                </a>
               ))}
             </div>
           </div>
@@ -134,7 +126,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
           <div className="flex flex-col items-center md:items-start gap-2">
             <p className="text-white/50 text-[10px] font-black uppercase tracking-widest">
-              © 2024 RollON Global Dynamics.
+              © {new Date().getFullYear()} RollON Global Dynamics.
             </p>
             <div className="flex items-center gap-2 text-white/50 text-[10px] font-bold">
               <ShieldCheck className="h-3 w-3 text-primary/40" />

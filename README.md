@@ -1,42 +1,44 @@
-# RollON - E-Commerce Template
+# RollON — Premium Smoking Accessories Storefront
 
 <div align="center">
 
-![RollON Logo](public/assets/logo.svg)
+![RollON](rollon-app/public/assets/hero.svg)
 
-**A configuration-driven e-commerce template for online stores**
+**A modern, configuration-driven e-commerce template built with React 19, TypeScript, and Tailwind CSS.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-RollON-blue?style=for-the-badge&logo=vercel)](https://rollon-delta.vercel.app)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-%7E5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
 </div>
 
 ## 🎯 Overview
 
-RollON is a modern, configuration-driven e-commerce template built with React, TypeScript, and Tailwind CSS. It's designed to be easily customizable for different businesses while maintaining a single, maintainable codebase.
+RollON is a production-ready e-commerce storefront for premium smoking accessories. It features a sleek dark theme, responsive design, and a configuration-driven architecture that makes it easy to customize for any business.
 
-**Current Demo:** A premium smoking accessories store showcasing vaporizers, grinders, water pipes, and more.
+**Live Demo:** [rollon-delta.vercel.app](https://rollon-delta.vercel.app)
 
 ## ✨ Features
 
-- 🎨 **Config-Driven Branding** - Change business identity, colors, and content via a single config file
-- 🛍️ **Complete E-Commerce Flow** - Product catalog, cart, checkout, and order confirmation
-- 📱 **Fully Responsive** - Mobile-first design that works on all devices
-- ⚡ **Fast & Optimized** - Lazy loading, code splitting, and optimized assets
-- 🌙 **Dark Theme** - Modern dark UI with customizable color scheme
-- 🔍 **SEO Optimized** - Meta tags, semantic HTML, and structured data
-- 📦 **Type-Safe** - Full TypeScript coverage
-- 🧩 **Modular Components** - Reusable, well-organized component architecture
+- 🛍️ **Complete Storefront** — Product catalog, cart, checkout, and order confirmation
+- 🎨 **Config-Driven Branding** — Customize business identity, colors, and content via a single config file
+- 📱 **Fully Responsive** — Mobile-first design that works on all devices
+- ⚡ **Blazing Fast** — Vite 7 build, code splitting, lazy loading
+- 🌙 **Dark Theme** — Modern dark UI with Tailwind CSS v4
+- 🔍 **SEO Optimized** — Meta tags, Open Graph, structured data, semantic HTML
+- ♿ **Accessible** — WCAG 2.1 AA compliant, keyboard navigation, ARIA labels
+- 📦 **Type-Safe** — Full TypeScript coverage with strict mode
+- 🧩 **Modular Architecture** — Reusable components, Zustand state management
+- 🛡️ **Secure** — CSP headers, env validation, no hardcoded secrets
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
+- [Node.js](https://nodejs.org/) 20+ 
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
 
 ### Installation
 
@@ -53,11 +55,11 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:5173` to see the app.
+Visit [http://localhost:5173](http://localhost:5173) to see the app.
 
 ## 🎨 Customization
 
-RollON is designed to be customized for any business. Here's how:
+RollON is designed to be easily customized. Here's how:
 
 ### 1. Update Site Configuration
 
@@ -92,78 +94,135 @@ Replace the product data in `rollon-app/src/data/products.ts` with your own prod
 
 ### 4. Update Images
 
-Replace images in `public/assets/` with your brand assets.
+Replace images in `rollon-app/public/images/` with your brand assets.
 
 ### 5. Customize Theme
 
-Edit `rollon-app/tailwind.config.js` to change the color scheme and design tokens.
+Edit `rollon-app/index.css` to change the color scheme and design tokens.
 
 See [docs/TEMPLATE_GUIDE.md](docs/TEMPLATE_GUIDE.md) for a complete customization guide.
 
 ## 📁 Project Structure
 
 ```
-rollon-app/
-├── src/
-│   ├── components/
-│   │   ├── layout/       # Navbar, Footer, etc.
-│   │   ├── sections/     # Hero, FeaturedProducts, etc.
-│   │   ├── shop/         # ProductCard, etc.
-│   │   └── ui/           # Reusable UI components
-│   ├── data/             # Product catalog, categories
-│   ├── lib/              # Configuration, utilities, API
-│   ├── pages/            # Page components
-│   ├── store/            # State management (Zustand)
-│   └── types/            # TypeScript type definitions
-├── public/               # Static assets
-└── tailwind.config.js    # Tailwind configuration
+RollON-MVP-Final-V1/
+├── rollon-app/                 # Main application
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   │   ├── layout/         # Navbar, Footer, ErrorBoundary
+│   │   │   ├── sections/       # Hero, Features, Testimonials
+│   │   │   ├── shop/           # ProductCard, ProductGrid
+│   │   │   └── ui/             # Base UI primitives (shadcn/ui)
+│   │   ├── data/               # Product catalog, categories
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── lib/                # Config, utilities, API, SEO
+│   │   ├── pages/              # Route components
+│   │   ├── store/              # Zustand state stores
+│   │   └── types/              # TypeScript type definitions
+│   ├── public/                 # Static assets
+│   ├── e2e/                    # Playwright E2E tests
+│   ├── index.html              # HTML entry point
+│   ├── package.json            # Dependencies and scripts
+│   ├── vite.config.ts          # Vite configuration
+│   ├── tsconfig.json           # TypeScript configuration
+│   └── eslint.config.js        # ESLint configuration
+├── docs/                       # Documentation
+│   ├── ARCHITECTURE.md         # System architecture
+│   └── TEMPLATE_GUIDE.md       # Customization guide
+├── .github/                    # GitHub configuration
+│   ├── workflows/              # CI/CD pipelines
+│   └── PULL_REQUEST_TEMPLATE.md
+├── vercel.json                 # Vercel deployment config
+├── LICENSE                     # MIT License
+├── README.md                   # This file
+└── CONTRIBUTING.md             # Contribution guidelines
 ```
 
 ## 🛠️ Tech Stack
 
-- **Framework:** React 18 + TypeScript
-- **Styling:** Tailwind CSS
-- **Routing:** React Router v6
-- **State Management:** Zustand
-- **Animations:** Framer Motion
-- **Build Tool:** Vite
-- **Deployment:** Vercel
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | React 19 | Component UI library |
+| **Language** | TypeScript ~5.9 | Type safety |
+| **Build Tool** | Vite 7 | Fast HMR and builds |
+| **Styling** | Tailwind CSS 4 | Utility-first CSS |
+| **Routing** | React Router 7 | Client-side navigation |
+| **State** | Zustand 5 | Global state management |
+| **Data Fetching** | React Query 5 | Server state and caching |
+| **Forms** | React Hook Form + Zod | Form handling and validation |
+| **Animations** | Framer Motion 12 | Animations and transitions |
+| **UI Primitives** | Radix UI | Accessible unstyled components |
+| **Testing** | Vitest 4 + Playwright | Unit and E2E testing |
+| **Deployment** | Vercel | Static hosting |
+
+## 🧪 Development
+
+```bash
+# Start development server
+npm run dev
+
+# Run linter
+npm run lint
+
+# Run unit tests
+npm test -- --run
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run E2E tests
+npx playwright test
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
 
 ## 🚢 Deployment
 
 ### Vercel (Recommended)
 
 1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Vercel will auto-detect the Vite configuration
+2. Connect your repository to [Vercel](https://vercel.com)
+3. Vercel auto-detects the Vite configuration
 4. Deploy!
+
+The `vercel.json` includes SPA rewrites and security headers.
 
 ### Other Platforms
 
-The app builds to a static `dist/` folder that can be deployed anywhere:
+The app builds to a static `dist/` folder:
 
 ```bash
+cd rollon-app
 npm run build
 ```
 
-Serve the `dist/` folder with any static file server.
+Serve the `dist/` folder with any static file server (Nginx, Apache, Cloudflare Pages, etc.).
 
 ## 📄 Documentation
 
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Template Customization Guide](docs/TEMPLATE_GUIDE.md)
+- [Contributing Guide](CONTRIBUTING.md)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
 
 ## 📞 Support
 
-For support, email support@rollon.com or contact via WhatsApp.
+- **Email**: FahadIbrahim93@gmail.com
+- **GitHub Issues**: [Open an issue](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/issues)
+- **Live Demo**: [rollon-delta.vercel.app](https://rollon-delta.vercel.app)
 
 ---
 
