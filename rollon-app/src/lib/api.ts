@@ -1,4 +1,4 @@
-import { testimonials as mockTestimonials, paymentMethods } from '../data/products';
+import { testimonials as mockTestimonials } from '../data/products';
 import { useDatabaseStore } from '../store/databaseStore';
 import type { Category, Customer, Order, Product, Testimonial } from '@/types';
 
@@ -189,6 +189,10 @@ export const api = {
   },
 
   payment: {
-    getMethods: async () => simulateApiCall(paymentMethods),
+    getMethods: async () => simulateApiCall([
+      { id: 'cod', name: 'Cash on Delivery', icon: 'Banknote', color: '#10B981' },
+      { id: 'bkash', name: 'bKash', icon: 'Smartphone', color: '#E2136E' },
+      { id: 'nagad', name: 'Nagad', icon: 'Wallet', color: '#F7931E' },
+    ]),
   },
 };

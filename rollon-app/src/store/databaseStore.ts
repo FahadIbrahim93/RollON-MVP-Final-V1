@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { products as initialProducts, categories as initialCategories, orders as initialOrders, customers as initialCustomers } from '../data/products';
+import { products as initialProducts, categories as initialCategories } from '../data/products';
 import type { Product, Category, Order, Customer, User } from '@/types';
 
 /**
@@ -189,8 +189,8 @@ export const useDatabaseStore = create<DatabaseState>()(
           set({
             products: initialProducts,
             categories: initialCategories,
-            orders: initialOrders,
-            customers: initialCustomers,
+            orders: [],
+            customers: [],
             users: [],
           });
         }
