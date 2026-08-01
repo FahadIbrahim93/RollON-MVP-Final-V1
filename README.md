@@ -128,9 +128,11 @@ RollON-MVP-Final-V1/
 │   └── eslint.config.js        # ESLint configuration
 ├── docs/                       # Documentation
 │   ├── ARCHITECTURE.md         # System architecture
-│   └── TEMPLATE_GUIDE.md       # Customization guide
+│   ├── TEMPLATE_GUIDE.md       # Customization guide
+│   └── API.md                  # Backend API contract
 ├── .github/                    # GitHub configuration
 │   ├── workflows/              # CI/CD pipelines
+│   ├── ISSUE_TEMPLATE/         # Bug, feature, question templates
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── vercel.json                 # Vercel deployment config
 ├── LICENSE                     # MIT License
@@ -206,7 +208,8 @@ Serve the `dist/` folder with any static file server (Nginx, Apache, Cloudflare 
 
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Template Customization Guide](docs/TEMPLATE_GUIDE.md)
-- [Contributing Guide](CONTRIBUTING.md)
+- [Backend API Contract](docs/API.md)
+- [Contributing Guidelines](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)
 

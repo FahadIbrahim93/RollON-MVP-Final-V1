@@ -14,7 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content Security Policy headers in Vercel deployment
 - `sitemap.xml` for search engine discovery
 - Service worker (`sw.js`) with offline caching
-- Unit tests for utils, cart store, wishlist store, checkout schema, and database store (47 tests, ~98% coverage)
+- Unit tests for utils, cart store, wishlist store, checkout schema, database store, and auth store (62 tests, ~95% coverage)
+- Playwright E2E suite: 11 tests covering storeflow, search, cart, checkout, 404
+- `docs/API.md` — backend API contract for products, orders, customers, and auth
+- GitHub issue templates (bug report, feature request, question)
+- E2E job in CI workflow (installs chromium, runs Playwright suite)
+- `VITE_USE_REMOTE_API` documented in `.env.example`
 - Dependency audit: Vite upgraded to patched 7.3.x, react-router-dom to 7.18.2
 
 ### Changed
