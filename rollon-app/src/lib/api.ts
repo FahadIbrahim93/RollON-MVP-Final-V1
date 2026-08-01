@@ -78,11 +78,20 @@ export const api = {
     getAll: async () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), async () => simulateApiCall(getStoreProducts())),
 
     getById: async (id: string) =>
-      withFallback<Product | undefined>(() => fetchJson(`/products?id=${id}`), async () => getStoreProducts().find((p) => p.id === id)),
+      withFallback<Product | undefined>(
+        async () => {
+          const items = unwrapList(await fetchJson<ListResponse<Product>>(`/products?id=${encodeURIComponent(id)}`));
+          return items[0];
+        },
+        async () => getStoreProducts().find((p) => p.id === id),
+      ),
 
     getBySlug: async (slug: string) =>
       withFallback<Product | undefined>(
-        () => fetchJson(`/products?slug=${encodeURIComponent(slug)}`),
+        async () => {
+          const items = unwrapList(await fetchJson<ListResponse<Product>>(`/products?slug=${encodeURIComponent(slug)}`));
+          return items[0];
+        },
         async () => getStoreProducts().find((p) => p.slug === slug),
       ),
 
@@ -149,7 +158,13 @@ export const api = {
     getAll: async () => withFallback<Order[]>(() => fetchJson('/orders'), async () => simulateApiCall(getStoreOrders())),
 
     getById: async (id: string) =>
-      withFallback<Order | undefined>(() => fetchJson(`/orders?id=${id}`), async () => getStoreOrders().find((o) => o.id === id)),
+      withFallback<Order | undefined>(
+        async () => {
+          const items = unwrapList(await fetchJson<ListResponse<Order>>(`/orders?id=${encodeURIComponent(id)}`));
+          return items[0];
+        },
+        async () => getStoreOrders().find((o) => o.id === id),
+      ),
 
     create: async (order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) => {
       const newOrder: Order = {
@@ -179,10 +194,13 @@ export const api = {
     getAll: async () => withFallback<Customer[]>(() => fetchJson('/customers'), async () => simulateApiCall(getStoreCustomers())),
 
     getById: async (id: string) =>
-      withFallback<Customer | undefined>(async () => {
-        const customers = await fetchJson<Customer[]>('/customers');
-        return customers.find((c) => c.id === id);
-      }, async () => getStoreCustomers().find((c) => c.id === id)),
+      withFallback<Customer | undefined>(
+        async () => {
+          const items = unwrapList(await fetchJson<ListResponse<Customer>>(`/customers?id=${encodeURIComponent(id)}`));
+          return items[0];
+        },
+        async () => getStoreCustomers().find((c) => c.id === id),
+      ),
   },
 
   payment: {

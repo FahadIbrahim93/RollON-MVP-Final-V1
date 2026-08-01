@@ -35,8 +35,9 @@ export function ProductDetail() {
     if (!product) {
       return 'Premium smoking accessories from RollON Bangladesh.';
     }
-
-    return `${product.name} - ${product.description.slice(0, 140)}${product.description.length > 140 ? '…' : ''}`;
+    // Defensive: never crash the page on a malformed product payload.
+    const desc = product.description || '';
+    return `${product.name} - ${desc.slice(0, 140)}${desc.length > 140 ? '…' : ''}`;
   }, [product]);
 
   const productJsonLd = useMemo(

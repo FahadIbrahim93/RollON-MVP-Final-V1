@@ -126,6 +126,10 @@ RollON-MVP-Final-V1/
 │   ├── vite.config.ts          # Vite configuration
 │   ├── tsconfig.json           # TypeScript configuration
 │   └── eslint.config.js        # ESLint configuration
+├── server/                    # Reference API server (zero-dependency Node)
+│   ├── index.js               # Implements the docs/API.md contract
+│   ├── seed.json              # Catalog snapshot (generated from app data)
+│   └── test/                  # 23 integration tests (node:test)
 ├── docs/                       # Documentation
 │   ├── ARCHITECTURE.md         # System architecture
 │   ├── TEMPLATE_GUIDE.md       # Customization guide

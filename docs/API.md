@@ -5,6 +5,10 @@ single source of truth for backend implementers — any backend (Supabase, Node,
 serverless functions, etc.) that conforms to this contract will work with the
 frontend with zero code changes.
 
+> **Reference implementation:** A working, zero-dependency Node server that
+> implements this contract lives in [`server/`](../server/). Run it with
+> `cd server && npm start`, then point the frontend at it (see below).
+
 ## Configuration
 
 | Env var | Description | Default |

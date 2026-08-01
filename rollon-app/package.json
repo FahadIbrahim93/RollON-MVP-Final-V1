@@ -9,11 +9,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "dev:remote": "node scripts/dev-remote.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:remote": "playwright test --config=playwright.remote.config.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
