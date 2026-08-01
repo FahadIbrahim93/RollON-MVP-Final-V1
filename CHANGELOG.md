@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content Security Policy headers in Vercel deployment
 - `sitemap.xml` for search engine discovery
 - Service worker (`sw.js`) with offline caching
-- Unit tests for utils, cart store, and wishlist store (98%+ coverage)
+- Unit tests for utils, cart store, wishlist store, checkout schema, and database store (47 tests, ~98% coverage)
+- Dependency audit: Vite upgraded to patched 7.3.x, react-router-dom to 7.18.2
 
 ### Changed
 - Removed admin dashboard routes and components
@@ -24,12 +25,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gated local fake-auth fallback to development only
 - Removed non-functional social login and dummy UI elements
 - Contact and newsletter forms now deliver via WhatsApp
+- Made `SITE_URL` configurable via `VITE_SITE_URL` (defaults to live demo URL)
+- Fixed ghost image references and missing `--primary-rgb` CSS variable
+- Wired product wishlist/share buttons and order print/share to real handlers
+- Documented known advisory status in `SECURITY.md`
 
 ### Removed
 - `marjahans-app/` — unrelated project
 - `api/` — serverless functions
 - `scripts/` — dev utilities
 - Dead `ProductCategory` and `Address` types
+- Fabricated marketing stats from About/Account pages
 
 ## [1.0.0-beta.1] — 2026-03-16
 

@@ -33,6 +33,17 @@ This project implements the following security measures:
 - **Dependency Auditing**: CI runs `npm audit` on every push
 - **CodeQL Analysis**: Automated security scanning on schedule and PRs
 - **No Hardcoded Secrets**: All sensitive values use `.env` placeholders
+- **PBKDF2-SHA256 Password Hashing**: Local auth fallback hashes passwords with 100k iterations; hashes never persist to localStorage
+- **Dev-Only Local Auth Fallback**: The mock/local auth path is gated to `import.meta.env.DEV` and is never active in production
+
+## Known Advisory Status
+
+| Advisory | Scope | Status |
+|----------|-------|--------|
+| [GHSA-qwww-vcr4-c8h2](https://github.com/advisories/GHSA-qwww-vcr4-c8h2) (react-router RSC-mode CSRF bypass) | Only affects React Server Components mode with actions/loaders. RollON is a client-side SPA using plain `BrowserRouter` — no RSC, no loaders/actions | **Not exploitable**; tracked until react-router-dom publishes a patched release (react-router ≥ 8.3.0) |
+| Vite dev-server advisories (GHSA-fx2h-pf6j-xcff et al.) | Dev server only, never exposed in the Vercel production build | **Not exploitable in production**; resolved by pinning Vite to a patched minor |
+
+All production-relevant dependencies are kept at the latest patched versions via `npm audit fix` in CI.
 
 ## Security Best Practices for Users
 
