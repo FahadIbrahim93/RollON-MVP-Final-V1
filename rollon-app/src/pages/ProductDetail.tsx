@@ -242,7 +242,7 @@ export function ProductDetail() {
                     </span>
                   )}
                 </div>
-                <p className="text-primary/60 text-sm font-medium">VAT inclusive where applicable</p>
+                <p className="text-primary/80 text-sm font-medium">VAT inclusive where applicable</p>
               </div>
 
               <p className="text-white/50 text-xl leading-relaxed font-light font-display">

@@ -143,6 +143,7 @@ export function Testimonials() {
                 variant="outline"
                 size="icon"
                 onClick={prevSlide}
+                aria-label="Previous testimonial"
                 className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/60 hover:text-white transition-all shadow-xl"
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -151,6 +152,7 @@ export function Testimonials() {
                 variant="outline"
                 size="icon"
                 onClick={nextSlide}
+                aria-label="Next testimonial"
                 className="h-16 w-16 rounded-2xl bg-white/[0.03] border-white/10 hover:border-primary/50 text-white/60 hover:text-white transition-all shadow-xl"
               >
                 <ChevronRight className="w-6 h-6" />

@@ -85,7 +85,7 @@ export function ShopProductCard({ product, index, onAddToCart }: ShopProductCard
               <span className="text-[10px] uppercase tracking-[0.3em] text-white/60 font-black">{product.category}</span>
               <div className="flex items-center gap-1">
                 <Star className="w-3 h-3 text-primary fill-primary" />
-                <span className="text-[10px] text-white/50 font-bold tabular-nums">{product.rating}</span>
+                <span className="text-[10px] text-white/60 font-bold tabular-nums">{product.rating}</span>
               </div>
             </div>
             <Link to={`/product/${product.slug}`}>

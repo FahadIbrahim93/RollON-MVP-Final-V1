@@ -94,7 +94,10 @@ export function FeaturedProducts() {
                 >
                   <div className="relative h-full bg-white/[0.02] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all duration-700 hover:shadow-2xl hover:shadow-primary/5 flex flex-col">
                     {/* Visual Interface */}
-                    <Link to={`/product/${product.slug}`} className={cn(
+                    <Link
+                      to={`/product/${product.slug}`}
+                      aria-label={`View ${product.name} details`}
+                      className={cn(
                       "relative overflow-hidden block bg-white/[0.02]",
                       isLarge ? "aspect-[16/9] sm:aspect-square lg:aspect-[16/9]" : "aspect-[4/5]"
                     )}>
@@ -175,7 +178,7 @@ export function FeaturedProducts() {
                             </span>
                           )}
                         </div>
-                        <Link to={`/product/${product.slug}`}>
+                        <Link to={`/product/${product.slug}`} aria-label={`View ${product.name} details`}>
                           <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/60 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-500">
                             <ArrowRight className="w-5 h-5" />
                           </div>

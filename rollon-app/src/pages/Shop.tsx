@@ -190,6 +190,7 @@ export function Shop() {
                       setSortBy(e.target.value);
                       setVisibleCount(INITIAL_VISIBLE_PRODUCTS);
                     }}
+                    aria-label="Sort products"
                     className="w-full h-12 bg-white/[0.03] border border-white/10 rounded-2xl px-6 text-sm font-bold text-white/60 hover:text-white hover:border-primary/30 appearance-none focus:outline-none transition-all cursor-pointer"
                   >
                     {sortOptions.map((option) => (
