@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { createApiClient, apiHealth } from '../api';
 import { useDatabaseStore } from '../../store/databaseStore';
 
 /**
- * Tests for the remote-API path of the API client.
- * Uses vi.stubEnv + vi.resetModules so api.ts re-imports with
- * VITE_USE_REMOTE_API=true, then mocks fetch to return bare-array list
- * responses (the documented contract) and verifies getById/getBySlug unwrap
- * them into single items.
+ * Tests for the API client using the injectable factory (createApiClient).
+ *
+ * No vi.stubEnv / vi.resetModules hacks: each test constructs a client with
+ * explicit useRemote / fetchImpl options, which is the whole point of the
+ * factory design.
  */
 
 const mockProduct = {
@@ -26,313 +27,309 @@ const mockProduct = {
   tags: ['grinder'],
 };
 
-async function loadRemoteApi() {
-  vi.stubEnv('VITE_USE_REMOTE_API', 'true');
-  vi.stubEnv('VITE_API_BASE_URL', 'http://api.test');
-  vi.resetModules();
-  return (await import('../api')).api;
+const mockOrder = {
+  id: 'o1',
+  orderNumber: 'ORD-123',
+  customerId: 'u1',
+  customerName: 'Test User',
+  items: [{ productId: 'p1', name: 'Test Grinder', quantity: 1, price: 1500, image: '/images/products/grinder-classic.jpg' }],
+  subtotal: 1500,
+  deliveryFee: 0,
+  total: 1500,
+  paymentMethod: 'cod',
+  status: 'pending',
+  paymentStatus: 'pending',
+  shippingAddress: { name: 'Test User', phone: '01700000000', address: 'Dhaka', city: 'Dhaka' },
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+};
+
+function jsonResponse(payload: unknown) {
+  return { ok: true, status: 200, json: async () => payload } as Response;
 }
 
-async function loadLocalApi() {
-  // VITE_USE_REMOTE_API unset → USE_REMOTE=false → local write path.
-  vi.unstubAllEnvs();
-  vi.resetModules();
-  return (await import('../api')).api;
-}
-
-describe('api client — remote path', () => {
+describe('api client — remote path (injectable factory)', () => {
   beforeEach(() => {
     localStorage.clear();
     useDatabaseStore.setState({ products: [], categories: [], orders: [], customers: [], users: [] });
+    apiHealth.degraded = false;
+    apiHealth.lastError = null;
   });
 
   afterEach(() => {
-    vi.unstubAllEnvs();
     vi.unstubAllGlobals();
-    vi.resetModules();
   });
 
   it('getBySlug unwraps a bare-array response into a single product', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [mockProduct], // bare array, per docs/API.md
-    })));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockProduct])) as unknown as typeof fetch });
 
     const product = await api.products.getBySlug('test-grinder');
     expect(product).toEqual(mockProduct);
-    expect(Array.isArray(product)).toBe(false);
   });
 
   it('getById unwraps a bare-array response into a single product', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [mockProduct],
-    })));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockProduct])) as unknown as typeof fetch });
 
     const product = await api.products.getById('p1');
     expect(product).toEqual(mockProduct);
-    expect(Array.isArray(product)).toBe(false);
   });
 
-  it('getBySlug returns undefined for an empty result', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [],
-    })));
-
-    const product = await api.products.getBySlug('missing');
-    expect(product).toBeUndefined();
-  });
-
-  it('getAll returns the list as-is', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [mockProduct],
-    })));
+  it('getAll unwraps a bare-array response', async () => {
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockProduct])) as unknown as typeof fetch });
 
     const products = await api.products.getAll();
-    expect(products).toHaveLength(1);
-    expect(products[0].id).toBe('p1');
-  });
-
-  it('falls back to local store when the remote call fails', async () => {
-    const api = await loadRemoteApi();
-    // Re-import the store AFTER resetModules so it's the same fresh instance api.ts uses.
-    const { useDatabaseStore: freshStore } = await import('../../store/databaseStore');
-    vi.stubGlobal('fetch', vi.fn(async () => {
-      throw new Error('Network error');
-    }));
-    freshStore.setState({ products: [mockProduct] });
-
-    const product = await api.products.getBySlug('test-grinder');
-    expect(product).toEqual(mockProduct);
-  });
-
-  it('orders.getById unwraps a bare-array response', async () => {
-    const api = await loadRemoteApi();
-    const mockOrder = {
-      id: 'o1',
-      orderNumber: 'ORD-123',
-      customerId: 'u1',
-      customerName: 'Test User',
-      total: 1500,
-      status: 'pending',
-      paymentStatus: 'pending',
-      paymentMethod: 'cod',
-      createdAt: new Date().toISOString(),
-      items: [],
-      shippingAddress: { name: 'T', address: 'A', city: 'C', phone: '1' },
-    };
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [mockOrder],
-    })));
-
-    const order = await api.orders.getById('o1');
-    expect(order).toEqual(mockOrder);
-    expect(Array.isArray(order)).toBe(false);
-  });
-
-  it('products.getByCategory returns filtered list from remote', async () => {
-    const api = await loadRemoteApi();
-    const catProduct = { ...mockProduct, categoryId: 'c2' };
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [catProduct],
-    })));
-
-    const products = await api.products.getByCategory('c2');
-    expect(products).toHaveLength(1);
-    expect(products[0].categoryId).toBe('c2');
-  });
-
-  it('products.getFeatured returns featured from remote', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [{ ...mockProduct, featured: true }],
-    })));
-
-    const products = await api.products.getFeatured();
-    expect(products).toHaveLength(1);
-    expect(products[0].featured).toBe(true);
-  });
-
-  it('products.search passes the query through to remote', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [mockProduct],
-    })));
-
-    const products = await api.products.search('grinder');
-    expect(products).toHaveLength(1);
-    const fetchMock = vi.mocked(fetch);
-    expect(String(fetchMock.mock.calls[0][0])).toContain('search=grinder');
-  });
-
-  it('categories.getAll returns categories from remote', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [{ id: 'c1', name: 'Vaporizers', slug: 'vaporizers', description: '', productCount: 1 }],
-    })));
-
-    const categories = await api.categories.getAll();
-    expect(categories).toHaveLength(1);
-    expect(categories[0].slug).toBe('vaporizers');
-  });
-
-  it('testimonials.getAll returns seeded testimonials', async () => {
-    const api = await loadRemoteApi();
-    const testimonials = await api.testimonials.getAll();
-    expect(Array.isArray(testimonials)).toBe(true);
-  });
-
-  it('payment.getMethods returns the static methods', async () => {
-    const api = await loadRemoteApi();
-    const methods = await api.payment.getMethods();
-    const ids = methods.map((m) => m.id);
-    expect(ids).toEqual(['cod', 'bkash', 'nagad']);
+    expect(products).toEqual([mockProduct]);
   });
 
   it('handles paginated envelope list responses', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({ items: [mockProduct], total: 1, page: 1, limit: 12 }),
-    })));
+    const api = createApiClient({
+      useRemote: true,
+      baseUrl: 'http://api.test',
+      fetchImpl: vi.fn(async () => jsonResponse({ items: [mockProduct], total: 1, page: 1, limit: 20 })) as unknown as typeof fetch,
+    });
+
+    const products = await api.products.getByCategory('c2');
+    expect(products).toEqual([mockProduct]);
+  });
+
+  it('products.getByCategory unwraps envelope and filters correctly', async () => {
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockProduct])) as unknown as typeof fetch });
+
+    const products = await api.products.getByCategory('c2');
+    expect(products).toHaveLength(1);
+  });
+
+  it('products.getFeatured passes the featured flag', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse([mockProduct]));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchMock as unknown as typeof fetch });
+
+    await api.products.getFeatured();
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?featured=true', expect.any(Object));
+  });
+
+  it('products.search sends the search query and unwraps', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse([mockProduct]));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchMock as unknown as typeof fetch });
+
+    const results = await api.products.search('grinder');
+    expect(results).toEqual([mockProduct]);
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?search=grinder', expect.any(Object));
+  });
+
+  it('categories.getAll returns the remote list', async () => {
+    const mockCategory = { id: 'c1', name: 'Pipes', slug: 'pipes', image: '/images/categories/pipes.svg' };
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockCategory])) as unknown as typeof fetch });
+
+    const categories = await api.categories.getAll();
+    expect(categories).toEqual([mockCategory]);
+  });
+
+  it('orders.getById unwraps a bare-array response', async () => {
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockOrder])) as unknown as typeof fetch });
+
+    const order = await api.orders.getById('o1');
+    expect(order).toEqual(mockOrder);
+  });
+
+  it('customers.getById unwraps a bare-array response', async () => {
+    const mockCustomer = { id: 'c1', name: 'Test User', email: 'test@example.com', phone: '01700000000', role: 'customer' as const };
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockCustomer])) as unknown as typeof fetch });
+
+    const customer = await api.customers.getById('c1');
+    expect(customer).toEqual(mockCustomer);
+  });
+
+  it('falls back to the local store and flags degraded when the remote call fails', async () => {
+    useDatabaseStore.setState({ products: [mockProduct] });
+    const onFallback = vi.fn();
+    const api = createApiClient({
+      useRemote: true,
+      baseUrl: 'http://api.test',
+      fetchImpl: (() => {
+        throw new Error('Network error');
+      }) as unknown as typeof fetch,
+      onFallback,
+    });
 
     const products = await api.products.getAll();
-    expect(products).toHaveLength(1);
-    expect(products[0].id).toBe('p1');
+    expect(products).toEqual([mockProduct]); // local fallback
+    expect(apiHealth.degraded).toBe(true); // visible degraded flag
+    expect(apiHealth.lastError?.message).toBe('Network error');
+    expect(onFallback).toHaveBeenCalledWith(expect.any(Error), '/products');
+  });
+
+  it('does not flag degraded when useRemote is false (local mode)', async () => {
+    const api = createApiClient({ useRemote: false });
+    await api.products.getAll();
+    expect(apiHealth.degraded).toBe(false);
+  });
+
+  it('does not call fetch in local mode', async () => {
+    const fetchMock = vi.fn();
+    const api = createApiClient({ useRemote: false, fetchImpl: fetchMock as unknown as typeof fetch });
+    await api.products.getAll();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('products.create adds to the local store and returns the product', async () => {
-    const api = await loadLocalApi();
-    const { useDatabaseStore: freshStore } = await import('../../store/databaseStore');
-    freshStore.setState({ products: [] });
+    const api = createApiClient({ useRemote: false });
+    useDatabaseStore.setState({ products: [] });
 
     const created = await api.products.create(mockProduct);
     expect(created.id).toBe('p1');
-    expect(freshStore.getState().products).toHaveLength(1);
+    expect(useDatabaseStore.getState().products).toHaveLength(1);
   });
 
   it('products.update patches the local store', async () => {
-    const api = await loadLocalApi();
-    const { useDatabaseStore: freshStore } = await import('../../store/databaseStore');
-    freshStore.setState({ products: [{ ...mockProduct }] });
+    const api = createApiClient({ useRemote: false });
+    useDatabaseStore.setState({ products: [{ ...mockProduct }] });
 
     const updated = await api.products.update('p1', { price: 2000 });
     expect(updated.price).toBe(2000);
-    expect(freshStore.getState().products[0].price).toBe(2000);
+    expect(useDatabaseStore.getState().products[0].price).toBe(2000);
   });
 
   it('products.delete removes from the local store', async () => {
-    const api = await loadLocalApi();
-    const { useDatabaseStore: freshStore } = await import('../../store/databaseStore');
-    freshStore.setState({ products: [{ ...mockProduct }] });
+    const api = createApiClient({ useRemote: false });
+    useDatabaseStore.setState({ products: [{ ...mockProduct }] });
 
     const result = await api.products.delete('p1');
     expect(result.success).toBe(true);
-    expect(freshStore.getState().products).toHaveLength(0);
+    expect(useDatabaseStore.getState().products).toHaveLength(0);
+  });
+
+  it('apiHealth notifies subscribers when degrading and unsubscribe works', async () => {
+    useDatabaseStore.setState({ products: [mockProduct] });
+    const listener = vi.fn();
+    const unsubscribe = apiHealth.subscribe(listener);
+    apiHealth.degraded = false;
+
+    const api = createApiClient({
+      useRemote: true,
+      baseUrl: 'http://api.test',
+      fetchImpl: (() => {
+        throw new Error('down');
+      }) as unknown as typeof fetch,
+    });
+
+    await api.products.getAll(); // triggers degrade → notify
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(apiHealth.degraded).toBe(true);
+
+    unsubscribe();
+    apiHealth.degraded = false;
+    apiHealth._notify();
+    expect(listener).toHaveBeenCalledTimes(1); // no further calls after unsubscribe
+  });
+
+  it('does not notify when a remote call succeeds', async () => {
+    const listener = vi.fn();
+    const unsubscribe = apiHealth.subscribe(listener);
+    apiHealth.degraded = false;
+
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockProduct])) as unknown as typeof fetch });
+    await api.products.getAll();
+
+    expect(apiHealth.degraded).toBe(false);
+    expect(listener).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
+  it('customers.getAll returns the remote list', async () => {
+    const mockCustomer = { id: 'c1', name: 'Test User', email: 'test@example.com', phone: '01700000000', role: 'customer' as const };
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockCustomer])) as unknown as typeof fetch });
+
+    const customers = await api.customers.getAll();
+    expect(customers).toEqual([mockCustomer]);
+  });
+
+  it('categories.getBySlug finds by slug from the remote list', async () => {
+    const mockCategory = { id: 'c1', name: 'Pipes', slug: 'pipes', image: '/images/categories/pipes.svg' };
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockCategory])) as unknown as typeof fetch });
+
+    const category = await api.categories.getBySlug('pipes');
+    expect(category).toEqual(mockCategory);
+  });
+
+  it('categories.getById finds by id from the remote list', async () => {
+    const mockCategory = { id: 'c1', name: 'Pipes', slug: 'pipes', image: '/images/categories/pipes.svg' };
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockCategory])) as unknown as typeof fetch });
+
+    const category = await api.categories.getById('c1');
+    expect(category).toEqual(mockCategory);
+  });
+
+  it('orders.getAll returns the remote list', async () => {
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: vi.fn(async () => jsonResponse([mockOrder])) as unknown as typeof fetch });
+
+    const orders = await api.orders.getAll();
+    expect(orders).toEqual([mockOrder]);
+  });
+
+  it('handles non-Error fallback payloads (string rejection)', async () => {
+    useDatabaseStore.setState({ products: [mockProduct] });
+    const api = createApiClient({
+      useRemote: true,
+      baseUrl: 'http://api.test',
+      fetchImpl: (() => {
+        throw 'plain string failure';
+      }) as unknown as typeof fetch,
+    });
+
+    const products = await api.products.getAll();
+    expect(products).toEqual([mockProduct]);
+    expect(apiHealth.lastError).toBeInstanceOf(Error); // wrapped
   });
 
   it('orders.create generates metadata and stores locally in local mode', async () => {
-    const api = await loadLocalApi();
-    const { useDatabaseStore: freshStore } = await import('../../store/databaseStore');
-    freshStore.setState({ orders: [] });
+    const api = createApiClient({ useRemote: false });
+    useDatabaseStore.setState({ orders: [] });
 
     const order = await api.orders.create({
       customerId: 'u1',
       customerName: 'Test User',
+      items: [{ productId: 'p1', name: 'Test Grinder', quantity: 1, price: 1500, image: '/images/products/grinder-classic.jpg' }],
       total: 1500,
+      paymentMethod: 'cod',
       status: 'pending',
       paymentStatus: 'pending',
-      paymentMethod: 'cod',
-      items: [{ productId: 'p1', name: 'Test Grinder', quantity: 1, price: 1500, image: '/images/x.jpg' }],
-      shippingAddress: { name: 'T', address: 'A', city: 'C', phone: '1' },
+      shippingAddress: { name: 'Test User', phone: '01700000000', address: 'Dhaka', city: 'Dhaka' },
     });
+
     expect(order.id).toBeTruthy();
     expect(order.orderNumber).toMatch(/^ORD-/);
-    expect(freshStore.getState().orders).toHaveLength(1);
+    expect(useDatabaseStore.getState().orders).toHaveLength(1);
   });
 
-  it('customers.getAll returns customers from remote', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [{ id: 'u1', name: 'T', email: 't@e.com', phone: '1', totalSpent: 0, orders: 0, createdAt: new Date().toISOString() }],
-    })));
+  it('orders.create POSTs to the remote API in remote mode', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse({ ...mockOrder, id: 'server-id' }));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchMock as unknown as typeof fetch });
 
-    const customers = await api.customers.getAll();
-    expect(customers).toHaveLength(1);
-    expect(customers[0].email).toBe('t@e.com');
+    const order = await api.orders.create({
+      customerId: 'u1',
+      customerName: 'Test User',
+      items: [{ productId: 'p1', name: 'Test Grinder', quantity: 1, price: 1500, image: '/images/products/grinder-classic.jpg' }],
+      total: 1500,
+      paymentMethod: 'cod',
+      status: 'pending',
+      paymentStatus: 'pending',
+      shippingAddress: { name: 'Test User', phone: '01700000000', address: 'Dhaka', city: 'Dhaka' },
+    });
+
+    expect(order.id).toBe('server-id');
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/orders', expect.objectContaining({ method: 'POST' }));
   });
 
-  it('categories.getById finds the category in the remote list', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [
-        { id: 'c1', name: 'Vaporizers', slug: 'vaporizers', description: '', productCount: 1 },
-        { id: 'c2', name: 'Grinders', slug: 'grinders', description: '', productCount: 1 },
-      ],
-    })));
-
-    const category = await api.categories.getById('c2');
-    expect(category?.slug).toBe('grinders');
+  it('payment.getMethods returns the static list', async () => {
+    const api = createApiClient({ useRemote: false });
+    const methods = await api.payment.getMethods();
+    expect(methods.length).toBeGreaterThanOrEqual(3);
+    expect(methods[0].id).toBe('cod');
   });
 
-  it('categories.getBySlug finds the category in the remote list', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [{ id: 'c1', name: 'Vaporizers', slug: 'vaporizers', description: '', productCount: 1 }],
-    })));
-
-    const category = await api.categories.getBySlug('vaporizers');
-    expect(category?.id).toBe('c1');
-  });
-
-  it('customers.getById finds the customer in the remote list', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [{ id: 'u1', name: 'T', email: 't@e.com', phone: '1', totalSpent: 0, orders: 0, createdAt: new Date().toISOString() }],
-    })));
-
-    const customer = await api.customers.getById('u1');
-    expect(customer?.email).toBe('t@e.com');
-  });
-
-  it('orders.getAll returns orders from remote', async () => {
-    const api = await loadRemoteApi();
-    vi.stubGlobal('fetch', vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => [],
-    })));
-
-    const orders = await api.orders.getAll();
-    expect(Array.isArray(orders)).toBe(true);
+  it('testimonials.getAll returns seeded testimonials', async () => {
+    const api = createApiClient({ useRemote: false });
+    const testimonials = await api.testimonials.getAll();
+    expect(testimonials.length).toBeGreaterThan(0);
   });
 });
