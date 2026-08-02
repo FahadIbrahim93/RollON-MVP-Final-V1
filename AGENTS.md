@@ -18,10 +18,11 @@ npm run dev
 ```bash
 cd rollon-app
 npm run lint     # ESLint — zero errors required
-npm test -- --run  # Vitest — 106 tests required
+npm test -- --run  # Vitest — 115 tests required
 npm run test:coverage  # Coverage thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
 npm run build   # TypeScript + Vite
-npm run test:e2e  # Playwright storeflow + accessibility (17 tests)
+npm run test:e2e  # Playwright storeflow + accessibility (21 tests)
+npm run test:e2e:degraded  # Degraded-mode: remote API down → banner + fallback
 
 # If the reference API server changed:
 cd ../server
@@ -51,6 +52,28 @@ Before ending an autonomous session:
 
 ## Test Coverage
 Run `npm run test:coverage` to generate coverage reports. The project uses `@vitest/coverage-v8` provider.
+
+## Dead-Code Policy (codified — apply uniformly, never per-case)
+
+Unused code is judged by ONE rule: **is it part of the template's public
+surface, or is it an orphaned implementation detail?**
+
+1. **DELETE** application-level components/hooks with zero consumers that were
+   superseded or scoped to removed features (e.g. `ProductCard` → superseded
+   by `ShopProductCard`; `WhyChooseUs` → unreferenced).
+2. **KEEP** standard shadcn/ui primitives in `src/components/ui/` even when
+   currently unused — they are the template's UI kit, tree-shaken from the
+   production bundle, and template consumers expect the full set.
+3. **KEEP** `src/hooks/useApi.ts` exports even when pages don't use them yet —
+   they are the template's data-access contract, wrapping every method of the
+   API client (`docs/API.md`). Consumers building admin/orders/customers
+   features use exactly these hooks.
+4. Before deleting anything, run `npx tsc --noEmit` — a passing build proves
+   no consumer exists. Never delete on grep alone (grep misses re-exports).
+
+This policy exists because a past session deleted two app components while
+keeping 11 primitives + 10 hooks with contradictory reasoning. Write the rule
+down; apply it uniformly.
 
 ## Current Status (August 2026)
 - **Version**: 1.0.0-beta.1
