@@ -11,14 +11,20 @@ import AxeBuilder from '@axe-core/playwright';
  * Run: npx playwright test e2e/accessibility.spec.ts
  */
 
-// Pages that must be accessible: home, shop, a product, cart, about, contact.
+// Every storefront route must be accessible. Checkout renders its empty
+// state without cart items (still scannable); /account redirects to /login
+// when unauthenticated, so it's covered via the login scan.
 const PAGES = [
   { path: '/', name: 'homepage' },
   { path: '/shop', name: 'shop' },
   { path: '/product/richer-kingslim-papers', name: 'product detail' },
   { path: '/cart', name: 'cart' },
+  { path: '/checkout', name: 'checkout' },
   { path: '/about', name: 'about' },
   { path: '/contact', name: 'contact' },
+  { path: '/login', name: 'login' },
+  { path: '/register', name: 'register' },
+  { path: '/nonexistent-route-xyz', name: '404' },
 ];
 
 async function scanPage(page, path) {

@@ -160,9 +160,9 @@ export function Register() {
                 <input type="checkbox" required className="w-4 h-4 mt-1 accent-green-400 rounded" />
                 <span className="text-white/60 text-sm">
                   I agree to the{' '}
-                  <Link to="/contact" className="text-green-400 hover:underline">Terms of Service</Link>
-                  {' '}and{' '}
-                  <Link to="/contact" className="text-green-400 hover:underline">Privacy Policy</Link>
+                  <Link to="/contact" className="text-green-400 underline underline-offset-2 hover:text-green-300">Terms of Service</Link>
+                  <span className="text-white/60">and</span>{' '}
+                  <Link to="/contact" className="text-green-400 underline underline-offset-2 hover:text-green-300">Privacy Policy</Link>
                 </span>
               </label>
 
@@ -182,7 +182,7 @@ export function Register() {
             {/* Login Link */}
             <p className="text-center text-white/60 mt-6">
               Already have an account?{' '}
-              <Link to="/login" className="text-green-400 hover:underline">
+              <Link to="/login" className="text-green-400 underline underline-offset-2 hover:text-green-300">
                 Sign in
               </Link>
             </p>
