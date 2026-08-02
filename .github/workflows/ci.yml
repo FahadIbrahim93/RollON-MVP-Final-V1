@@ -96,3 +96,7 @@ jobs:
       - name: Run reference API tests (zero-dependency server)
         working-directory: ./server
         run: npm test
+
+      - name: Verify seed.json is in sync with frontend data
+        working-directory: ./server
+        run: npm run check:seed

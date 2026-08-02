@@ -1,9 +1,9 @@
 # RollON Development Guidelines
 
 ## Project Overview
-- **Repository**: RollON e-commerce storefront + admin dashboard
-- **Tech Stack**: React 19, TypeScript, Vite, Tailwind CSS, Framer Motion
-- **Framework**: React Router v7 for SPA routing
+- **Repository**: RollON e-commerce storefront (React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, React Router v7)
+- **Backend**: Reference API server in `server/` (zero-dependency Node, implements `docs/API.md`)
+- **Testing**: Vitest unit (106 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (23 tests)
 
 ## Development Workflow
 
@@ -16,20 +16,49 @@ npm run dev
 
 ### Quality Gates (Required before commit)
 ```bash
-npm run lint     # ESLint
-npm test -- --run  # Vitest
-npm run test:coverage  # Vitest with coverage
+cd rollon-app
+npm run lint     # ESLint — zero errors required
+npm test -- --run  # Vitest — 106 tests required
+npm run test:coverage  # Coverage thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
 npm run build   # TypeScript + Vite
+npm run test:e2e  # Playwright storeflow + accessibility (17 tests)
+
+# If the reference API server changed:
+cd ../server
+npm test         # 23 integration tests
+npm run check:seed  # seed.json must match rollon-app/src/data/products.ts
 ```
+
+## Definition of Done (MANDATORY before declaring any task complete)
+
+A task is NOT done unless ALL of the following hold. This is enforced by CI, but
+never rely on CI alone — verify locally before committing.
+
+1. **Tests green**: full unit suite passes; new/changed logic has tests
+2. **Coverage holds**: `npm run test:coverage` clears the thresholds (regression = failure)
+3. **Lint + build clean**: zero ESLint errors; TypeScript compiles
+4. **E2E green**: storeflow + accessibility suites pass (if UI changed)
+5. **Working tree committed**: `git status --short` shows nothing after the commit
+6. **Docs in same commit**: README/CHANGELOG/docs updated when behavior changes
+7. **Honest claims**: every claim in a summary is backed by a command you ran — never report "done" from memory; run the command
+
+### Session Exit Gate (autonomous sessions)
+Before ending an autonomous session:
+- [ ] All work committed and pushed (`git status --short` clean)
+- [ ] No failing tests left behind — a red build is a broken session
+- [ ] Summary table of claims with the verification command for each
+- [ ] No "scaffolded but unverified" features listed as DONE
 
 ## Test Coverage
 Run `npm run test:coverage` to generate coverage reports. The project uses `@vitest/coverage-v8` provider.
 
-## Current Status (March 16, 2026)
+## Current Status (August 2026)
 - **Version**: 1.0.0-beta.1
-- **Tests**: 141 passing
+- **Tests**: 106 unit (Vitest) + 17 E2E (Playwright: storeflow + a11y) + 23 server integration (node:test)
+- **Coverage**: ~87% statements (thresholds: 84/75/80/84)
 - **Lint**: 0 errors
 - **Build**: Passing
+- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite
 
 ## Accessibility Requirements
 

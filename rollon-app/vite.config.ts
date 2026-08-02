@@ -44,7 +44,9 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
-      thresholds: { lines: 75, branches: 70, functions: 75, statements: 75 }
+      // Raised from 75/70/75/75 (2026-08) — the suite now runs 106 tests at
+      // ~87% statements. These thresholds make coverage regression a CI failure.
+      thresholds: { lines: 84, branches: 75, functions: 80, statements: 84 }
     },
   },
 })

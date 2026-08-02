@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "node --test",
-    "generate:seed": "node scripts/generate-seed.mjs"
+    "generate:seed": "node scripts/generate-seed.mjs",
+    "check:seed": "node scripts/check-seed-sync.mjs"
   },
   "engines": {
     "node": ">=20.0.0"
