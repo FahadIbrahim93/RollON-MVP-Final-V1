@@ -11,6 +11,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-%7E5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![CI](https://img.shields.io/github/actions/workflow/status/FahadIbrahim93/RollON-MVP-Final-V1/ci.yml?style=for-the-badge&label=CI&logo=github)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
+[![Tests: 106](https://img.shields.io/badge/Unit_Tests-106-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
+[![Coverage: 87%](https://img.shields.io/badge/Coverage-87%25-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
 
 </div>
 

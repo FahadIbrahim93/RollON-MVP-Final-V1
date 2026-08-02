@@ -55,15 +55,24 @@ Navigate to [http://localhost:5173](http://localhost:5173).
 ## 🧪 Testing
 
 ```bash
-# Run unit tests
+# Run unit tests (106 tests: stores, API client, schemas, shop logic)
 npm test -- --run
 
-# Run tests with coverage
+# Run tests with coverage (~87% statements)
 npm run test:coverage
 
-# Run E2E tests
-npx playwright test
+# Run E2E tests (storeflow + accessibility, mock data mode)
+npm run test:e2e
+
+# Run E2E against the real reference API (server/)
+npm run test:e2e:remote
+
+# Run accessibility audit only (axe-core, WCAG 2.1 AA)
+npx playwright test e2e/accessibility.spec.ts
 ```
+
+The E2E suite includes an automated **accessibility audit** (`axe-core`)
+that fails on serious/critical WCAG violations across the six key pages.
 
 ## 📁 Structure
 
