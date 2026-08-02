@@ -12,6 +12,7 @@
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { realpathSync } from 'node:fs';
 import path from 'node:path';
 import { randomUUID, scryptSync, timingSafeEqual, randomBytes } from 'node:crypto';
 
@@ -384,7 +385,16 @@ function createAppServer() {
 }
 
 // Auto-start only when run directly (not when imported by tests).
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+// realpathSync normalizes case (Windows) and resolves symlinks, so the
+// comparison is robust against C:\ vs c:\ and MSYS path translation.
+const isMain = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(path.resolve(process.argv[1]));
+  } catch {
+    return false;
+  }
+})();
 
 if (isMain) {
   const server = createAppServer();
