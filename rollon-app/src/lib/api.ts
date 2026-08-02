@@ -143,7 +143,15 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     }
 
     try {
-      return await remoteFn();
+      const result = await remoteFn();
+      // Auto-recover: a successful remote call clears the degraded flag so the
+      // banner dismisses when the backend comes back.
+      if (apiHealth.degraded) {
+        apiHealth.degraded = false;
+        apiHealth.lastError = null;
+        apiHealth._notify();
+      }
+      return result;
     } catch (error) {
       apiHealth.degraded = true;
       apiHealth.lastError = error instanceof Error ? error : new Error(String(error));

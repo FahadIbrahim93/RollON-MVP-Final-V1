@@ -16,7 +16,8 @@
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:remote": "playwright test --config=playwright.remote.config.ts"
+    "test:e2e:remote": "playwright test --config=playwright.remote.config.ts",
+    "test:e2e:degraded": "playwright test --config=playwright.degraded.config.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

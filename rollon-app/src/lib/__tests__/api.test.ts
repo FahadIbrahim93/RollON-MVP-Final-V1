@@ -281,6 +281,30 @@ describe('api client — remote path (injectable factory)', () => {
     expect(apiHealth.lastError).toBeInstanceOf(Error); // wrapped
   });
 
+  it('auto-recovers: successful remote call clears the degraded flag', async () => {
+    useDatabaseStore.setState({ products: [mockProduct] });
+    apiHealth.degraded = false;
+
+    // First call fails → degraded
+    let shouldFail = true;
+    const fetchImpl = vi.fn(async () => {
+      if (shouldFail) {
+        throw new Error('down');
+      }
+      return jsonResponse([mockProduct]);
+    });
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchImpl as unknown as typeof fetch });
+
+    await api.products.getAll();
+    expect(apiHealth.degraded).toBe(true);
+
+    // Next call succeeds → recovers
+    shouldFail = false;
+    await api.products.getAll();
+    expect(apiHealth.degraded).toBe(false);
+    expect(apiHealth.lastError).toBeNull();
+  });
+
   it('orders.create generates metadata and stores locally in local mode', async () => {
     const api = createApiClient({ useRemote: false });
     useDatabaseStore.setState({ orders: [] });

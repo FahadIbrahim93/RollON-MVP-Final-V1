@@ -61,6 +61,10 @@ jobs:
       - name: Run E2E tests
         run: npx playwright test
 
+      - name: Run degraded-mode E2E (remote API down)
+        working-directory: ./rollon-app
+        run: npm run test:e2e:degraded
+
   dependency-audit:
     runs-on: ubuntu-latest
     defaults:

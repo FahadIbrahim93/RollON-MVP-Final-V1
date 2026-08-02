@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
+import { DegradedModeBanner } from '@/components/layout/DegradedModeBanner';
 import { CartDrawer } from '@/components/CartDrawer';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { LoadingFallback } from '@/components/common/LoadingFallback';
@@ -32,6 +33,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
+      <DegradedModeBanner />
       <CartDrawer />
       <Toaster position="top-right" expand={false} richColors />
       <ErrorBoundary>
