@@ -7,8 +7,10 @@
  * re-emitting the request onto the zero-dependency http.Server from
  * server/index.js.
  *
- * Seed data is imported as a module (not read from disk) because __dirname
- * is unreliable inside Vercel's bundled function output.
+ * Seed data is loaded via createRequire (not read from disk) because
+ * __dirname is unreliable inside Vercel's bundled function output, and
+ * require() of JSON is compatible with every Node runtime Vercel offers
+ * (import attributes need Node 20.10+/18.20+ — avoid them here).
  *
  * Statelessness note (honest limitation): this is an in-memory reference
  * backend. Catalog reads (products, categories, testimonials, search) are
@@ -16,8 +18,12 @@
  * instance's memory and reset on cold start / scale-out — durable storage
  * requires swapping in Supabase (see docs/API.md).
  */
+import { createRequire } from 'node:module';
 import { createAppServer } from '../server/index.js';
-import seed from '../server/seed.json' with { type: 'json' };
+
+const require = createRequire(import.meta.url);
+// Bundled as JSON by Vercel's nft/esbuild — no filesystem read.
+const seed = require('../server/seed.json');
 
 // One server per warm function instance — keeps in-memory state warm
 // between invocations on the same instance.
