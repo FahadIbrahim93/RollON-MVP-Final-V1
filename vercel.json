@@ -6,6 +6,7 @@
   "framework": "vite",
   "installCommand": "cd rollon-app && npm ci",
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/rollon" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

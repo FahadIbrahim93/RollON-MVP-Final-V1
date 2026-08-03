@@ -375,7 +375,14 @@ async function handleRequest(req, res) {
   sendError(res, 404, `Not found: ${method} ${pathname}`, 'NOT_FOUND');
 }
 
-function createAppServer() {
+function createAppServer({ seed: seedOverride } = {}) {
+  // seedOverride lets serverless wrappers inject the catalog data directly
+  // (bundler-safe: __dirname is unreliable inside a bundled function).
+  if (seedOverride) {
+    db.categories = [...seedOverride.categories];
+    db.products = [...seedOverride.products];
+    db.testimonials = [...seedOverride.testimonials];
+  }
   return createServer((req, res) => {
     handleRequest(req, res).catch((err) => {
       console.error('[RollON API] Unhandled error:', err);
