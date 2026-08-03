@@ -77,11 +77,12 @@ down; apply it uniformly.
 
 ## Current Status (August 2026)
 - **Version**: 1.0.0-beta.1
-- **Tests**: 106 unit (Vitest) + 17 E2E (Playwright: storeflow + a11y) + 23 server integration (node:test)
-- **Coverage**: ~87% statements (thresholds: 84/75/80/84)
+- **Tests**: 115 unit (Vitest) + 21 E2E (Playwright: storeflow + a11y) + 2 degraded-mode E2E + 23 server integration (node:test) + 4 seed-injection tests
+- **Coverage**: ~88% statements (thresholds: 84/75/80/84)
 - **Lint**: 0 errors
 - **Build**: Passing
-- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite
+- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (10 routes)
+- **Production API**: reference API deployed as Vercel serverless function (`api/rollon.js`, `/api/*` rewrite); live site talks to real backend same-origin
 
 ## Accessibility Requirements
 

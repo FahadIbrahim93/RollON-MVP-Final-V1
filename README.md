@@ -21,7 +21,7 @@
 
 RollON is a production-ready e-commerce storefront for premium smoking accessories. It features a sleek dark theme, responsive design, and a configuration-driven architecture that makes it easy to customize for any business.
 
-**Live Demo:** [rollon-delta.vercel.app](https://rollon-delta.vercel.app)
+**Live Demo:** [rollon-delta.vercel.app](https://rollon-delta.vercel.app) — full-stack: the storefront talks to the deployed reference API (`/api/*`) same-origin. If the API is unreachable, the storefront shows a visible degraded-mode banner and falls back to bundled catalog data.
 
 ## ✨ Features
 
