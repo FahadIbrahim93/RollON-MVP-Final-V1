@@ -17,9 +17,14 @@ const dataFile = path.join(appDir, 'src', 'data', 'products.ts');
 const committed = path.join(serverDir, 'seed.json');
 const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'seed-check-'));
 
-// Locate esbuild in the app's node_modules.
+// Locate esbuild: prefer the server's own devDependency, fall back to the app's.
 const require = (await import('node:module')).createRequire(import.meta.url);
-const esbuildPath = require.resolve('esbuild', { paths: [appDir] });
+let esbuildPath;
+try {
+  esbuildPath = require.resolve('esbuild'); // server/node_modules
+} catch {
+  esbuildPath = require.resolve('esbuild', { paths: [appDir] }); // rollon-app/node_modules
+}
 const esbuild = require(esbuildPath);
 
 const outFile = path.join(tmpDir, 'seed-build.mjs');

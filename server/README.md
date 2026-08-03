@@ -72,9 +72,31 @@ npx playwright test --config=playwright.remote.config.ts
 
 ## Deploying
 
+### Option 1 — Vercel serverless (already deployed for the live demo)
+
+The repo ships a ready-made Vercel function at [`api/rollon.js`](../api/rollon.js).
+`vercel.json` rewrites `/api/*` → the function, and production builds of the
+storefront default to `VITE_USE_REMOTE_API=true` (see `rollon-app/.env.production`),
+so **the live site talks to this real API at the same origin** — no CORS, no
+separate host.
+
+```bash
+# Deploy (repo root)
+vercel --prod
+```
+
+The live reference: `https://rollon-delta.vercel.app/api/products` (200 + JSON).
+
+> **Honest limitation:** serverless = in-memory. Catalog reads (products,
+> categories, testimonials, search) are fully functional. Writes (register,
+> orders, customers) live in the warm instance's memory and reset on cold
+> start / scale-out. For durable writes, use Option 2 or swap in Supabase.
+
+### Option 2 — self-host the Node server
+
 The server is a plain Node app — deploy it to Railway, Render, Fly.io, or any
-Node host. Set `PORT` to the platform's expected port. For Vercel, see
-[`docs/API.md`](../docs/API.md) for the serverless-function alternative.
+Node host. Set `PORT` to the platform's expected port, then point the frontend
+at it with `VITE_API_BASE_URL=https://your-host`.
 
 ## Layout
 

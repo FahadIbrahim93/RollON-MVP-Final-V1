@@ -11,6 +11,9 @@
     "generate:seed": "node scripts/generate-seed.mjs",
     "check:seed": "node scripts/check-seed-sync.mjs"
   },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  },
   "engines": {
     "node": ">=20.0.0"
   }

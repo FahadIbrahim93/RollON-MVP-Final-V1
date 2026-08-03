@@ -26,9 +26,14 @@ const appDir = path.join(rootDir, 'rollon-app');
 const dataFile = path.join(appDir, 'src', 'data', 'products.ts');
 const outFile = path.join(serverDir, '.seed-build.mjs');
 
-// Load esbuild from the app's node_modules via createRequire.
-const require = createRequire(import.meta.url);
-const esbuildPath = require.resolve('esbuild', { paths: [appDir] });
+// Load esbuild: prefer the server's own devDependency, fall back to the app's.
+const require = (await import('node:module')).createRequire(import.meta.url);
+let esbuildPath;
+try {
+  esbuildPath = require.resolve('esbuild'); // server/node_modules
+} catch {
+  esbuildPath = require.resolve('esbuild', { paths: [appDir] }); // rollon-app/node_modules
+}
 const esbuild = require(esbuildPath);
 
 // 1. Transpile the TS data file to ESM (type-only imports are dropped).

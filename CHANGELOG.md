@@ -14,20 +14,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content Security Policy headers in Vercel deployment
 - `sitemap.xml` for search engine discovery
 - Service worker (`sw.js`) with offline caching
-- Unit tests for utils, cart store, wishlist store, checkout schema, database store, auth store, shop helpers, and the API client (106 tests, ~87% coverage)
-- Playwright E2E suite: 17 tests covering storeflow, search, cart, checkout, 404, and accessibility
-- **Reference API server** (`server/`) — zero-dependency Node implementation of `docs/API.md` (products, orders, auth with PBKDF2, customers, payment methods) with 23 integration tests
-- **Accessibility audit** — automated axe-core WCAG 2.1 AA scan across 6 key pages; 5 real violations fixed (icon-button labels, sort select name, product link names, contrast)
+- Unit tests for utils, cart store, wishlist store, checkout schema, database store, auth store, shop helpers, and the API client (115 tests, ~88% coverage)
+- Playwright E2E suite: 21 storeflow + accessibility tests, plus 2 degraded-mode tests (remote API down → visible banner + fallback data)
+- **Reference API server** (`server/`) — zero-dependency Node implementation of `docs/API.md` (products, orders, auth with PBKDF2, customers, payment methods) with 27 integration tests
+- **Reference API deployed to production** — `api/rollon.js` Vercel serverless function, `/api/*` rewrite, production builds default to `VITE_USE_REMOTE_API=true`; the live site now talks to a real backend same-origin
+- **Visible degraded-mode banner** — when the remote API fails, the storefront shows an amber "showing cached catalog" status instead of failing silently; auto-recovers when the backend returns
+- **Accessibility audit** — automated axe-core WCAG 2.1 AA scan across 10 pages (added checkout, login, register, 404); fixed color-only links in auth forms
 - `docs/API.md` — backend API contract for products, orders, customers, and auth
 - GitHub issue templates (bug report, feature request, question)
 - E2E + reference-API jobs in CI workflow
-- `VITE_USE_REMOTE_API` documented in `.env.example`; `dev:remote`/`test:e2e:remote` scripts
+- `VITE_USE_REMOTE_API` documented in `.env.example`; `dev:remote`/`test:e2e:remote`/`test:e2e:degraded` scripts
 - README badges for CI status, test count, and coverage
 - Dependency audit: Vite upgraded to patched 7.3.x, react-router-dom to 7.18.2, @axe-core/playwright added
 
 ### Changed
 - Removed admin dashboard routes and components
 - Fixed API client remote-path bug: `getBySlug`/`getById`/orders/customers now unwrap bare-array responses (previously returned arrays, crashing product detail in remote mode)
+- API client refactored to an injectable factory (`createApiClient`) — tests no longer use module-reload hacks (`vi.stubEnv`/`resetModules`), and the client reports degradation via a subscribable `apiHealth` observable
+- Hardened server entrypoint detection with `realpathSync` normalization (robust on Windows case/symlink differences)
+- Dead-code policy codified in `AGENTS.md` (template surface stays, orphaned app code goes)
 - Defensive guard on ProductDetail SEO description
 - Removed mock data files (orders, customers)
 - Cleaned up project structure for template reuse

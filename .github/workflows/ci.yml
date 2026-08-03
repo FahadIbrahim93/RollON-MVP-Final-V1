@@ -97,6 +97,10 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Install server devDependencies (esbuild for seed check)
+        working-directory: ./server
+        run: npm ci
+
       - name: Run reference API tests (zero-dependency server)
         working-directory: ./server
         run: npm test

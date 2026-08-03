@@ -162,6 +162,18 @@ The API layer (`src/lib/api.ts`) wraps every call:
 
 ## Implementing as Vercel Serverless Functions
 
-Create `api/products.ts`, `api/orders.ts`, `api/auth.ts`, etc. under the repo root.
-Each file exports a default handler; Vercel maps `/api/*` automatically. The frontend
-expects `VITE_API_BASE_URL=/api` (the default), so no frontend changes are needed.
+**Shipped and live.** The repo includes [`api/rollon.js`](../api/rollon.js): a
+single catch-all function that wraps the zero-dependency reference server and
+serves the full contract at `/api/*`. `vercel.json` rewrites `/api/(.*)` →
+`/api/rollon`, and `rollon-app/.env.production` sets `VITE_USE_REMOTE_API=true`
+so production builds hit it same-origin (CSP's `connect-src 'self'` allows it).
+
+The live demo (`rollon-delta.vercel.app`) uses this exact path.
+
+Alternative granular layout: create `api/products.ts`, `api/orders.ts`,
+`api/auth.ts`, etc. under the repo root. Each file exports a default handler;
+Vercel maps `/api/*` automatically. The frontend expects `VITE_API_BASE_URL=/api`
+(the default), so no frontend changes are needed.
+
+> Serverless functions are in-memory — catalog reads are durable-accurate,
+> writes reset on cold start. Durable storage: Supabase (recommended, above).
