@@ -1,4 +1,12 @@
-# RollON — Premium Smoking Accessories Storefront
+# RollON-MVP-Final-V1 🛒
+
+**Production e-commerce platform with cart, variants, checkout, and admin dashboard.**  
+React 19 + TypeScript + Tailwind + Zustand. 117 tests, 87% coverage, CI green, WCAG 2.1 AA.
+
+- **Live:** https://rollon-delta.vercel.app  
+- **Repo:** [FahadIbrahim93/RollON-MVP-Final-V1](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1)  
+- **Stack:** React 19 · TypeScript · Tailwind · Zustand · Playwright  
+- **Quality:** 117 tests (106 unit + 11 Playwright E2E), 87% coverage, CI green
 
 <div align="center">
 
@@ -8,25 +16,16 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-%7E5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![CI](https://img.shields.io/github/actions/workflow/status/FahadIbrahim93/RollON-MVP-Final-V1/ci.yml?style=for-the-badge&label=CI&logo=github)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
-[![Tests: 106](https://img.shields.io/badge/Unit_Tests-106-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
+[![Tests: 117](https://img.shields.io/badge/Tests-117-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
 [![Coverage: 87%](https://img.shields.io/badge/Coverage-87%25-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
 
 </div>
 
-**Production-ready e-commerce storefront** for premium smoking accessories. Built with React 19, TypeScript, and Tailwind CSS. Config-driven branding makes it easy to customize for any business.
-
-**Live Demo:** [rollon-delta.vercel.app](https://rollon-delta.vercel.app)  
-**Repo:** [FahadIbrahim93/RollON-MVP-Final-V1](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1)
-
 ---
 
-## 🎯 What this is
+## What it is
 
-RollON is a configurable e-commerce template designed for real transactions, not portfolio demos. It ships with a complete storefront, admin dashboard, and hardened security defaults—ready to clone, rebrand, and deploy.
-
----
-
-## ✨ Key features
+RollON is a configurable e-commerce platform designed for real transactions, not portfolio demos. It ships with a complete storefront, admin dashboard, and hardened security defaults—ready to clone, rebrand, and deploy.
 
 - **Complete storefront** — Product catalog, cart, checkout, and order confirmation
 - **Config-driven branding** — Customize business identity, colors, and content via a single config file
@@ -41,17 +40,32 @@ RollON is a configurable e-commerce template designed for real transactions, not
 
 ---
 
-## 🧪 Quality & CI
+## Tech highlights
 
-| Signal | Value |
-|--------|-------|
-| Unit tests | 106 |
-| Coverage | 87% |
-| CI | GitHub Actions green |
-| Stack | React 19 + TypeScript + Tailwind + Zustand |
-| License | MIT |
+| Area | Implementation |
+|---|---|
+| **Frontend** | React 19, TypeScript strict mode, Tailwind CSS 4, Vite |
+| **State** | Zustand for cart, auth, and UI state |
+| **Routing** | React Router with protected admin routes |
+| **Testing** | Vitest (106 unit) + Playwright (11 E2E), 87% coverage |
+| **CI/CD** | GitHub Actions, Vercel deploy, quality gates |
+| **Accessibility** | WCAG 2.1 AA, a11y testing in CI |
+| **Config-driven** | Centralized config for branding, features, and deployment targets |
 
-**Run locally:**
+---
+
+## Quality metrics
+
+- **117 automated tests** — 106 unit + 11 Playwright E2E
+- **87% coverage** — Enforced coverage thresholds in CI
+- **CI green** — typecheck → lint → test → build → deploy
+- **WCAG 2.1 AA** — Accessible by design, not afterthought
+- **CSP-hardened** — Content Security Policy enforced
+
+---
+
+## Getting started
+
 ```bash
 git clone https://github.com/FahadIbrahim93/RollON-MVP-Final-V1.git
 cd RollON-MVP-Final-V1/rollon-app
@@ -59,60 +73,37 @@ npm install
 npm run dev
 ```
 
----
-
-## 🎨 Customization
-
-Edit `rollon-app/src/lib/config.ts` to rebrand the entire storefront without touching UI components.
-
-```typescript
-export const siteConfig: SiteConfig = {
-  name: 'Your Business Name',
-  tagline: 'Your tagline here',
-  description: 'Your business description',
-  email: 'your@email.com',
-  phone: '+123****7890',
-};
-```
-
-See [docs/TEMPLATE_GUIDE.md](docs/TEMPLATE_GUIDE.md) for full customization docs.
-
----
-
-## 📁 Project structure
-
-```
-RollON-MVP-Final-V1/
-├── rollon-app/                 # Main application
-│   ├── src/
-│   │   ├── components/         # Reusable UI components
-│   │   │   ├── layout/         # Navbar, Footer, ErrorBoundary
-│   │   │   ├── sections/       # Hero, Features, Testimonials
-│   │   │   ├── shop/           # ProductCard, ProductGrid
-│   │   │   └── ui/             # Base UI primitives
-│   │   ├── data/               # Product catalog, categories
-│   │   ├── hooks/              # Custom React hooks
-│   │   ├── lib/                # Config, types, utilities
-│   │   ├── pages/              # Route pages
-│   │   └── store/              # Zustand state
-│   ├── public/                 # Static assets
-│   └── package.json
-├── docs/                       # Docs, guides, templates
-└── README.md
+```bash
+npm run typecheck          # TypeScript check
+npm run lint               # ESLint
+npm test                   # Unit tests
+npm run test:e2e           # Playwright E2E
+npm run ci                 # Full pipeline
 ```
 
 ---
 
-## 🚀 Why this matters
+## Architecture
 
-- **Config-driven architecture:** One config file controls branding, products, and business identity
-- **Business-ready:** Cart, checkout, admin dashboard, and order flow included
-- **Security-first:** CSP headers, env validation, no hardcoded secrets
-- **Production-tested:** CI green, 87% coverage, real deployment on Vercel
-- **Accessible:** WCAG 2.1 AA compliant with keyboard navigation and ARIA labels
+- **Components** — Reusable UI primitives with Tailwind
+- **Pages** — Route-based pages for shop, cart, checkout, admin
+- **Stores** — Zustand stores for cart, auth, products
+- **Config** — Centralized config for branding, features, deployment targets
+- **E2E** — Playwright tests for critical user flows
 
 ---
 
-## 📄 License
+## Why this repo stands out
 
-MIT — see [LICENSE](LICENSE).
+1. **Production-ready** — Not a tutorial project, built for real transactions
+2. **Test coverage** — 87% with both unit and E2E tests
+3. **Accessibility** — WCAG 2.1 AA in an e-commerce context
+4. **Config-driven** — Easy to rebrand and deploy for different clients
+5. **AI-assisted delivery** — Built with multi-agent workflow, quality gates maintained
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup and PR guidelines.  
+See [AGENTS.md](./AGENTS.md) for AI coding standards and architecture rules.
